@@ -1,0 +1,31 @@
+import json
+import os
+
+mandala_data = [
+    {"product": "Niyantran", "layer": "Governance", "subsystem": "Task Review Engine", "capability": "Submission Evaluation"},
+    {"product": "Niyantran", "layer": "Governance", "subsystem": "Task Review Engine", "capability": "Task Modification"},
+    {"product": "Niyantran", "layer": "Governance", "subsystem": "Task Review Engine", "capability": "Task Enforcement"},
+    {"product": "Niyantran", "layer": "Governance", "subsystem": "Access Control", "capability": "RBAC Management"},
+    {"product": "Niyantran", "layer": "Governance", "subsystem": "Access Control", "capability": "Audit Logging"},
+    {"product": "Niyantran", "layer": "Core", "subsystem": "Database", "capability": "Relational Storage"},
+    {"product": "Niyantran", "layer": "Core", "subsystem": "Database", "capability": "Vector Search"},
+    {"product": "Niyantran", "layer": "Core", "subsystem": "Authentication", "capability": "MFA Verification"},
+    {"product": "Niyantran", "layer": "Core", "subsystem": "Authentication", "capability": "SSO Integration"},
+    {"product": "Niyantran", "layer": "Frontend", "subsystem": "Dashboard", "capability": "Real-time Metrics"},
+    {"product": "Niyantran", "layer": "Frontend", "subsystem": "Dashboard", "capability": "Alert Notifications"},
+    {"product": "Niyantran", "layer": "Frontend", "subsystem": "User Portal", "capability": "Profile Configuration"},
+    {"product": "Niyantran", "layer": "Frontend", "subsystem": "User Portal", "capability": "Usage Analytics"},
+    {"product": "Niyantran", "layer": "API", "subsystem": "External Gateway", "capability": "Rate Limiting"},
+    {"product": "Niyantran", "layer": "API", "subsystem": "External Gateway", "capability": "Integration Webhooks"},
+    {"product": "Niyantran", "layer": "API", "subsystem": "Internal Gateway", "capability": "Service Discovery"},
+    {"product": "Niyantran", "layer": "Testing", "subsystem": "QA Automation", "capability": "End-to-End Tests"},
+    {"product": "Niyantran", "layer": "Testing", "subsystem": "QA Automation", "capability": "Load Testing"},
+    {"product": "Niyantran", "layer": "Testing", "subsystem": "Compliance", "capability": "Security Scanning"},
+    {"product": "Niyantran", "layer": "Governance", "subsystem": "Compliance Checks", "capability": "Policy Enforcement"}
+]
+
+os.makedirs('c:\\Live Task Review Agent - 2\\db', exist_ok=True)
+with open('c:\\Live Task Review Agent - 2\\db\\mandala.json', 'w') as f:
+    json.dump(mandala_data, f, indent=4)
+
+print("Mandala generated")

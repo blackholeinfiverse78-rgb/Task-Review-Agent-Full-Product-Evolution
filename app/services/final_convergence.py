@@ -24,6 +24,12 @@ from .task_selection_engine import task_selection_engine
 from .task_selector import task_selector
 from .graph_engine import graph_engine
 
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+from engine.task_graph_engine import task_graph_engine
+from engine.mandala_mapper import mandala_mapper
+
 logger = logging.getLogger("final_convergence")
 
 class FinalConvergenceOrchestrator:
@@ -225,7 +231,7 @@ class FinalConvergenceOrchestrator:
             
             # Convert canonical result to API format
             api_format_result = self._convert_canonical_to_api_format(
-                enhanced_result, supporting_signals, task_title, task_description, module_id, schema_version
+                enhanced_result, supporting_signals, task_title, task_description, module_id, schema_version, current_task_id
             )
             
             final_result = validation_gate.validate_final_output(
@@ -248,6 +254,8 @@ class FinalConvergenceOrchestrator:
             logger.error(f"[FINAL CONVERGENCE] Validation gate failed: {e}")
             import traceback
             logger.error(f"[FINAL CONVERGENCE] Validation traceback: {traceback.format_exc()}")
+            print("EXCEPTION CAUGHT:", e)
+            print(traceback.format_exc())
             
             # Create emergency response
             final_result = {
@@ -279,7 +287,8 @@ class FinalConvergenceOrchestrator:
         task_title: str,
         task_description: str,
         module_id: str,
-        schema_version: str
+        schema_version: str,
+        current_task_id: Optional[str] = None
     ) -> Dict[str, Any]:
         """
         Convert Canonical Intelligence result to API format
@@ -297,15 +306,23 @@ class FinalConvergenceOrchestrator:
         status = canonical_result.get("status", "fail")
         decision = "APPROVED" if score_10 >= 6.0 else "REJECTED"
 
-        # Select next task via unified TaskSelector (graph_engine + mandala + niyantran)
-        selected = task_selector.select(
-            score_10=score_10,
-            decision=decision,
-            task_title=task_title,
-            task_description=task_description,
-            current_task_id=None,
-            current_difficulty="beginner",
-        )
+        # Phase 5 Flow Execution
+        try:
+            mapped_context = mandala_mapper.resolve_context(task_title, task_description)
+        except ValueError as e:
+            logger.error(f"[FINAL CONVERGENCE] Mandala mapping failed: {e}")
+            mapped_context = {
+                "product": "Unknown",
+                "layer": "Unknown",
+                "subsystem": "Unknown",
+                "capability": "Unknown"
+            }
+            
+        active_task_id = current_task_id or "T-GOV-001"
+        next_task_id = task_graph_engine.resolve_next_task(active_task_id, score_10)
+        next_task = task_graph_engine.get_task(next_task_id)
+        
+        selection_reason = f"Score is {score_10}. Proceeding to {'next task' if score_10 >= 6.0 else 'failure recovery task'}."
         
         # Generate DETERMINISTIC IDs based on content hash + timestamp for traceability
         import hashlib
@@ -320,8 +337,13 @@ class FinalConvergenceOrchestrator:
         attempt_hash = hashlib.md5(f"{content_base}{timestamp_ms}".encode(), usedforsecurity=False).hexdigest()[:8]
         
         submission_id = f"sub-{content_hash}-{attempt_hash}"
-        next_task_id = f"next-{content_hash}-{attempt_hash}"
         
+        task_type = "correction"
+        if status == "pass":
+            task_type = "advancement"
+        elif status == "borderline":
+            task_type = "reinforcement"
+            
         # Convert to API format with proper score breakdown
         api_result = {
             "submission_id": submission_id,
@@ -331,14 +353,19 @@ class FinalConvergenceOrchestrator:
             "status": status,
             "readiness_percent": canonical_result.get("readiness_percent", score),
             "next_task_id": next_task_id,
-            "task_type": selected["task_type"],
-            "title": selected["title"],
-            "difficulty": selected["difficulty"],
-            "objective": selected["objective"],
-            "focus_area": selected.get("subsystem") or selected.get("decision_band", "general"),
-            "reason": selected["selection_reason"],
-            "dharma": selected.get("dharma", ""),
-            "completion_signals": selected.get("completion_signals", []),
+            "task_type": task_type,
+            "title": next_task.get("capability", "Task"),
+            "difficulty": "intermediate",
+            "objective": next_task.get("dharma", ""),
+            "product": mapped_context["product"],
+            "layer": mapped_context["layer"],
+            "subsystem": mapped_context["subsystem"],
+            "capability": mapped_context["capability"],
+            "selection_reason": selection_reason,
+            "source": "task_graph",
+            
+            "dharma": next_task.get("dharma", ""),
+            "completion_signals": next_task.get("completion_signals", []),
             
             # Evidence and metadata
             "missing_features": supporting_signals.get("missing_features", []),
