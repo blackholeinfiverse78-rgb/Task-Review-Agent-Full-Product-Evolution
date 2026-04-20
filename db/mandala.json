@@ -9,12 +9,6 @@
         "product": "Niyantran",
         "layer": "Governance",
         "subsystem": "Task Review Engine",
-        "capability": "Task Modification"
-    },
-    {
-        "product": "Niyantran",
-        "layer": "Governance",
-        "subsystem": "Task Review Engine",
         "capability": "Task Enforcement"
     },
     {
@@ -25,75 +19,9 @@
     },
     {
         "product": "Niyantran",
-        "layer": "Governance",
-        "subsystem": "Access Control",
-        "capability": "Audit Logging"
-    },
-    {
-        "product": "Niyantran",
         "layer": "Core",
         "subsystem": "Database",
         "capability": "Relational Storage"
-    },
-    {
-        "product": "Niyantran",
-        "layer": "Core",
-        "subsystem": "Database",
-        "capability": "Vector Search"
-    },
-    {
-        "product": "Niyantran",
-        "layer": "Core",
-        "subsystem": "Authentication",
-        "capability": "MFA Verification"
-    },
-    {
-        "product": "Niyantran",
-        "layer": "Core",
-        "subsystem": "Authentication",
-        "capability": "SSO Integration"
-    },
-    {
-        "product": "Niyantran",
-        "layer": "Frontend",
-        "subsystem": "Dashboard",
-        "capability": "Real-time Metrics"
-    },
-    {
-        "product": "Niyantran",
-        "layer": "Frontend",
-        "subsystem": "Dashboard",
-        "capability": "Alert Notifications"
-    },
-    {
-        "product": "Niyantran",
-        "layer": "Frontend",
-        "subsystem": "User Portal",
-        "capability": "Profile Configuration"
-    },
-    {
-        "product": "Niyantran",
-        "layer": "Frontend",
-        "subsystem": "User Portal",
-        "capability": "Usage Analytics"
-    },
-    {
-        "product": "Niyantran",
-        "layer": "API",
-        "subsystem": "External Gateway",
-        "capability": "Rate Limiting"
-    },
-    {
-        "product": "Niyantran",
-        "layer": "API",
-        "subsystem": "External Gateway",
-        "capability": "Integration Webhooks"
-    },
-    {
-        "product": "Niyantran",
-        "layer": "API",
-        "subsystem": "Internal Gateway",
-        "capability": "Service Discovery"
     },
     {
         "product": "Niyantran",
@@ -102,21 +30,51 @@
         "capability": "End-to-End Tests"
     },
     {
-        "product": "Niyantran",
-        "layer": "Testing",
-        "subsystem": "QA Automation",
-        "capability": "Load Testing"
+        "product": "Vaani_TTS",
+        "layer": "Core",
+        "subsystem": "Inference Engine",
+        "capability": "Voice Synthesis"
     },
     {
-        "product": "Niyantran",
-        "layer": "Testing",
-        "subsystem": "Compliance",
+        "product": "Vaani_TTS",
+        "layer": "Core",
+        "subsystem": "Inference Engine",
+        "capability": "Model Loading"
+    },
+    {
+        "product": "Vaani_TTS",
+        "layer": "API",
+        "subsystem": "Gateway",
+        "capability": "Audio Streaming"
+    },
+    {
+        "product": "Parikshak",
+        "layer": "Evaluation",
+        "subsystem": "Code Analysis",
+        "capability": "Static Linting"
+    },
+    {
+        "product": "Parikshak",
+        "layer": "Evaluation",
+        "subsystem": "Code Analysis",
         "capability": "Security Scanning"
     },
     {
-        "product": "Niyantran",
+        "product": "Parikshak",
         "layer": "Governance",
-        "subsystem": "Compliance Checks",
-        "capability": "Policy Enforcement"
+        "subsystem": "Task Selection",
+        "capability": "Deterministic Routing"
+    },
+    {
+        "product": "InsightFlow",
+        "layer": "Frontend",
+        "subsystem": "Dashboard",
+        "capability": "Metrics Visualization"
+    },
+    {
+        "product": "InsightFlow",
+        "layer": "Core",
+        "subsystem": "Analytics Engine",
+        "capability": "Data Aggregation"
     }
 ]

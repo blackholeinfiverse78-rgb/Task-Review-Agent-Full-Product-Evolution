@@ -63,7 +63,8 @@ class FinalConvergenceOrchestrator:
         schema_version: str = "v1.0",
         pdf_text: str = "",
         current_task_id: Optional[str] = None,
-        submitted_by: str = ""
+        submitted_by: str = "",
+        trace_id: Optional[str] = None
     ) -> Dict[str, Any]:
         """
         FINAL CONVERGENCE processing with enforced hierarchy
@@ -221,9 +222,10 @@ class FinalConvergenceOrchestrator:
             
             # STEP 5: Human-in-Loop Processing
             logger.info("[FINAL CONVERGENCE] Step 5: Human-in-Loop Processing")
+            active_trace_id = trace_id or f"trace-{datetime.now().strftime('%Y%m%d%H%M%S')}"
             enhanced_result = human_in_loop.process_with_human_loop(
                 canonical_result, decision_result, supporting_signals, 
-                f"trace-{datetime.now().strftime('%Y%m%d%H%M%S')}"
+                active_trace_id
             )
             
             # STEP 6: Validation Gate (FINAL WRAPPER)
@@ -231,7 +233,7 @@ class FinalConvergenceOrchestrator:
             
             # Convert canonical result to API format
             api_format_result = self._convert_canonical_to_api_format(
-                enhanced_result, supporting_signals, task_title, task_description, module_id, schema_version, current_task_id
+                enhanced_result, supporting_signals, task_title, task_description, module_id, schema_version, current_task_id, active_trace_id
             )
             
             final_result = validation_gate.validate_final_output(
@@ -288,7 +290,8 @@ class FinalConvergenceOrchestrator:
         task_description: str,
         module_id: str,
         schema_version: str,
-        current_task_id: Optional[str] = None
+        current_task_id: Optional[str] = None,
+        trace_id: Optional[str] = None
     ) -> Dict[str, Any]:
         """
         Convert Canonical Intelligence result to API format
@@ -311,12 +314,25 @@ class FinalConvergenceOrchestrator:
             mapped_context = mandala_mapper.resolve_context(task_title, task_description)
         except ValueError as e:
             logger.error(f"[FINAL CONVERGENCE] Mandala mapping failed: {e}")
-            mapped_context = {
-                "product": "Unknown",
-                "layer": "Unknown",
-                "subsystem": "Unknown",
-                "capability": "Unknown"
+            import hashlib
+            # HARD REJECT ENFORCEMENT
+            content_hash = hashlib.md5(f"{task_title}{task_description}".encode(), usedforsecurity=False).hexdigest()[:12]
+            rejection_result = {
+                "submission_id": f"mapping-rejected-{content_hash}",
+                "score": 0,
+                "status": "fail",
+                "readiness_percent": 0.0,
+                "next_task_id": "mapping-correction",
+                "task_type": "correction",
+                "title": "Mandala Mapping Hard Reject",
+                "difficulty": "foundational",
+                "failure_reasons": ["HARD REJECT: Task could not be mapped to Mandala capabilities. Context drift detected."],
+                "mapping_rejection": True,
+                "trace_id": trace_id or "unknown"
             }
+            # Instead of wrapping via return, we'll let validation_gate do it directly for Hard Rejects.
+            # But here we are inside _convert_canonical_to_api_format, returning dict to process_with_convergence.
+            return rejection_result
             
         active_task_id = current_task_id or "T-GOV-001"
         next_task_id = task_graph_engine.resolve_next_task(active_task_id, score_10)
@@ -362,7 +378,10 @@ class FinalConvergenceOrchestrator:
             "subsystem": mapped_context["subsystem"],
             "capability": mapped_context["capability"],
             "selection_reason": selection_reason,
+            "mapping_rules_applied": mapped_context.get("mapping_rules_applied", []),
             "source": "task_graph",
+            "trace_id": trace_id,
+            "computed_confidence": (1.0 * 0.4) + ((score / 100.0) * 0.6), # Deterministic confidence formula
             
             "dharma": next_task.get("dharma", ""),
             "completion_signals": next_task.get("completion_signals", []),

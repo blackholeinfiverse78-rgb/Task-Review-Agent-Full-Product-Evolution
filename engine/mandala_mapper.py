@@ -21,18 +21,22 @@ class MandalaMapper:
         # Simple scoring based on capability matches
         best_match = None
         highest_score = 0
+        rule_trace = []
         
         for item in self.mandala_data:
             score = 0
             # weight layer matches
             if item['layer'].lower() in combined_text:
                 score += 1
+                rule_trace.append(f"Matched text to layer {item['layer']}")
             # weight subsystem matches
             if item['subsystem'].lower() in combined_text:
                 score += 2
+                rule_trace.append(f"Matched text to subsystem {item['subsystem']}")
             # weight capability matches
             if item['capability'].lower() in combined_text:
                 score += 5
+                rule_trace.append(f"Matched text to capability {item['capability']}")
                 
             if score > highest_score:
                 highest_score = score
@@ -49,10 +53,13 @@ class MandalaMapper:
                         "product": item["product"],
                         "layer": item["layer"],
                         "subsystem": item["subsystem"],
-                        "capability": item["capability"]
+                        "capability": item["capability"],
+                        "mapping_rules_applied": ["Exact keyword substring match fallback"]
                     }
-            raise ValueError("HARD REJECT: Task could not be mapped to Mandala capabilities.")
+            raise ValueError(f"HARD REJECT: Task could not be mapped to Mandala capabilities. Trace: {rule_trace}")
             
-        return dict(best_match)
+        result = dict(best_match)
+        result["mapping_rules_applied"] = rule_trace
+        return result
 
 mandala_mapper = MandalaMapper()
