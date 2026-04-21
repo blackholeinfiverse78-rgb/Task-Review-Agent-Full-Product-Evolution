@@ -1,12 +1,54 @@
-# Parikshak — Sovereign Evaluation Authority
+# Parikshak — Deterministic Task Evaluation Engine
 
-**Version**: 2.0.0 | **Status**: Production-Ready | **Protocol**: Boundary-Locked Deterministic
+**Version**: 2.0.0 | **Status**: Production-Ready | **Stack**: FastAPI · React 18 · TailwindCSS · Python 3.11
 
-Parikshak is a fully deterministic, governance-safe engineering task evaluation engine. It enforces strict architectural boundaries, eliminates all parallel scoring paths, and guarantees that identical inputs always produce identical outputs.
+Parikshak is a fully deterministic, governance-safe engineering task evaluation system. It enforces strict architectural boundaries across layered service, api, model, and core directories, eliminates all parallel scoring paths, and guarantees that identical inputs always produce identical outputs across repeated runs.
 
 ---
 
-## Architecture
+## Project Structure
+
+```
+parikshak-system/
+├── api/                        ← Route handlers and endpoint definitions
+│   ├── lifecycle.py            ← Submission, history, review, next-task routes
+│   ├── production.py           ← Niyantran, bucket, human-review routes
+│   └── tts.py                  ← VaaniTTS speech generation routes
+├── service/                    ← Business logic and evaluation pipeline
+│   ├── assignment_engine.py    ← SINGLE scoring authority (Phase 2–4)
+│   ├── signal_engine.py        ← Supporting signals collector (no scoring)
+│   ├── production_decision_engine.py ← Phase 5 APPROVED/REJECTED decision
+│   ├── task_selection_engine.py      ← Niyantran graph task selector
+│   ├── review_packet_parser.py       ← Phase 0 hard gate
+│   ├── domain_router.py        ← backend/frontend/infra/fullstack/ml routing
+│   ├── human_in_loop.py        ← Escalation at confidence < 0.98
+│   └── bucket_integration.py   ← Mandatory JSONL evaluation logging
+├── model/                      ← Pydantic schemas and data models
+│   ├── schemas.py
+│   └── next_task_model.py
+├── core/                       ← Configuration, registry, interfaces
+│   └── interfaces/
+├── frontend/                   ← React 18 + TailwindCSS UI
+│   ├── src/
+│   │   ├── components/
+│   │   ├── pages/
+│   │   └── services/
+│   └── package.json
+├── tests/                      ← Determinism and integration test suite
+│   └── test_determinism_proof.py
+├── docs/                       ← Architecture and API documentation
+│   ├── ARCHITECTURE.md
+│   └── API_CONTRACTS.md
+├── storage/
+│   ├── bucket_logs/            ← JSONL evaluation logs
+│   └── escalations/            ← Human-in-loop escalation cases
+├── requirements.txt
+└── README.md
+```
+
+---
+
+## Architecture — 8-Step Locked Pipeline
 
 ```
 Submission Input
@@ -39,13 +81,12 @@ Submission Input
     │  confidence = (proof + architecture + code + rubric_completeness) / 4
     │  confidence < 0.98 → escalation case created + persisted to disk
     ▼
-[Step 6] Validation Gate               ← shraddha_validation.py  (FINAL WRAPPER)
+[Step 6] Validation Gate               ← shraddha_validation.py
     │  Contract enforcement, type checking, field correction
     ▼
 [Step 7] Bucket Logging                ← bucket_integration.py  (MANDATORY)
     │  Writes: type, candidate_id, task_id, score, decision,
     │          review_summary, next_task, trace_id
-    │  Allowed reads: same_task_history, escalation_cases only
     ▼
 [Step 8] Task Selection                ← task_selection_engine.py
          Deterministic selection from Niyantran task graph
@@ -58,52 +99,82 @@ Submission Input
 
 ```
 final_score (0–10) =
-  0.35 × completeness   +   (delivery_ratio from repo signals)
-  0.25 × quality        +   (Q_proof + Q_arch + Q_code) / 3
-  0.20 × alignment      +   (binary: delivery ≥ 0.6 and missing ≤ 3)
-  0.10 × authenticity   +   (binary: repo present and description ≥ 50 words)
-  0.10 × effort             (binary: description ≥ 80 words and README present)
+  0.35 × completeness   (delivery_ratio from repo signals)
+  0.25 × quality        (Q_proof + Q_arch + Q_code) / 3
+  0.20 × alignment      (binary: delivery ≥ 0.6 and missing ≤ 3)
+  0.10 × authenticity   (binary: repo present and description ≥ 50 words)
+  0.10 × effort         (binary: description ≥ 80 words and README present)
 
-Caps:
+Score Caps:
   Q_proof = 0    → cap at 4.0
   Q_code  = 0    → cap at 5.0
   alignment = 0  → cap at 6.0
 
-Decision:
-  score ≥ 6.0 → APPROVED (advancement)
-  score 4–5.9 → REJECTED (reinforcement)
-  score < 4.0 → REJECTED (correction)
+Decision Thresholds:
+  score ≥ 6.0 → APPROVED  (advancement)
+  score 4–5.9 → REJECTED  (reinforcement)
+  score < 4.0 → REJECTED  (correction)
 ```
 
 ---
 
-## Confidence Formula (Phase 3 — Hardened)
+## Confidence Formula
 
 ```
 confidence = (proof + architecture + code + rubric_completeness) / 4
 
-Where:
   proof               = pac.proof          (0 or 1)
   architecture        = pac.architecture   (0 or 1)
   code                = pac.code           (0 or 1)
   rubric_completeness = rubric_sum / 6     (0.0–1.0)
 
-confidence < 0.98 → escalation triggered
+confidence < 0.98 → human escalation triggered
 ```
 
 ---
 
-## Boundary Rules
+## Setup & Running Locally
 
-| Rule | Enforcement |
-|------|-------------|
-| Assignment Engine = ONLY scoring authority | No parallel scoring paths exist |
-| No task generation | `task_selection_engine` selects from Niyantran graph only |
-| No adaptive / RL logic | All scoring is purely mathematical |
-| trace_id must come from Niyantran | Missing trace_id → REJECT at intake |
-| Bucket write is mandatory | Every evaluation logged, no exceptions |
-| Bucket reads restricted | Only `same_task_history` and `escalation_cases` |
-| REVIEW_PACKET is a hard gate | Missing or malformed → score 0, no evaluation |
+### Prerequisites
+- Python 3.11+
+- Node.js 20.x
+- GitHub Token (for repo analysis)
+- Groq API Key (for LLM signals)
+
+### Backend
+
+```bash
+git clone https://github.com/blackholeinfiverse78-rgb/Parikshak-system.git
+cd Parikshak-system
+
+pip install -r requirements.txt
+
+cp .env.example .env
+# Set GITHUB_TOKEN and GROQ_API_KEY in .env
+
+uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+```
+
+API docs available at: `http://localhost:8000/docs`
+
+### Frontend
+
+```bash
+cd frontend
+npm install
+npm start
+```
+
+UI available at: `http://localhost:3000`
+
+### Environment Variables
+
+```env
+GITHUB_TOKEN=your_github_token
+GROQ_API_KEY=your_groq_key
+ALLOWED_ORIGINS=["http://localhost:3000"]
+JWT_SECRET_KEY=your_secret_key
+```
 
 ---
 
@@ -139,35 +210,8 @@ confidence < 0.98 → escalation triggered
 
 ---
 
-## Running Locally
+## Determinism Test Results
 
-**Backend**
-```bash
-pip install -r requirements.txt
-uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
-```
-API docs: `http://localhost:8000/docs`
-
-**Frontend**
-```bash
-cd frontend
-npm install
-npm start
-```
-UI: `http://localhost:3000`
-
-**Environment** — copy `.env.example` to `.env` and set:
-```
-GITHUB_TOKEN=your_token_here
-GROQ_API_KEY=your_key_here
-ALLOWED_ORIGINS=["http://localhost:3000"]
-```
-
----
-
-## Determinism Proof
-
-Run the full test suite:
 ```bash
 python tests/test_determinism_proof.py
 ```
@@ -186,12 +230,26 @@ python tests/test_determinism_proof.py
 
 ---
 
+## Boundary Rules
+
+| Rule | Enforcement |
+|------|-------------|
+| Assignment Engine = ONLY scoring authority | No parallel scoring paths exist |
+| No task generation | `task_selection_engine` selects from Niyantran graph only |
+| No adaptive / RL logic | All scoring is purely mathematical |
+| trace_id must come from Niyantran | Missing trace_id → REJECT at intake |
+| Bucket write is mandatory | Every evaluation logged, no exceptions |
+| Bucket reads restricted | Only `same_task_history` and `escalation_cases` |
+| REVIEW_PACKET is a hard gate | Missing or malformed → score 0, no evaluation |
+
+---
+
 ## Tech Stack
 
 | Layer | Technology |
-|-------|-----------|
+|-------|------------|
 | Backend | Python 3.11, FastAPI, Pydantic v2 |
-| Frontend | React 18, TailwindCSS, Axios |
+| Frontend | React 18, TailwindCSS, Axios, React Query |
 | TTS | VaaniTTS (gTTS primary, pyttsx3 fallback) |
 | Storage | Local JSONL (bucket_logs, escalations) |
 | Deployment | Render (backend web service + static frontend) |
@@ -202,15 +260,15 @@ python tests/test_determinism_proof.py
 
 | Engine | File |
 |--------|------|
-| Assignment Engine (scoring authority) | `app/services/assignment_engine.py` |
-| Signal Engine (supporting only) | `app/services/signal_engine.py` |
-| Decision Engine (Phase 5) | `app/services/production_decision_engine.py` |
-| Task Selection (Niyantran graph) | `app/services/task_selection_engine.py` |
-| Review Packet Parser (hard gate) | `app/services/review_packet_parser.py` |
-| Domain Router | `app/services/domain_router.py` |
-| Human-in-Loop | `app/services/human_in_loop.py` |
-| Bucket Integration | `app/services/bucket_integration.py` |
-| Niyantran Connection | `app/services/niyantran_connection.py` |
-| Validation Gate | `app/services/shraddha_validation.py` |
-| Registry Validator | `app/services/validator.py` |
-| Final Convergence Orchestrator | `app/services/final_convergence.py` |
+| Assignment Engine (scoring authority) | `service/assignment_engine.py` |
+| Signal Engine (supporting only) | `service/signal_engine.py` |
+| Decision Engine (Phase 5) | `service/production_decision_engine.py` |
+| Task Selection (Niyantran graph) | `service/task_selection_engine.py` |
+| Review Packet Parser (hard gate) | `service/review_packet_parser.py` |
+| Domain Router | `service/domain_router.py` |
+| Human-in-Loop | `service/human_in_loop.py` |
+| Bucket Integration | `service/bucket_integration.py` |
+| Niyantran Connection | `service/niyantran_connection.py` |
+| Validation Gate | `service/shraddha_validation.py` |
+| Registry Validator | `service/validator.py` |
+| Final Convergence Orchestrator | `service/final_convergence.py` |
