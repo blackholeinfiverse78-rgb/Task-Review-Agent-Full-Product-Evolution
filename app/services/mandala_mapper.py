@@ -53,12 +53,13 @@ class MandalaMapper:
         best_product, best_score, matched_kws = self._score_products(combined)
 
         if best_product is None or best_score == 0:
-            default_id = context_registry.get_default_product()
-            best_product = context_registry.get_product(default_id)
-            matched_kws = []
-            mapping_source = "default_fallback"
-            logger.info(
-                f"[MANDALA] No keyword match — defaulting to '{default_id}'"
+            logger.error(
+                f"[MANDALA] HARD REJECT — no keyword match for input: '{combined[:80]}'"
+            )
+            raise ValueError(
+                "MANDALA_HARD_REJECT: No product context match found. "
+                "Submission must contain recognisable product keywords. "
+                "No fallback mapping permitted."
             )
         else:
             mapping_source = "keyword_match"
