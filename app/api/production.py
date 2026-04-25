@@ -248,10 +248,9 @@ async def test_determinism(request: NiyantranTaskRequest, runs: int = 3):
             # Extract key metrics for comparison
             run_result = {
                 "run": run + 1,
-                "score": result["review"]["score"],
+                "evaluation_result": result["review"]["evaluation_result"],
+                "failure_type": result["review"].get("failure_type"),
                 "decision": result["review"]["decision"],
-                "status": result["review"]["status"],
-                "confidence": result["review"]["confidence"],
                 "task_type": result["next_task"]["task_type"],
                 "trace_id": result["trace_id"]
             }
@@ -260,9 +259,9 @@ async def test_determinism(request: NiyantranTaskRequest, runs: int = 3):
         # Check determinism
         first_result = results[0]
         is_deterministic = all(
-            r["score"] == first_result["score"] and
+            r["evaluation_result"] == first_result["evaluation_result"] and
+            r["failure_type"] == first_result["failure_type"] and
             r["decision"] == first_result["decision"] and
-            r["status"] == first_result["status"] and
             r["task_type"] == first_result["task_type"]
             for r in results
         )
@@ -272,9 +271,9 @@ async def test_determinism(request: NiyantranTaskRequest, runs: int = 3):
             "runs": runs,
             "results": results,
             "summary": {
-                "consistent_score": len(set(r["score"] for r in results)) == 1,
-                "consistent_decision": len(set(r["decision"] for r in results)) == 1,
-                "consistent_status": len(set(r["status"] for r in results)) == 1,
+                "consistent_result":    len(set(r["evaluation_result"] for r in results)) == 1,
+                "consistent_failure":   len(set(str(r["failure_type"]) for r in results)) == 1,
+                "consistent_decision":  len(set(r["decision"] for r in results)) == 1,
                 "consistent_task_type": len(set(r["task_type"] for r in results)) == 1
             },
             "timestamp": datetime.now().isoformat()

@@ -1,43 +1,34 @@
 """
 Parikshak Assignment Engine — SINGLE EVALUATION AUTHORITY
-Phase 2: Binary P/A/C detection
-Phase 3: Quality rubric (Q_proof, Q_architecture, Q_code, alignment, authenticity, effort) — all binary 0/1
-Phase 4: Exact scoring formula on 0–10 scale
-  final_score = 0.35*completeness + 0.25*quality + 0.20*alignment + 0.10*authenticity + 0.10*effort
+Evaluates submissions as PASS or FAIL with a structured failure_type.
 
-BOUNDARY RULES (Phase 1 Lock):
-  - NO task generation (removed — handled by task_selection_engine)
-  - NO adaptive/learning logic
-  - NO heuristic shortcuts
-  - NO parallel scoring paths
+failure_type values:
+  schema_violation    — missing REVIEW_PACKET, invalid module_id, malformed input
+  incomplete          — missing repo, missing proof, missing architecture
+  incorrect_logic     — code present but no alignment, delivery below threshold
+  integration_fail    — repo inaccessible, network failure, bucket write failure
+
+BOUNDARY RULES:
+  - NO numeric scores, weights, or thresholds
+  - NO partial scoring or fallback scoring
   - evaluate_and_assign() is the ONLY public entry point
 """
-from typing import Dict, Any, Tuple
+from typing import Dict, Any, Optional
 import logging
 
 logger = logging.getLogger("assignment_engine")
 
-# Boundary lock — no datetime import (prevents non-deterministic IDs)
-# No NextTask, DecisionRules, ArchitectureGuard — task generation removed
 
 class AssignmentEngine:
     """
     SINGLE EVALUATION AUTHORITY.
-    Implements the exact Parikshak Phase 2–4 scoring protocol.
-    No heuristics. No parallel paths. No task generation. Deterministic.
-
-    BOUNDARY RULES:
-    - evaluate_and_assign() is the ONLY public method
-    - Returns score, status, PAC, rubric, score_breakdown ONLY
-    - Task selection is delegated to task_selection_engine (Phase 2)
-    - No datetime.now() calls — all IDs come from Niyantran trace_id
+    Returns evaluation_result = PASS or FAIL.
+    Returns failure_type when FAIL.
+    No numeric scoring. No weights. No thresholds.
     """
 
     def __init__(self):
         self.authority_level = "CANONICAL_PRIMARY"
-        # No rules/guard — task generation removed from this engine
-
-    # ── Public entry point ────────────────────────────────────────────────
 
     def evaluate_and_assign(
         self,
@@ -45,70 +36,29 @@ class AssignmentEngine:
         task_description: str,
         supporting_signals: Dict[str, Any]
     ) -> Dict[str, Any]:
-        logger.info(f"[ASSIGNMENT ENGINE] Evaluating: {task_title[:60]}...")
+        logger.info(f"[ASSIGNMENT ENGINE] Evaluating: {task_title[:60]}")
 
         # Phase 2: Binary P/A/C detection
         pac = self._detect_pac(supporting_signals)
 
-        # Phase 3: Binary quality rubric
-        rubric = self._score_rubric(supporting_signals, pac)
+        # Phase 3: Binary rubric checks
+        rubric = self._check_rubric(supporting_signals, pac)
 
-        # Phase 4: Exact formula → score on 0–10
-        score_10, score_breakdown = self._compute_score(rubric, supporting_signals)
-
-        # Map 0–10 → 0–100 for downstream compatibility
-        score_100 = round(score_10 * 10)
-        status = self._determine_status(score_10)
-
-        # Evidence summary for downstream engines
-        evd = supporting_signals.get("expected_vs_delivered_evidence", {})
-        evidence_summary = {
-            "expected_features": evd.get("expected_count", 0),
-            "delivered_features": evd.get("delivered_count", 0),
-            "missing_features_count": len(supporting_signals.get("missing_features", [])),
-            "failure_indicators_count": len(supporting_signals.get("failure_indicators", [])),
-            "delivery_ratio": evd.get("delivery_ratio", 0.0)
-        }
-
-        # Component scores (kept for downstream/UI compatibility, derived from rubric)
-        title_score = self._title_score_compat(supporting_signals)
-        desc_score  = self._desc_score_compat(supporting_signals)
-        repo_score  = self._repo_score_compat(supporting_signals)
+        # Phase 4: PASS or FAIL determination
+        evaluation_result, failure_type = self._determine_result(pac, rubric, supporting_signals)
 
         result = {
-            # Core
-            "score":            score_100,
-            "score_10":         round(score_10, 2),
-            "status":           status,
-            "readiness_percent": score_100,
-
-            # Phase 2 — P/A/C
+            "evaluation_result": evaluation_result,
+            "failure_type": failure_type,
             "pac": pac,
-
-            # Phase 3 — rubric
             "rubric": rubric,
-
-            # Phase 4 — score breakdown
-            "score_breakdown": score_breakdown,
-
-            # Component scores (UI compat)
-            "title_score":       title_score,
-            "description_score": desc_score,
-            "repository_score":  repo_score,
-
-            # Evidence
-            "evidence_summary": evidence_summary,
-
-            # Authority markers
-            "canonical_authority":  True,
-            "evaluation_basis":     "parikshak_assignment_engine",
-            "intelligence_source":  "parikshak_canonical_engine",
-            # NOTE: no evaluation_timestamp — timestamps are non-deterministic
-            # Caller must attach trace_id from Niyantran
+            "canonical_authority": True,
+            "evaluation_basis": "parikshak_assignment_engine",
         }
 
         logger.info(
-            f"[ASSIGNMENT ENGINE] Result: {status} | score_10={score_10:.2f} | "
+            f"[ASSIGNMENT ENGINE] Result: {evaluation_result} | "
+            f"failure_type={failure_type} | "
             f"P={pac['proof']} A={pac['architecture']} C={pac['code']}"
         )
         return result
@@ -116,49 +66,36 @@ class AssignmentEngine:
     # ── Phase 2: Binary P/A/C ─────────────────────────────────────────────
 
     def _detect_pac(self, signals: Dict[str, Any]) -> Dict[str, int]:
-        """
-        P = proof present (logs / output / test results)
-        A = architecture present (flow + system design)
-        C = code present (repo / implementation references)
-        Returns binary {proof: 0/1, architecture: 0/1, code: 0/1}
-        """
         repo_signals   = signals.get("repository_signals") or {}
         repo_available = signals.get("repository_available", False)
         desc_signals   = signals.get("description_signals") or {}
         title_signals  = signals.get("title_signals") or {}
 
-        # C — code: repo is accessible and has files
         file_count = repo_signals.get("structure", {}).get("total_files", 0)
         code = 1 if (repo_available and file_count > 0) else 0
 
-        # A — architecture: layered structure OR modular OR architecture keywords in description
         arch = repo_signals.get("architecture", {})
         has_layers = arch.get("has_layers", False) or arch.get("layer_count", 0) >= 2
         arch_keywords = {"architecture", "layer", "service", "module", "component",
                          "design", "flow", "pipeline", "orchestrat"}
-        desc_text = str(desc_signals).lower()
+        desc_text  = str(desc_signals).lower()
         title_text = str(title_signals).lower()
         has_arch_keywords = any(kw in desc_text or kw in title_text for kw in arch_keywords)
         architecture = 1 if (has_layers or (code == 1 and has_arch_keywords)) else 0
 
-        # P — proof: test files OR docs OR README with content
-        quality = repo_signals.get("quality", {})
+        quality      = repo_signals.get("quality", {})
         readme_score = quality.get("readme_score", 0)
-        components = repo_signals.get("components", {})
-        test_files = components.get("tests", [])
-        doc_files  = components.get("docs", [])
+        components   = repo_signals.get("components", {})
+        test_files   = components.get("tests", [])
+        doc_files    = components.get("docs", [])
         proof = 1 if (readme_score >= 1 or len(test_files) > 0 or len(doc_files) > 0) else 0
 
         logger.info(f"[ASSIGNMENT ENGINE] P/A/C → proof={proof} architecture={architecture} code={code}")
         return {"proof": proof, "architecture": architecture, "code": code}
 
-    # ── Phase 3: Binary quality rubric ───────────────────────────────────
+    # ── Phase 3: Binary rubric ────────────────────────────────────────────
 
-    def _score_rubric(self, signals: Dict[str, Any], pac: Dict[str, int]) -> Dict[str, int]:
-        """
-        All criteria are binary (0 or 1). No subjective scoring.
-        Returns dict with each criterion and derived dimension scores.
-        """
+    def _check_rubric(self, signals: Dict[str, Any], pac: Dict[str, int]) -> Dict[str, int]:
         repo_signals   = signals.get("repository_signals") or {}
         repo_available = signals.get("repository_available", False)
         evd            = signals.get("expected_vs_delivered_evidence", {})
@@ -169,173 +106,82 @@ class AssignmentEngine:
         structure_q    = desc_signals.get("structure_quality", 0) if isinstance(desc_signals, dict) else 0
         quality        = repo_signals.get("quality", {})
         readme_score   = quality.get("readme_score", 0)
-        doc_density    = quality.get("documentation_density", 0)
         file_count     = repo_signals.get("structure", {}).get("total_files", 0)
         arch           = repo_signals.get("architecture", {})
         layer_count    = arch.get("layer_count", 0)
         is_modular     = arch.get("modular", False)
 
-        # Q_proof: evidence of working output (binary)
-        Q_proof = 1 if (pac["proof"] == 1 and delivery_ratio >= 0.5) else 0
-
-        # Q_architecture: structured design present (binary)
-        Q_architecture = 1 if (pac["architecture"] == 1 and (layer_count >= 2 or is_modular)) else 0
-
-        # Q_code: real implementation present (binary)
-        Q_code = 1 if (pac["code"] == 1 and file_count >= 3) else 0
-
-        # alignment_score: requirements match implementation (binary)
-        alignment_score = 1 if (delivery_ratio >= 0.6 and len(missing) <= 3) else 0
-
-        # authenticity_score: genuine effort — repo + description depth (binary)
-        authenticity_score = 1 if (repo_available and word_count >= 50) else 0
-
-        # effort_score: description structured + README present (binary)
-        effort_score = 1 if (word_count >= 80 and (readme_score >= 1 or structure_q >= 0.3)) else 0
+        has_proof        = pac["proof"] == 1 and delivery_ratio >= 0.5
+        has_architecture = pac["architecture"] == 1 and (layer_count >= 2 or is_modular)
+        has_code         = pac["code"] == 1 and file_count >= 3
+        has_alignment    = delivery_ratio >= 0.6 and len(missing) <= 3
+        has_authenticity = repo_available and word_count >= 50
+        has_effort       = word_count >= 80 and (readme_score >= 1 or structure_q >= 0.3)
 
         rubric = {
-            "Q_proof": Q_proof,
-            "Q_architecture": Q_architecture,
-            "Q_code": Q_code,
-            "alignment_score": alignment_score,
-            "authenticity_score": authenticity_score,
-            "effort_score": effort_score,
-            # Derived totals for downstream
-            "total_quality_binary": Q_proof + Q_architecture + Q_code,
-            "rubric_sum": Q_proof + Q_architecture + Q_code + alignment_score + authenticity_score + effort_score
+            "has_proof":        int(has_proof),
+            "has_architecture": int(has_architecture),
+            "has_code":         int(has_code),
+            "has_alignment":    int(has_alignment),
+            "has_authenticity": int(has_authenticity),
+            "has_effort":       int(has_effort),
+            "rubric_sum":       sum([int(has_proof), int(has_architecture), int(has_code),
+                                     int(has_alignment), int(has_authenticity), int(has_effort)])
         }
 
         logger.info(
-            f"[ASSIGNMENT ENGINE] Rubric → Q_proof={Q_proof} Q_arch={Q_architecture} "
-            f"Q_code={Q_code} align={alignment_score} auth={authenticity_score} effort={effort_score}"
+            f"[ASSIGNMENT ENGINE] Rubric → proof={rubric['has_proof']} arch={rubric['has_architecture']} "
+            f"code={rubric['has_code']} align={rubric['has_alignment']} "
+            f"auth={rubric['has_authenticity']} effort={rubric['has_effort']}"
         )
         return rubric
 
-    # ── Phase 4: Exact scoring formula ───────────────────────────────────
+    # ── Phase 4: PASS / FAIL determination ───────────────────────────────
 
-    def _compute_score(
+    def _determine_result(
         self,
+        pac: Dict[str, int],
         rubric: Dict[str, int],
         signals: Dict[str, Any]
     ):
         """
-        Exact formula (all dimensions 0–1, result 0–10):
-        final_score = 0.35*completeness + 0.25*quality + 0.20*alignment
-                    + 0.10*authenticity + 0.10*effort
+        PASS requires ALL of:
+          - code present (pac.code == 1)
+          - proof present (pac.proof == 1)
+          - architecture present (pac.architecture == 1)
+          - alignment met (rubric.has_alignment == 1)
+          - authenticity met (rubric.has_authenticity == 1)
 
-        Caps applied after formula:
-        - No proof (Q_proof=0)       → cap at 4.0
-        - No code  (Q_code=0)        → cap at 5.0
-        - No alignment               → cap at 6.0
+        FAIL returns one of:
+          schema_violation   — no repo, no code, no authenticity
+          incomplete         — missing proof or architecture
+          incorrect_logic    — code present but alignment or effort missing
+          integration_fail   — repo error signal present
         """
-        evd            = signals.get("expected_vs_delivered_evidence", {})
-        delivery_ratio = evd.get("delivery_ratio", 0.0)
+        repo_signals = signals.get("repository_signals") or {}
+        repo_error   = repo_signals.get("error")
 
-        # completeness: delivery ratio (0–1)
-        completeness = min(delivery_ratio, 1.0)
+        # integration_fail — repo fetch failed
+        if repo_error and repo_error != "network_failure":
+            return "FAIL", "integration_fail"
 
-        # quality: fraction of binary quality criteria met (Q_proof + Q_arch + Q_code) / 3
-        quality = rubric["total_quality_binary"] / 3.0
+        # schema_violation — no repo, no code, no authenticity
+        if pac["code"] == 0 and rubric["has_authenticity"] == 0:
+            return "FAIL", "schema_violation"
 
-        # alignment: binary → float
-        alignment = float(rubric["alignment_score"])
+        # incomplete — code present but proof or architecture missing
+        if pac["proof"] == 0 or pac["architecture"] == 0 or rubric["has_code"] == 0:
+            return "FAIL", "incomplete"
 
-        # authenticity: binary → float
-        authenticity = float(rubric["authenticity_score"])
+        # incorrect_logic — structure present but alignment or effort missing
+        if rubric["has_alignment"] == 0 or rubric["has_effort"] == 0:
+            return "FAIL", "incorrect_logic"
 
-        # effort: binary → float
-        effort = float(rubric["effort_score"])
+        # integration_fail — network failure with no files
+        if repo_error == "network_failure":
+            return "FAIL", "integration_fail"
 
-        raw_score = (
-            0.35 * completeness +
-            0.25 * quality +
-            0.20 * alignment +
-            0.10 * authenticity +
-            0.10 * effort
-        ) * 10  # scale to 0–10
-
-        # Apply caps
-        capped_score = raw_score
-        caps_applied = []
-
-        if rubric["Q_proof"] == 0:
-            capped_score = min(capped_score, 4.0)
-            caps_applied.append("proof_cap_4.0")
-
-        if rubric["Q_code"] == 0:
-            capped_score = min(capped_score, 5.0)
-            caps_applied.append("code_cap_5.0")
-
-        if rubric["alignment_score"] == 0:
-            capped_score = min(capped_score, 6.0)
-            caps_applied.append("alignment_cap_6.0")
-
-        final = round(max(0.0, min(10.0, capped_score)), 2)
-
-        breakdown = {
-            "completeness": round(completeness, 3),
-            "quality": round(quality, 3),
-            "alignment": round(alignment, 3),
-            "authenticity": round(authenticity, 3),
-            "effort": round(effort, 3),
-            "raw_score": round(raw_score, 3),
-            "final_score_10": final,
-            "caps_applied": caps_applied,
-            "formula": "0.35*completeness + 0.25*quality + 0.20*alignment + 0.10*authenticity + 0.10*effort"
-        }
-
-        logger.info(
-            f"[ASSIGNMENT ENGINE] Score: completeness={completeness:.2f} quality={quality:.2f} "
-            f"alignment={alignment:.2f} auth={authenticity:.2f} effort={effort:.2f} "
-            f"→ raw={raw_score:.2f} final={final}"
-        )
-        return final, breakdown
-
-    # ── Status determination ──────────────────────────────────────────────
-
-    def _determine_status(self, score_10: float) -> str:
-        """Phase 5 threshold: score ≥ 6 → pass, 4–5.9 → borderline, <4 → fail"""
-        if score_10 >= 6.0:
-            return "pass"
-        elif score_10 >= 4.0:
-            return "borderline"
-        return "fail"
-
-    # ── UI-compat component scores (0–20/40/40 scale) ────────────────────
-
-    def _title_score_compat(self, signals: Dict[str, Any]) -> float:
-        ts = signals.get("title_signals", {})
-        kw = ts.get("technical_keywords", [])
-        cl = ts.get("clarity_indicators", 0.7)
-        dr = ts.get("domain_relevance", 0.8)
-        kw_s = min(len(kw) / 2, 1.0) if kw else 0.5
-        return round(max(0, min(20, 20 * (0.4 * kw_s + 0.3 * float(cl) + 0.3 * float(dr)))), 1)
-
-    def _desc_score_compat(self, signals: Dict[str, Any]) -> float:
-        ds = signals.get("description_signals", {})
-        depth = ds.get("content_depth", 0.5)
-        tech  = ds.get("technical_density_normalized") or ds.get("technical_density", 0.1)
-        struct = ds.get("structure_quality", 0.5)
-        return round(max(0, min(40, 40 * (0.35 * float(depth) + 0.35 * min(float(tech) * 1.5, 1.0) + 0.30 * float(struct)))), 1)
-
-    def _repo_score_compat(self, signals: Dict[str, Any]) -> float:
-        if not signals.get("repository_available", False):
-            rs = signals.get("repository_signals") or {}
-            if rs.get("error") == "network_failure":
-                return 15.0
-            return 0.0
-        rs   = signals.get("repository_signals") or {}
-        qs   = rs.get("quality", {})
-        arch = rs.get("architecture", {})
-        readme = qs.get("readme_score", 0)
-        doc_d  = qs.get("documentation_density", 0)
-        files  = rs.get("structure", {}).get("total_files", 0)
-        layers = arch.get("layer_count", 0)
-        cq = min((readme / 3.0 + min(doc_d, 1.0)) / 2, 1.0)
-        aq = min(layers / 2.0, 1.0) if layers else (0.6 if arch.get("modular") else 0.4)
-        dq = min(doc_d + (readme / 3.0) * 0.5, 1.0)
-        fb = min(files / 10, 1.0)
-        return round(max(0, min(40, 40 * (0.3 * cq + 0.3 * aq + 0.2 * dq + 0.2 * fb))), 1)
+        return "PASS", None
 
 
 # Global instance

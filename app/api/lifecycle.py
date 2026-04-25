@@ -27,9 +27,9 @@ class TaskSubmitRequest(BaseModel):
     previous_task_id: Optional[str] = None
 
 class ReviewSummary(BaseModel):
-    score: int
-    status: str
-    readiness_percent: int
+    evaluation_result: str
+    failure_type: Optional[str] = None
+    decision: str
 
 class NextTaskSummary(BaseModel):
     task_id: str
@@ -56,26 +56,15 @@ class SubmissionHistoryItem(BaseModel):
 class ReviewDetailResponse(BaseModel):
     review_id: str
     submission_id: str
-    score: int
-    readiness_percent: int
-    status: str
+    evaluation_result: str
+    failure_type: Optional[str] = None
+    decision: str
     failure_reasons: List[str]
     improvement_hints: List[str]
     analysis: dict
     reviewed_at: datetime
-    feature_coverage: float
-    architecture_score: float
-    code_quality_score: float
-    completeness_score: float
     missing_features: List[str]
-    requirement_match: float
     evaluation_summary: str
-    documentation_score: float
-    documentation_alignment: str
-    analysis_pdf: Optional[dict] = None
-    title_score: float = 0.0
-    description_score: float = 0.0
-    repository_score: float = 0.0
     registry_validation: Optional[dict] = None
 
 class NextTaskDetailResponse(BaseModel):
@@ -158,9 +147,9 @@ async def submit_task(
             submission_timestamp=result.get("submission_timestamp", datetime.now().isoformat()),
             attempt_number=result.get("attempt_number", 1),
             review_summary=ReviewSummary(
-                score=result["review"]["score"],
-                status=result["review"]["status"],
-                readiness_percent=result["review"]["readiness_percent"]
+                evaluation_result=result["review"]["evaluation_result"],
+                failure_type=result["review"].get("failure_type"),
+                decision=result["review"].get("decision", "REJECTED")
             ),
             next_task_summary=NextTaskSummary(
                 task_id=result["next_task"]["task_id"],
@@ -234,26 +223,15 @@ def get_review(submission_id: str):
     return ReviewDetailResponse(
         review_id=review.review_id,
         submission_id=review.submission_id,
-        score=review.score,
-        readiness_percent=review.readiness_percent,
-        status=review.status,
+        evaluation_result=getattr(review, "evaluation_result", "FAIL"),
+        failure_type=getattr(review, "failure_type", None),
+        decision=getattr(review, "decision", "REJECTED"),
         failure_reasons=review.failure_reasons,
         improvement_hints=review.improvement_hints,
         analysis=review.analysis,
         reviewed_at=review.reviewed_at,
-        feature_coverage=review.feature_coverage,
-        architecture_score=review.architecture_score,
-        code_quality_score=review.code_quality_score,
-        completeness_score=review.completeness_score,
         missing_features=review.missing_features,
-        requirement_match=review.requirement_match,
         evaluation_summary=review.evaluation_summary,
-        documentation_score=review.documentation_score,
-        documentation_alignment=review.documentation_alignment,
-        analysis_pdf=review.analysis_pdf,
-        title_score=review.title_score,
-        description_score=review.description_score,
-        repository_score=review.repository_score,
         registry_validation=registry_validation
     )
 
