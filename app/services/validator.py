@@ -274,17 +274,10 @@ class Validator:
             module_info=module_result.module_info
         )
     
-    def get_module_info(self, module_id: str) -> Optional[Dict[str, Any]]:
-        """
-        Get complete module information from registry
-        
-        Args:
-            module_id: Module identifier
-            
-        Returns:
-            Module information dictionary or None if not found
-        """
-        return self._blueprint_registry.get(module_id)
+    def get_module_info(self, module_id: str) -> Dict[str, Any]:
+        if module_id not in self._blueprint_registry:
+            raise ValueError(f"REGISTRY_HARD_REJECT: module_id '{module_id}' not found in Blueprint Registry.")
+        return self._blueprint_registry[module_id]
     
     def list_active_modules(self) -> Dict[str, Dict[str, Any]]:
         """
@@ -300,21 +293,13 @@ class Validator:
         }
     
     def is_operation_allowed(self, module_id: str, operation: str) -> bool:
-        """
-        Check if a specific operation is allowed for a module
-        
-        Args:
-            module_id: Module identifier
-            operation: Operation to check (e.g., "submit", "review")
-            
-        Returns:
-            True if operation is allowed, False otherwise
-        """
-        module_info = self.get_module_info(module_id)
-        if not module_info:
-            return False
-        
-        return operation in module_info.get("allowed_operations", [])
+        module_info = self.get_module_info(module_id)  # raises on unknown
+        if operation not in module_info.get("allowed_operations", []):
+            raise ValueError(
+                f"REGISTRY_HARD_REJECT: operation '{operation}' not allowed for module '{module_id}'. "
+                f"Allowed: {module_info.get('allowed_operations', [])}"
+            )
+        return True
 
 # Global registry validator instance
 validator = Validator()

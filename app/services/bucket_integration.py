@@ -15,6 +15,10 @@ import logging
 logger = logging.getLogger("bucket_integration")
 
 
+def _hard_reject_field(field: str) -> None:
+    raise ValueError(f"BUCKET_HARD_REJECT: required field '{field}' is missing or empty.")
+
+
 class BucketIntegrationService:
     """
     Phase 6 — Mandatory evaluation logging.
@@ -157,86 +161,71 @@ class BucketIntegrationService:
         task_data: Dict[str, Any],
         trace_id: str
     ) -> Dict[str, Any]:
-        """
-        Phase 6 mandatory fields:
-          type, candidate_id, task_id, score, decision,
-          review_summary, next_task, trace_id
-        """
-        score    = decision_result.get("score", evaluation_result.get("score_10", 0))
-        decision = decision_result.get("decision", "REJECTED")
-        confidence = decision_result.get("confidence", 0.0)
+        evaluation = evaluation_result.get("evaluation_result")
+        failure_type = evaluation_result.get("failure_type")
+        decision = decision_result.get("decision")
 
-        # review_summary — structured block
+        if evaluation not in ("PASS", "FAIL"):
+            raise ValueError(f"BUCKET_HARD_REJECT: invalid evaluation_result '{evaluation}'. Must be PASS or FAIL.")
+        if decision not in ("APPROVED", "REJECTED"):
+            raise ValueError(f"BUCKET_HARD_REJECT: invalid decision '{decision}'. Must be APPROVED or REJECTED.")
+
         review_summary = {
-            "score_10":          score,
-            "score_100":         round(score * 10) if score <= 10 else score,
-            "status":            evaluation_result.get("status", "fail"),
+            "evaluation_result": evaluation,
+            "failure_type":      failure_type,
             "decision":          decision,
-            "confidence":        confidence,
-            "pac": {
-                "proof":        evaluation_result.get("pac", {}).get("proof", 0),
-                "architecture": evaluation_result.get("pac", {}).get("architecture", 0),
-                "code":         evaluation_result.get("pac", {}).get("code", 0)
-            },
-            "rubric": evaluation_result.get("rubric", {}),
-            "score_breakdown":   evaluation_result.get("score_breakdown", {}),
+            "pac":               evaluation_result.get("pac", {}),
+            "rubric":            evaluation_result.get("rubric", {}),
             "strengths":         decision_result.get("strengths", []),
             "failures":          decision_result.get("failures", []),
             "root_cause":        decision_result.get("root_cause", ""),
             "learning_feedback": decision_result.get("learning_feedback", []),
-            "quality_rubric":    decision_result.get("quality_rubric", {}),
-            "effort_score":      decision_result.get("effort_score", {}),
-            "requires_human_review": confidence < 0.98
+            "requires_human_review": evaluation_result.get("requires_human_review", False)
         }
 
-        # next_task — structured block
         next_task = {
             "task_id":    next_task_result.get("next_task_id", ""),
-            "task_type":  next_task_result.get("task_type", "correction"),
+            "task_type":  next_task_result.get("task_type", ""),
             "title":      next_task_result.get("title", ""),
-            "difficulty": next_task_result.get("difficulty", "beginner"),
-            "objective":  next_task_result.get("objective", ""),
-            "focus_area": next_task_result.get("focus_area", ""),
-            "reason":     next_task_result.get("reason", ""),
+            "difficulty": next_task_result.get("difficulty", ""),
             "next_direction": decision_result.get("next_direction", "")
         }
 
+        if not next_task["task_id"]:
+            raise ValueError("BUCKET_HARD_REJECT: next_task_id is missing — cannot log without task routing.")
+
         desc = task_data.get("task_description", "")
-
         return {
-            # Phase 6 mandatory fields
-            "type":           "task_review",
-            "candidate_id":   task_data.get("submitted_by", "unknown"),
-            "task_id":        task_data.get("task_id", task_data.get("task_title", "unknown")[:40]),
-            "score":          score,
-            "decision":       decision,
-            "review_summary": review_summary,
-            "next_task":      next_task,
-            "trace_id":       trace_id,
-
-            # Extended fields for traceability
-            "timestamp":      datetime.now().isoformat(),
-            "task_title":     task_data.get("task_title", ""),
+            "type":             "task_review",
+            "candidate_id":     task_data.get("submitted_by") or _hard_reject_field("submitted_by"),
+            "task_id":          task_data.get("task_id") or task_data.get("task_title", "")[:40],
+            "evaluation_result": evaluation,
+            "failure_type":     failure_type,
+            "decision":         decision,
+            "review_summary":   review_summary,
+            "next_task":        next_task,
+            "trace_id":         trace_id,
+            "timestamp":        datetime.now().isoformat(),
+            "task_title":       task_data.get("task_title", ""),
             "task_description": (desc[:500] + "...") if len(desc) > 500 else desc,
-            "repository_url": task_data.get("github_repo_link") or task_data.get("repository_url"),
-            "domain":         supporting_signals.get("domain", "unknown"),
-            "confidence":     confidence,
-            "quality_grade":  decision_result.get("quality_rubric", {}).get("quality_grade", "D"),
-            "signals_summary": self._summarize_signals(supporting_signals),
-            "canonical_authority": evaluation_result.get("canonical_authority", False),
-            "validation_applied":  bool(evaluation_result.get("validation_metadata"))
+            "repository_url":   task_data.get("github_repo_link") or task_data.get("repository_url"),
+            "domain":           supporting_signals.get("domain") or _hard_reject_field("domain"),
+            "signals_summary":  self._summarize_signals(supporting_signals),
+            "canonical_authority": evaluation_result.get("canonical_authority", False)
         }
 
     def _summarize_signals(self, signals: Dict[str, Any]) -> Dict[str, Any]:
+        domain = signals.get("domain")
+        if not domain:
+            raise ValueError("BUCKET_HARD_REJECT: domain missing from signals — cannot log without domain.")
         return {
-            "repository_available":      signals.get("repository_available", False),
-            "feature_match_ratio":       signals.get("feature_match_ratio", 0.0),
-            "expected_features_count":   len(signals.get("expected_features", [])),
+            "repository_available":       signals.get("repository_available", False),
+            "feature_match_ratio":        signals.get("feature_match_ratio", 0.0),
+            "expected_features_count":    len(signals.get("expected_features", [])),
             "implemented_features_count": len(signals.get("implemented_features", [])),
-            "missing_features_count":    len(signals.get("missing_features", [])),
-            "failure_indicators_count":  len(signals.get("failure_indicators", [])),
-            "delivery_ratio":            signals.get("expected_vs_delivered_evidence", {}).get("delivery_ratio", 0.0),
-            "domain":                    signals.get("domain", "unknown")
+            "missing_features_count":     len(signals.get("missing_features", [])),
+            "delivery_ratio":             signals.get("expected_vs_delivered_evidence", {}).get("delivery_ratio", 0.0),
+            "domain":                     domain
         }
 
     def _write(self, entry: Dict[str, Any]) -> None:
@@ -248,10 +237,7 @@ class BucketIntegrationService:
                 f.write("\n")
         except Exception as e:
             logger.error(f"[BUCKET] Write failed: {e}")
-            # Fallback — never lose a log
-            fallback = os.path.join(self.bucket_path, "bucket_errors.log")
-            with open(fallback, "a") as fb:
-                fb.write(f"{datetime.now().isoformat()} | {entry.get('trace_id')} | {e}\n")
+            raise RuntimeError(f"BUCKET_WRITE_FAILURE: {e} — evaluation not logged, trace_id={entry.get('trace_id')}")
 
     def _update_index(self, entry: Dict[str, Any]) -> None:
         index_file = os.path.join(self.bucket_path, "evaluation_index.jsonl")

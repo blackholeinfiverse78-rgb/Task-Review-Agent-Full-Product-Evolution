@@ -48,7 +48,6 @@ DOMAIN_PROFILES: Dict[str, Dict[str, Any]] = {
     },
 }
 
-DEFAULT_DOMAIN = "backend"
 
 
 class DomainRouter:
@@ -69,8 +68,11 @@ class DomainRouter:
                 scores[domain] = hit_count
 
         if not scores:
-            logger.info(f"[DOMAIN ROUTER] No domain matched — defaulting to '{DEFAULT_DOMAIN}'")
-            return DEFAULT_DOMAIN
+            raise ValueError(
+                f"DOMAIN_HARD_REJECT: No domain matched for input. "
+                f"Task must contain keywords from one of: {list(DOMAIN_PROFILES.keys())}. "
+                "No default routing permitted."
+            )
 
         detected = max(scores, key=lambda d: scores[d])
         logger.info(f"[DOMAIN ROUTER] Detected domain: '{detected}' (hits: {scores[detected]})")
@@ -78,7 +80,12 @@ class DomainRouter:
 
     def get_domain_context(self, domain: str) -> Dict[str, Any]:
         """Return the full domain profile for a detected domain."""
-        return DOMAIN_PROFILES.get(domain, DOMAIN_PROFILES[DEFAULT_DOMAIN])
+        if domain not in DOMAIN_PROFILES:
+            raise ValueError(
+                f"DOMAIN_HARD_REJECT: Unknown domain '{domain}'. "
+                f"Must be one of: {list(DOMAIN_PROFILES.keys())}."
+            )
+        return DOMAIN_PROFILES[domain]
 
     def apply_domain_adjustments(
         self,

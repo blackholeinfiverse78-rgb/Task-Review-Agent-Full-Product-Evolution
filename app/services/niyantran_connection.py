@@ -187,34 +187,7 @@ class NiyantranConnectionService:
             
         except Exception as e:
             logger.error(f"[NIYANTRAN] Task processing failed: {e}")
-            
-            # Create error response
-            processing_time = int((datetime.now() - start_time).total_seconds() * 1000)
-            error_response = {
-                "task_id": task_data.get("task_id", "unknown"),
-                "trace_id": f"error-{datetime.now().strftime('%Y%m%d%H%M%S')}",
-                "review": {
-                    "score": 0,
-                    "decision": "reject",
-                    "status": "fail",
-                    "confidence": 0.0,
-                    "failure_reasons": [f"Processing error: {str(e)}"],
-                    "error": True
-                },
-                "next_task": {
-                    "task_type": "correction",
-                    "title": "System Recovery Task",
-                    "difficulty": "foundational",
-                    "reason": "Processing system encountered an error"
-                },
-                "processing_metadata": {
-                    "processing_time_ms": processing_time,
-                    "timestamp": datetime.now().isoformat(),
-                    "status": "error"
-                }
-            }
-            
-            return error_response
+            raise RuntimeError(f"NIYANTRAN_HARD_REJECT: Task processing failed — {e}")
     
     def _execute_evaluation_pipeline(self, niyantran_task: NiyantranTask) -> Dict[str, Any]:
         """Execute the full evaluation pipeline"""
@@ -274,45 +247,33 @@ class NiyantranConnectionService:
         return base_next_task
     
     def _format_review_for_niyantran(
-        self, 
-        evaluation_result: Dict[str, Any], 
+        self,
+        evaluation_result: Dict[str, Any],
         decision_result: Dict[str, Any]
     ) -> Dict[str, Any]:
-        """Format review results for Niyantran consumption"""
-        
+        evaluation = evaluation_result.get("evaluation_result")
+        failure_type = evaluation_result.get("failure_type")
+        decision = decision_result.get("decision")
+
+        if evaluation not in ("PASS", "FAIL"):
+            raise ValueError(f"NIYANTRAN_HARD_REJECT: invalid evaluation_result '{evaluation}'")
+        if decision not in ("APPROVED", "REJECTED"):
+            raise ValueError(f"NIYANTRAN_HARD_REJECT: invalid decision '{decision}'")
+
         return {
-            # Core results
-            "score": decision_result.get("score", evaluation_result.get("score", 0)),
-            "decision": decision_result.get("decision", "reject"),
-            "status": evaluation_result.get("status", "fail"),
-            "confidence": decision_result.get("confidence", 0.0),
-            
-            # Quality assessment
-            "quality_rubric": decision_result.get("quality_rubric", {}),
-            "pac_detection": decision_result.get("pac_detection", {}),
-            "decision_criteria": decision_result.get("decision_criteria", {}),
-            
-            # Feedback
+            "evaluation_result":  evaluation,
+            "failure_type":       failure_type,
+            "decision":           decision,
+            "task_type":          decision_result.get("task_type"),
+            "pac":                evaluation_result.get("pac", {}),
+            "rubric":             evaluation_result.get("rubric", {}),
+            "strengths":          decision_result.get("strengths", []),
+            "failures":           decision_result.get("failures", []),
+            "root_cause":         decision_result.get("root_cause", ""),
+            "learning_feedback":  decision_result.get("learning_feedback", []),
+            "next_direction":     decision_result.get("next_direction", ""),
             "evaluation_summary": evaluation_result.get("evaluation_summary", ""),
-            "failure_reasons": evaluation_result.get("failure_reasons", []),
-            "improvement_hints": evaluation_result.get("improvement_hints", []),
-            "missing_features": evaluation_result.get("missing_features", []),
-            
-            # Evidence
-            "evidence_summary": evaluation_result.get("evidence_summary", {}),
-            "expected_vs_delivered": evaluation_result.get("expected_vs_delivered", {}),
-            
-            # Component scores
-            "component_scores": {
-                "title_score": evaluation_result.get("title_score", 0),
-                "description_score": evaluation_result.get("description_score", 0),
-                "repository_score": evaluation_result.get("repository_score", 0)
-            },
-            
-            # Metadata
             "canonical_authority": evaluation_result.get("canonical_authority", False),
-            "evaluation_basis": evaluation_result.get("evaluation_basis", "unknown"),
-            "validation_applied": bool(evaluation_result.get("validation_metadata"))
         }
     
     def _format_next_task_for_niyantran(
@@ -344,42 +305,14 @@ class NiyantranConnectionService:
         }
     
     def health_check(self) -> Dict[str, Any]:
-        """Health check for Niyantran connection"""
-        try:
-            # Test bucket connection
-            bucket_stats = bucket_integration.get_bucket_stats()
-            
-            # Test final convergence
-            test_result = final_convergence.process_with_convergence(
-                task_title="Health Check Test",
-                task_description="System health verification test",
-                repository_url=None,
-                module_id="task-review-agent",
-                schema_version="v1.0",
-                pdf_text=""
-            )
-            
-            return {
-                "status": "healthy",
-                "service": self.service_name,
-                "version": self.version,
-                "timestamp": datetime.now().isoformat(),
-                "bucket_stats": bucket_stats,
-                "pipeline_test": {
-                    "status": "pass" if test_result.get("score") is not None else "fail",
-                    "score": test_result.get("score", 0)
-                }
-            }
-            
-        except Exception as e:
-            logger.error(f"[NIYANTRAN] Health check failed: {e}")
-            return {
-                "status": "unhealthy",
-                "service": self.service_name,
-                "version": self.version,
-                "timestamp": datetime.now().isoformat(),
-                "error": str(e)
-            }
+        bucket_stats = bucket_integration.get_bucket_stats()
+        return {
+            "status":      "healthy",
+            "service":     self.service_name,
+            "version":     self.version,
+            "timestamp":   datetime.now().isoformat(),
+            "bucket_stats": bucket_stats
+        }
 
 # Global Niyantran connection service
 niyantran_connection = NiyantranConnectionService()

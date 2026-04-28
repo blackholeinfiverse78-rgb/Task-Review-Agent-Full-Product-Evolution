@@ -141,12 +141,12 @@ class HumanInLoopService:
         # rubric_completeness: fraction of 6 binary rubric criteria that are 1
         rubric = evaluation_result.get("rubric", {})
         rubric_sum = (
-            rubric.get("Q_proof",           0) +
-            rubric.get("Q_architecture",    0) +
-            rubric.get("Q_code",            0) +
-            rubric.get("alignment_score",   0) +
-            rubric.get("authenticity_score",0) +
-            rubric.get("effort_score",      0)
+            rubric.get("has_proof",        0) +
+            rubric.get("has_architecture", 0) +
+            rubric.get("has_code",         0) +
+            rubric.get("has_alignment",    0) +
+            rubric.get("has_authenticity", 0) +
+            rubric.get("has_effort",       0)
         )
         rubric_completeness = rubric_sum / 6.0  # normalised 0–1
 
@@ -260,14 +260,14 @@ class HumanInLoopService:
     def get_pending_escalations(self) -> List[Dict[str, Any]]:
         return [
             {
-                "case_id": c.case_id,
-                "trace_id": c.trace_id,
+                "case_id":   c.case_id,
+                "trace_id":  c.trace_id,
                 "timestamp": c.timestamp,
                 "confidence": c.confidence,
-                "reasons": c.escalation_context.get("escalation_reasons", []),
-                "task_title": c.original_evaluation.get("task_title", "Unknown"),
-                "score": c.original_decision.get("score", 0),
-                "decision": c.original_decision.get("decision", "unknown")
+                "reasons":   c.escalation_context.get("escalation_reasons", []),
+                "evaluation_result": c.original_evaluation.get("evaluation_result", "FAIL"),
+                "failure_type":      c.original_evaluation.get("failure_type"),
+                "decision":          c.original_decision.get("decision", "REJECTED")
             }
             for c in self.escalation_cases.values()
             if c.status == EscalationStatus.PENDING.value
