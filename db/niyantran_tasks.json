@@ -1,664 +1,422 @@
 [
-    {
-        "task_id": "T-GOV-001",
-        "product": "Niyantran",
-        "layer": "Governance",
-        "subsystem": "Task Review Engine",
-        "capability": "Submission Evaluation",
-        "difficulty": "beginner",
-        "prerequisites": [],
-        "next_tasks": ["T-GOV-002"],
-        "failure_tasks": ["T-GOV-F01"],
-        "completion_signals": [
-            "Evaluation API returns 200",
-            "score field present in response",
-            "decision field is APPROVED or REJECTED",
-            "trace_id written to bucket log"
-        ],
-        "assignment_payload": {
-            "objective": "Implement a task submission evaluation endpoint that returns score, decision, and trace_id",
-            "acceptance_criteria": [
-                "POST /api/v1/lifecycle/submit returns 200 with score 0-100",
-                "decision field is one of: APPROVED, REJECTED",
-                "trace_id is present and non-empty",
-                "evaluation logged to JSONL bucket"
-            ],
-            "integration_metadata": {
-                "upstream": "Niyantran",
-                "downstream": "bucket_integration",
-                "trace_required": true
-            }
-        },
-        "dharma": "Ensure accurate and unbiased evaluation of submissions."
+  {
+    "task_id": "T-GOV-001",
+    "product": "Niyantran",
+    "layer": "Governance",
+    "subsystem": "Task Review Engine",
+    "capability": "Submission Evaluation",
+    "dharma": "Ensure accurate and unbiased evaluation of submissions.",
+    "evaluation_inputs": ["task_title", "task_description", "repository_url", "module_id", "schema_version"],
+    "evaluation_rules": ["schema_validation", "completeness_validation", "logic_validation", "integration_validation"],
+    "completion_signals": ["evaluation_api_returns_200", "decision_field_present", "trace_id_written_to_bucket"],
+    "failure_type": null,
+    "prerequisites": [],
+    "next_tasks": ["T-GOV-002"],
+    "failure_tasks": {
+      "schema_violation": ["T-GOV-F01"],
+      "incomplete": ["T-GOV-F01"],
+      "incorrect_logic": ["T-GOV-F02"],
+      "integration_fail": ["T-SYS-F00"]
     },
-    {
-        "task_id": "T-GOV-002",
-        "product": "Niyantran",
-        "layer": "Governance",
-        "subsystem": "Task Review Engine",
-        "capability": "Task Enforcement",
-        "difficulty": "beginner",
-        "prerequisites": ["T-GOV-001"],
-        "next_tasks": ["T-COR-001"],
-        "failure_tasks": ["T-GOV-F02"],
-        "completion_signals": [
-            "Graph updates correctly after evaluation",
-            "Next task ID correctly recorded in response",
-            "task_type field is advancement, reinforcement, or correction"
-        ],
-        "assignment_payload": {
-            "objective": "Implement deterministic next-task selection from Niyantran task graph",
-            "acceptance_criteria": [
-                "next_task_id returned in every evaluation response",
-                "same score + decision always returns same next_task_id",
-                "task_type matches decision band"
-            ],
-            "integration_metadata": {
-                "upstream": "assignment_engine",
-                "downstream": "task_selection_engine",
-                "trace_required": true
-            }
-        },
-        "dharma": "Adapt dynamically via strict graph rules."
+    "constraints": ["trace_id_must_come_from_niyantran", "no_numeric_scoring", "no_fallback_routing"]
+  },
+  {
+    "task_id": "T-GOV-002",
+    "product": "Niyantran",
+    "layer": "Governance",
+    "subsystem": "Task Review Engine",
+    "capability": "Task Enforcement",
+    "dharma": "Adapt dynamically via strict graph rules.",
+    "evaluation_inputs": ["task_title", "task_description", "repository_url", "module_id", "schema_version"],
+    "evaluation_rules": ["schema_validation", "completeness_validation", "logic_validation", "integration_validation"],
+    "completion_signals": ["graph_updates_correctly", "next_task_id_in_response", "task_type_is_valid"],
+    "failure_type": null,
+    "prerequisites": ["T-GOV-001"],
+    "next_tasks": ["T-COR-001"],
+    "failure_tasks": {
+      "schema_violation": ["T-GOV-F01"],
+      "incomplete": ["T-GOV-F01"],
+      "incorrect_logic": ["T-GOV-F02"],
+      "integration_fail": ["T-SYS-F00"]
     },
-    {
-        "task_id": "T-COR-001",
-        "product": "Niyantran",
-        "layer": "Core",
-        "subsystem": "Database",
-        "capability": "Relational Storage",
-        "difficulty": "intermediate",
-        "prerequisites": ["T-GOV-002"],
-        "next_tasks": ["T-COR-002"],
-        "failure_tasks": ["T-COR-F01"],
-        "completion_signals": [
-            "SQL schema migrated without errors",
-            "JSONL bucket logs written correctly",
-            "evaluation_index.jsonl updated on each submission"
-        ],
-        "assignment_payload": {
-            "objective": "Implement persistent JSONL bucket storage for all evaluations",
-            "acceptance_criteria": [
-                "Every evaluation writes to storage/bucket_logs/evaluations_YYYY-MM-DD.jsonl",
-                "evaluation_index.jsonl updated with trace_id and date",
-                "No evaluation is silently dropped"
-            ],
-            "integration_metadata": {
-                "upstream": "production_decision_engine",
-                "downstream": "bucket_integration",
-                "trace_required": true
-            }
-        },
-        "dharma": "Data resilience and strict schema enforcement."
+    "constraints": ["trace_id_must_come_from_niyantran", "no_numeric_scoring", "no_fallback_routing"]
+  },
+  {
+    "task_id": "T-COR-001",
+    "product": "Niyantran",
+    "layer": "Core",
+    "subsystem": "Database",
+    "capability": "Relational Storage",
+    "dharma": "Data resilience and strict schema enforcement.",
+    "evaluation_inputs": ["task_title", "task_description", "repository_url", "module_id", "schema_version"],
+    "evaluation_rules": ["schema_validation", "completeness_validation", "logic_validation", "integration_validation"],
+    "completion_signals": ["sql_schema_migrated", "jsonl_bucket_writes_succeed", "evaluation_index_updated"],
+    "failure_type": null,
+    "prerequisites": ["T-GOV-002"],
+    "next_tasks": ["T-COR-002"],
+    "failure_tasks": {
+      "schema_violation": ["T-COR-F01"],
+      "incomplete": ["T-COR-F01"],
+      "incorrect_logic": ["T-COR-F02"],
+      "integration_fail": ["T-SYS-F00"]
     },
-    {
-        "task_id": "T-COR-002",
-        "product": "Niyantran",
-        "layer": "Core",
-        "subsystem": "Registry",
-        "capability": "Module Validation",
-        "difficulty": "intermediate",
-        "prerequisites": ["T-COR-001"],
-        "next_tasks": ["T-SEC-001"],
-        "failure_tasks": ["T-COR-F02"],
-        "completion_signals": [
-            "module_id validated against registry",
-            "schema_version validated against allowed versions",
-            "invalid module_id returns REJECT with reason"
-        ],
-        "assignment_payload": {
-            "objective": "Implement registry validation for module_id and schema_version",
-            "acceptance_criteria": [
-                "module_id must be in {task-review-agent, evaluation-engine}",
-                "schema_version must be in {v1.0, v2.0, v3.0}",
-                "invalid values return structured REJECT response"
-            ],
-            "integration_metadata": {
-                "upstream": "review_packet_parser",
-                "downstream": "signal_engine",
-                "trace_required": true
-            }
-        },
-        "dharma": "Enforce strict module identity at intake."
+    "constraints": ["no_numeric_scoring", "no_fallback_routing"]
+  },
+  {
+    "task_id": "T-COR-002",
+    "product": "Niyantran",
+    "layer": "Core",
+    "subsystem": "Registry",
+    "capability": "Module Validation",
+    "dharma": "Enforce strict module identity at intake.",
+    "evaluation_inputs": ["task_title", "task_description", "repository_url", "module_id", "schema_version"],
+    "evaluation_rules": ["schema_validation", "completeness_validation", "logic_validation", "integration_validation"],
+    "completion_signals": ["module_id_validated", "schema_version_validated", "invalid_module_returns_reject"],
+    "failure_type": null,
+    "prerequisites": ["T-COR-001"],
+    "next_tasks": ["T-SEC-001"],
+    "failure_tasks": {
+      "schema_violation": ["T-COR-F01"],
+      "incomplete": ["T-COR-F01"],
+      "incorrect_logic": ["T-COR-F02"],
+      "integration_fail": ["T-SYS-F00"]
     },
-    {
-        "task_id": "T-SEC-001",
-        "product": "Parikshak",
-        "layer": "Security",
-        "subsystem": "Middleware",
-        "capability": "CORS and Auth",
-        "difficulty": "intermediate",
-        "prerequisites": ["T-COR-002"],
-        "next_tasks": ["T-SIG-001"],
-        "failure_tasks": ["T-SEC-F01"],
-        "completion_signals": [
-            "CORS middleware configured with allowed origins",
-            "JWT_SECRET_KEY loaded from environment",
-            "Unauthorized requests return 401"
-        ],
-        "assignment_payload": {
-            "objective": "Implement CORS middleware and JWT secret key loading",
-            "acceptance_criteria": [
-                "ALLOWED_ORIGINS loaded from .env",
-                "CORS middleware applied to all routes",
-                "JWT_SECRET_KEY not hardcoded"
-            ],
-            "integration_metadata": {
-                "upstream": "app/main.py",
-                "downstream": "all routes",
-                "trace_required": false
-            }
-        },
-        "dharma": "Security is non-negotiable at every layer."
+    "constraints": ["no_numeric_scoring", "no_fallback_routing"]
+  },
+  {
+    "task_id": "T-SEC-001",
+    "product": "Parikshak",
+    "layer": "Security",
+    "subsystem": "Middleware",
+    "capability": "CORS and Auth",
+    "dharma": "Security is non-negotiable at every layer.",
+    "evaluation_inputs": ["task_title", "task_description", "repository_url", "module_id", "schema_version"],
+    "evaluation_rules": ["schema_validation", "completeness_validation", "logic_validation", "integration_validation"],
+    "completion_signals": ["cors_middleware_configured", "jwt_secret_loaded_from_env", "unauthorized_returns_401"],
+    "failure_type": null,
+    "prerequisites": ["T-COR-002"],
+    "next_tasks": ["T-SIG-001"],
+    "failure_tasks": {
+      "schema_violation": ["T-GOV-F01"],
+      "incomplete": ["T-GOV-F01"],
+      "incorrect_logic": ["T-GOV-F02"],
+      "integration_fail": ["T-SYS-F00"]
     },
-    {
-        "task_id": "T-SIG-001",
-        "product": "Parikshak",
-        "layer": "Governance",
-        "subsystem": "Signal Engine",
-        "capability": "Repository Analysis",
-        "difficulty": "intermediate",
-        "prerequisites": ["T-SEC-001"],
-        "next_tasks": ["T-SIG-002"],
-        "failure_tasks": ["T-SIG-F01"],
-        "completion_signals": [
-            "GitHub API returns repo structure",
-            "layer_count computed from root directories",
-            "readme_score computed from README file size",
-            "documentation_density computed from md/code ratio"
-        ],
-        "assignment_payload": {
-            "objective": "Implement repository analyzer that extracts architecture and quality signals",
-            "acceptance_criteria": [
-                "layer_count >= 3 for layered repos",
-                "readme_score = 3 for README > 1000 bytes",
-                "documentation_density = doc_count / code_count",
-                "network failure returns error signal, not exception"
-            ],
-            "integration_metadata": {
-                "upstream": "signal_engine",
-                "downstream": "assignment_engine",
-                "trace_required": true
-            }
-        },
-        "dharma": "Signals must be measurable and deterministic."
+    "constraints": ["no_numeric_scoring", "no_fallback_routing"]
+  },
+  {
+    "task_id": "T-SIG-001",
+    "product": "Parikshak",
+    "layer": "Governance",
+    "subsystem": "Signal Engine",
+    "capability": "Repository Analysis",
+    "dharma": "Signals must be measurable and deterministic.",
+    "evaluation_inputs": ["task_title", "task_description", "repository_url", "module_id", "schema_version"],
+    "evaluation_rules": ["schema_validation", "completeness_validation", "logic_validation", "integration_validation"],
+    "completion_signals": ["github_api_returns_structure", "layer_count_computed", "readme_score_computed", "doc_density_computed"],
+    "failure_type": null,
+    "prerequisites": ["T-SEC-001"],
+    "next_tasks": ["T-SIG-002"],
+    "failure_tasks": {
+      "schema_violation": ["T-GOV-F01"],
+      "incomplete": ["T-GOV-F01"],
+      "incorrect_logic": ["T-GOV-F02"],
+      "integration_fail": ["T-SYS-F00"]
     },
-    {
-        "task_id": "T-SIG-002",
-        "product": "Parikshak",
-        "layer": "Governance",
-        "subsystem": "Signal Engine",
-        "capability": "Feature Matching",
-        "difficulty": "intermediate",
-        "prerequisites": ["T-SIG-001"],
-        "next_tasks": ["T-ASN-001"],
-        "failure_tasks": ["T-SIG-F02"],
-        "completion_signals": [
-            "feature_match_ratio computed correctly",
-            "implemented_features list populated",
-            "missing_features list populated",
-            "delivery_ratio passed to assignment engine"
-        ],
-        "assignment_payload": {
-            "objective": "Implement feature matcher that computes delivery ratio from repo vs intent",
-            "acceptance_criteria": [
-                "feature_match_ratio = implemented / expected",
-                "synonym matching covers api, service, model, pipeline keywords",
-                "delivery_ratio >= 0.6 required for alignment=1"
-            ],
-            "integration_metadata": {
-                "upstream": "intent_extractor",
-                "downstream": "assignment_engine",
-                "trace_required": true
-            }
-        },
-        "dharma": "Match what was promised to what was delivered."
+    "constraints": ["no_numeric_scoring", "no_fallback_routing"]
+  },
+  {
+    "task_id": "T-SIG-002",
+    "product": "Parikshak",
+    "layer": "Governance",
+    "subsystem": "Signal Engine",
+    "capability": "Feature Matching",
+    "dharma": "Match what was promised to what was delivered.",
+    "evaluation_inputs": ["task_title", "task_description", "repository_url", "module_id", "schema_version"],
+    "evaluation_rules": ["schema_validation", "completeness_validation", "logic_validation", "integration_validation"],
+    "completion_signals": ["feature_match_ratio_computed", "implemented_features_populated", "missing_features_populated", "delivery_ratio_passed"],
+    "failure_type": null,
+    "prerequisites": ["T-SIG-001"],
+    "next_tasks": ["T-ASN-001"],
+    "failure_tasks": {
+      "schema_violation": ["T-GOV-F01"],
+      "incomplete": ["T-GOV-F01"],
+      "incorrect_logic": ["T-GOV-F02"],
+      "integration_fail": ["T-SYS-F00"]
     },
-    {
-        "task_id": "T-ASN-001",
-        "product": "Parikshak",
-        "layer": "Governance",
-        "subsystem": "Assignment Engine",
-        "capability": "Binary PAC Detection",
-        "difficulty": "advanced",
-        "prerequisites": ["T-SIG-002"],
-        "next_tasks": ["T-ASN-002"],
-        "failure_tasks": ["T-ASN-F01"],
-        "completion_signals": [
-            "proof binary 0 or 1 returned",
-            "architecture binary 0 or 1 returned",
-            "code binary 0 or 1 returned",
-            "same input always returns same PAC"
-        ],
-        "assignment_payload": {
-            "objective": "Implement binary P/A/C detection in assignment engine Phase 2",
-            "acceptance_criteria": [
-                "proof=1 if README score>=1 OR test files OR doc files",
-                "architecture=1 if layer_count>=2 OR arch keywords in description",
-                "code=1 if repo accessible AND file_count > 0",
-                "deterministic: same signals always same PAC"
-            ],
-            "integration_metadata": {
-                "upstream": "signal_engine",
-                "downstream": "rubric_scoring",
-                "trace_required": true
-            }
-        },
-        "dharma": "Binary truth — no ambiguity in evaluation."
+    "constraints": ["no_numeric_scoring", "no_fallback_routing"]
+  },
+  {
+    "task_id": "T-ASN-001",
+    "product": "Parikshak",
+    "layer": "Governance",
+    "subsystem": "Rule Engine",
+    "capability": "Binary PAC Detection",
+    "dharma": "Binary truth — no ambiguity in evaluation.",
+    "evaluation_inputs": ["task_title", "task_description", "repository_url", "module_id", "schema_version"],
+    "evaluation_rules": ["schema_validation", "completeness_validation", "logic_validation", "integration_validation"],
+    "completion_signals": ["proof_binary_returned", "architecture_binary_returned", "code_binary_returned", "same_input_same_pac"],
+    "failure_type": null,
+    "prerequisites": ["T-SIG-002"],
+    "next_tasks": ["T-ASN-002"],
+    "failure_tasks": {
+      "schema_violation": ["T-GOV-F01"],
+      "incomplete": ["T-GOV-F01"],
+      "incorrect_logic": ["T-GOV-F02"],
+      "integration_fail": ["T-SYS-F00"]
     },
-    {
-        "task_id": "T-ASN-002",
-        "product": "Parikshak",
-        "layer": "Governance",
-        "subsystem": "Assignment Engine",
-        "capability": "Score Formula",
-        "difficulty": "advanced",
-        "prerequisites": ["T-ASN-001"],
-        "next_tasks": ["T-DEC-001"],
-        "failure_tasks": ["T-ASN-F02"],
-        "completion_signals": [
-            "score_10 computed using exact formula",
-            "caps applied correctly",
-            "score_breakdown returned with all components",
-            "raw_score and final_score_10 both present"
-        ],
-        "assignment_payload": {
-            "objective": "Implement Phase 4 exact scoring formula with caps",
-            "acceptance_criteria": [
-                "formula: 0.35*completeness + 0.25*quality + 0.20*alignment + 0.10*authenticity + 0.10*effort",
-                "Q_proof=0 caps at 4.0",
-                "Q_code=0 caps at 5.0",
-                "alignment=0 caps at 6.0"
-            ],
-            "integration_metadata": {
-                "upstream": "rubric_scoring",
-                "downstream": "production_decision_engine",
-                "trace_required": true
-            }
-        },
-        "dharma": "Mathematics is the only authority."
+    "constraints": ["no_numeric_scoring", "no_fallback_routing", "deterministic_only"]
+  },
+  {
+    "task_id": "T-ASN-002",
+    "product": "Parikshak",
+    "layer": "Governance",
+    "subsystem": "Rule Engine",
+    "capability": "PASS/FAIL Determination",
+    "dharma": "Rules are the only authority.",
+    "evaluation_inputs": ["task_title", "task_description", "repository_url", "module_id", "schema_version"],
+    "evaluation_rules": ["schema_validation", "completeness_validation", "logic_validation", "integration_validation"],
+    "completion_signals": ["evaluation_result_is_pass_or_fail", "failure_type_is_valid_or_null", "no_numeric_score_in_output"],
+    "failure_type": null,
+    "prerequisites": ["T-ASN-001"],
+    "next_tasks": ["T-DEC-001"],
+    "failure_tasks": {
+      "schema_violation": ["T-GOV-F01"],
+      "incomplete": ["T-GOV-F01"],
+      "incorrect_logic": ["T-GOV-F02"],
+      "integration_fail": ["T-SYS-F00"]
     },
-    {
-        "task_id": "T-DEC-001",
-        "product": "Parikshak",
-        "layer": "Governance",
-        "subsystem": "Decision Engine",
-        "capability": "APPROVED/REJECTED Decision",
-        "difficulty": "advanced",
-        "prerequisites": ["T-ASN-002"],
-        "next_tasks": ["T-HIL-001"],
-        "failure_tasks": ["T-DEC-F01"],
-        "completion_signals": [
-            "decision is APPROVED for score >= 6.0",
-            "decision is REJECTED for score < 6.0",
-            "task_type is advancement, reinforcement, or correction",
-            "strengths, failures, root_cause, learning_feedback all present"
-        ],
-        "assignment_payload": {
-            "objective": "Implement Phase 5 decision engine with narrative generation",
-            "acceptance_criteria": [
-                "score >= 6.0 → APPROVED, task_type=advancement",
-                "score 4-5.9 → REJECTED, task_type=reinforcement",
-                "score < 4.0 → REJECTED, task_type=correction",
-                "narrative fields non-empty in all cases"
-            ],
-            "integration_metadata": {
-                "upstream": "assignment_engine",
-                "downstream": "human_in_loop",
-                "trace_required": true
-            }
-        },
-        "dharma": "Decisions must be clear, justified, and actionable."
+    "constraints": ["no_numeric_scoring", "no_fallback_routing", "deterministic_only"]
+  },
+  {
+    "task_id": "T-DEC-001",
+    "product": "Parikshak",
+    "layer": "Governance",
+    "subsystem": "Decision Engine",
+    "capability": "APPROVED/REJECTED Decision",
+    "dharma": "Decisions must be clear, justified, and actionable.",
+    "evaluation_inputs": ["task_title", "task_description", "repository_url", "module_id", "schema_version"],
+    "evaluation_rules": ["schema_validation", "completeness_validation", "logic_validation", "integration_validation"],
+    "completion_signals": ["decision_is_approved_or_rejected", "task_type_is_valid", "narrative_fields_non_empty"],
+    "failure_type": null,
+    "prerequisites": ["T-ASN-002"],
+    "next_tasks": ["T-HIL-001"],
+    "failure_tasks": {
+      "schema_violation": ["T-GOV-F01"],
+      "incomplete": ["T-GOV-F01"],
+      "incorrect_logic": ["T-GOV-F02"],
+      "integration_fail": ["T-SYS-F00"]
     },
-    {
-        "task_id": "T-HIL-001",
-        "product": "Parikshak",
-        "layer": "Governance",
-        "subsystem": "Human-in-Loop",
-        "capability": "Escalation",
-        "difficulty": "advanced",
-        "prerequisites": ["T-DEC-001"],
-        "next_tasks": ["T-TST-001"],
-        "failure_tasks": ["T-HIL-F01"],
-        "completion_signals": [
-            "confidence computed as (proof+architecture+code+rubric_completeness)/4",
-            "confidence < 0.98 creates escalation file in storage/escalations/",
-            "escalation file contains trace_id, score, reason",
-            "requires_human_review flag set correctly"
-        ],
-        "assignment_payload": {
-            "objective": "Implement human-in-loop escalation at confidence < 0.98",
-            "acceptance_criteria": [
-                "confidence formula: (proof+architecture+code+rubric_completeness)/4",
-                "escalation persisted to storage/escalations/esc-{timestamp}-{trace_id}.json",
-                "escalation file contains: trace_id, score, decision, confidence, reason",
-                "GET /api/v1/production/human-review/pending returns all escalations"
-            ],
-            "integration_metadata": {
-                "upstream": "production_decision_engine",
-                "downstream": "shraddha_validation",
-                "trace_required": true
-            }
-        },
-        "dharma": "Human oversight is mandatory when confidence is low."
+    "constraints": ["no_numeric_scoring", "no_fallback_routing"]
+  },
+  {
+    "task_id": "T-HIL-001",
+    "product": "Parikshak",
+    "layer": "Governance",
+    "subsystem": "Human-in-Loop",
+    "capability": "Escalation",
+    "dharma": "Human oversight is mandatory when confidence is low.",
+    "evaluation_inputs": ["task_title", "task_description", "repository_url", "module_id", "schema_version"],
+    "evaluation_rules": ["schema_validation", "completeness_validation", "logic_validation", "integration_validation"],
+    "completion_signals": ["confidence_computed", "escalation_file_created_if_low", "trace_id_in_escalation_file"],
+    "failure_type": null,
+    "prerequisites": ["T-DEC-001"],
+    "next_tasks": ["T-TST-001"],
+    "failure_tasks": {
+      "schema_violation": ["T-GOV-F01"],
+      "incomplete": ["T-GOV-F01"],
+      "incorrect_logic": ["T-GOV-F02"],
+      "integration_fail": ["T-SYS-F00"]
     },
-    {
-        "task_id": "T-TST-001",
-        "product": "Niyantran",
-        "layer": "Testing",
-        "subsystem": "QA Automation",
-        "capability": "Determinism Proof",
-        "difficulty": "advanced",
-        "prerequisites": ["T-HIL-001"],
-        "next_tasks": ["T-VAA-001"],
-        "failure_tasks": ["T-TST-F01"],
-        "completion_signals": [
-            "7/7 determinism test cases pass",
-            "TC-1: identical input x3 returns identical score",
-            "TC-2: missing REVIEW_PACKET returns HARD_GATE_FAILURE",
-            "TC-4: full valid submission returns score=10.0 APPROVED confidence=1.0"
-        ],
-        "assignment_payload": {
-            "objective": "Implement and pass 7-case determinism proof test suite",
-            "acceptance_criteria": [
-                "TC-1: same input x3 → same score x3",
-                "TC-2: missing REVIEW_PACKET → HARD_GATE_FAILURE",
-                "TC-3: no repo → score=0.0, 3 caps applied",
-                "TC-4: full valid → score=10.0, APPROVED, confidence=1.0",
-                "TC-5: empty repo → proof_cap applied, escalation=True",
-                "TC-6: parser parse-only → no score/status/decision",
-                "TC-7: task selection x3 → same task_id x3"
-            ],
-            "integration_metadata": {
-                "upstream": "all engines",
-                "downstream": "none",
-                "trace_required": false
-            }
-        },
-        "dharma": "Trust but verify — always."
+    "constraints": ["no_numeric_scoring", "no_fallback_routing"]
+  },
+  {
+    "task_id": "T-TST-001",
+    "product": "Niyantran",
+    "layer": "Testing",
+    "subsystem": "QA Automation",
+    "capability": "Determinism Proof",
+    "dharma": "Trust but verify — always.",
+    "evaluation_inputs": ["task_title", "task_description", "repository_url", "module_id", "schema_version"],
+    "evaluation_rules": ["schema_validation", "completeness_validation", "logic_validation", "integration_validation"],
+    "completion_signals": ["same_input_same_output_x3", "schema_violation_test_passes", "incomplete_test_passes", "integration_fail_test_passes"],
+    "failure_type": null,
+    "prerequisites": ["T-HIL-001"],
+    "next_tasks": ["T-VAA-001"],
+    "failure_tasks": {
+      "schema_violation": ["T-TST-F01"],
+      "incomplete": ["T-TST-F01"],
+      "incorrect_logic": ["T-TST-F01"],
+      "integration_fail": ["T-SYS-F00"]
     },
-    {
-        "task_id": "T-VAA-001",
-        "product": "Vaani_TTS",
-        "layer": "API",
-        "subsystem": "Gateway",
-        "capability": "Audio Streaming",
-        "difficulty": "intermediate",
-        "prerequisites": ["T-TST-001"],
-        "next_tasks": ["COMPLETED"],
-        "failure_tasks": ["T-VAA-F01"],
-        "completion_signals": [
-            "GET /api/v1/tts/speak returns audio bytes",
-            "gTTS primary engine used",
-            "pyttsx3 fallback activates on gTTS failure",
-            "GET /api/v1/tts/languages returns supported languages"
-        ],
-        "assignment_payload": {
-            "objective": "Implement VaaniTTS with gTTS primary and pyttsx3 fallback",
-            "acceptance_criteria": [
-                "GET /api/v1/tts/speak?text=hello returns audio/mpeg",
-                "gTTS used as primary engine",
-                "pyttsx3 used as fallback when gTTS fails",
-                "GET /api/v1/tts/prosody returns prosody hint"
-            ],
-            "integration_metadata": {
-                "upstream": "tts.py router",
-                "downstream": "VaaniTTS_Standalone",
-                "trace_required": false
-            }
-        },
-        "dharma": "Deliver zero-latency audio streams."
+    "constraints": ["no_numeric_scoring", "no_fallback_routing", "deterministic_only"]
+  },
+  {
+    "task_id": "T-VAA-001",
+    "product": "Vaani_TTS",
+    "layer": "API",
+    "subsystem": "Gateway",
+    "capability": "Audio Streaming",
+    "dharma": "Deliver zero-latency audio streams.",
+    "evaluation_inputs": ["task_title", "task_description", "repository_url", "module_id", "schema_version"],
+    "evaluation_rules": ["schema_validation", "completeness_validation", "logic_validation", "integration_validation"],
+    "completion_signals": ["tts_speak_returns_audio", "gtts_primary_used", "pyttsx3_fallback_activates", "languages_endpoint_works"],
+    "failure_type": null,
+    "prerequisites": ["T-TST-001"],
+    "next_tasks": ["COMPLETED"],
+    "failure_tasks": {
+      "schema_violation": ["T-VAA-F01"],
+      "incomplete": ["T-VAA-F01"],
+      "incorrect_logic": ["T-VAA-F01"],
+      "integration_fail": ["T-SYS-F00"]
     },
-    {
-        "task_id": "T-GOV-F01",
-        "product": "Niyantran",
-        "layer": "Governance",
-        "subsystem": "Task Review Engine",
-        "capability": "Submission Evaluation",
-        "difficulty": "beginner",
-        "prerequisites": [],
-        "next_tasks": ["T-GOV-001"],
-        "failure_tasks": ["T-SYS-F00"],
-        "completion_signals": ["Evaluation logic debugged and fixed"],
-        "assignment_payload": {
-            "objective": "Debug and fix evaluation endpoint returning incorrect score",
-            "acceptance_criteria": ["score field returns correct value", "decision matches score threshold"],
-            "integration_metadata": {"upstream": "none", "downstream": "T-GOV-001", "trace_required": false}
-        },
-        "dharma": "Diagnose evaluation issues systematically."
+    "constraints": ["no_numeric_scoring", "no_fallback_routing"]
+  },
+  {
+    "task_id": "T-GOV-F01",
+    "product": "Niyantran",
+    "layer": "Governance",
+    "subsystem": "Task Review Engine",
+    "capability": "Schema Correction",
+    "dharma": "Diagnose schema violations systematically.",
+    "evaluation_inputs": ["task_title", "task_description", "repository_url", "module_id", "schema_version"],
+    "evaluation_rules": ["schema_validation", "completeness_validation", "logic_validation", "integration_validation"],
+    "completion_signals": ["schema_violation_resolved", "evaluation_result_is_pass"],
+    "failure_type": "schema_violation",
+    "prerequisites": [],
+    "next_tasks": ["T-GOV-001"],
+    "failure_tasks": {
+      "schema_violation": ["T-SYS-F00"],
+      "incomplete": ["T-SYS-F00"],
+      "incorrect_logic": ["T-SYS-F00"],
+      "integration_fail": ["T-SYS-F00"]
     },
-    {
-        "task_id": "T-GOV-F02",
-        "product": "Niyantran",
-        "layer": "Governance",
-        "subsystem": "Task Review Engine",
-        "capability": "Task Enforcement",
-        "difficulty": "beginner",
-        "prerequisites": [],
-        "next_tasks": ["T-GOV-002"],
-        "failure_tasks": ["T-SYS-F00"],
-        "completion_signals": ["Enforcement loop fixed", "next_task_id returned correctly"],
-        "assignment_payload": {
-            "objective": "Fix task selection returning wrong next_task_id",
-            "acceptance_criteria": ["graph key lookup returns correct task", "determinism verified x3"],
-            "integration_metadata": {"upstream": "none", "downstream": "T-GOV-002", "trace_required": false}
-        },
-        "dharma": "Maintain execution structure."
+    "constraints": ["no_numeric_scoring", "no_fallback_routing"]
+  },
+  {
+    "task_id": "T-GOV-F02",
+    "product": "Niyantran",
+    "layer": "Governance",
+    "subsystem": "Task Review Engine",
+    "capability": "Logic Correction",
+    "dharma": "Maintain execution structure.",
+    "evaluation_inputs": ["task_title", "task_description", "repository_url", "module_id", "schema_version"],
+    "evaluation_rules": ["schema_validation", "completeness_validation", "logic_validation", "integration_validation"],
+    "completion_signals": ["incorrect_logic_resolved", "evaluation_result_is_pass"],
+    "failure_type": "incorrect_logic",
+    "prerequisites": [],
+    "next_tasks": ["T-GOV-001"],
+    "failure_tasks": {
+      "schema_violation": ["T-SYS-F00"],
+      "incomplete": ["T-SYS-F00"],
+      "incorrect_logic": ["T-SYS-F00"],
+      "integration_fail": ["T-SYS-F00"]
     },
-    {
-        "task_id": "T-COR-F01",
-        "product": "Niyantran",
-        "layer": "Core",
-        "subsystem": "Database",
-        "capability": "Relational Storage",
-        "difficulty": "beginner",
-        "prerequisites": [],
-        "next_tasks": ["T-COR-001"],
-        "failure_tasks": ["T-SYS-F00"],
-        "completion_signals": ["DB schema bug resolved", "JSONL writes succeed"],
-        "assignment_payload": {
-            "objective": "Fix JSONL bucket write failure",
-            "acceptance_criteria": ["bucket_logs directory writable", "evaluation_index.jsonl updated"],
-            "integration_metadata": {"upstream": "none", "downstream": "T-COR-001", "trace_required": false}
-        },
-        "dharma": "Fix relational structures."
+    "constraints": ["no_numeric_scoring", "no_fallback_routing"]
+  },
+  {
+    "task_id": "T-COR-F01",
+    "product": "Niyantran",
+    "layer": "Core",
+    "subsystem": "Database",
+    "capability": "Storage Correction",
+    "dharma": "Fix relational structures.",
+    "evaluation_inputs": ["task_title", "task_description", "repository_url", "module_id", "schema_version"],
+    "evaluation_rules": ["schema_validation", "completeness_validation", "logic_validation", "integration_validation"],
+    "completion_signals": ["db_schema_bug_resolved", "jsonl_writes_succeed"],
+    "failure_type": "schema_violation",
+    "prerequisites": [],
+    "next_tasks": ["T-COR-001"],
+    "failure_tasks": {
+      "schema_violation": ["T-SYS-F00"],
+      "incomplete": ["T-SYS-F00"],
+      "incorrect_logic": ["T-SYS-F00"],
+      "integration_fail": ["T-SYS-F00"]
     },
-    {
-        "task_id": "T-COR-F02",
-        "product": "Niyantran",
-        "layer": "Core",
-        "subsystem": "Registry",
-        "capability": "Module Validation",
-        "difficulty": "beginner",
-        "prerequisites": [],
-        "next_tasks": ["T-COR-002"],
-        "failure_tasks": ["T-SYS-F00"],
-        "completion_signals": ["Registry validation returns correct REJECT reason"],
-        "assignment_payload": {
-            "objective": "Fix registry validator not rejecting invalid module_id",
-            "acceptance_criteria": ["invalid module_id returns REJECT", "reason field populated"],
-            "integration_metadata": {"upstream": "none", "downstream": "T-COR-002", "trace_required": false}
-        },
-        "dharma": "Identity must be verified at every entry."
+    "constraints": ["no_numeric_scoring", "no_fallback_routing"]
+  },
+  {
+    "task_id": "T-COR-F02",
+    "product": "Niyantran",
+    "layer": "Core",
+    "subsystem": "Registry",
+    "capability": "Registry Correction",
+    "dharma": "Identity must be verified at every entry.",
+    "evaluation_inputs": ["task_title", "task_description", "repository_url", "module_id", "schema_version"],
+    "evaluation_rules": ["schema_validation", "completeness_validation", "logic_validation", "integration_validation"],
+    "completion_signals": ["registry_validation_returns_correct_reject", "reason_field_populated"],
+    "failure_type": "incorrect_logic",
+    "prerequisites": [],
+    "next_tasks": ["T-COR-002"],
+    "failure_tasks": {
+      "schema_violation": ["T-SYS-F00"],
+      "incomplete": ["T-SYS-F00"],
+      "incorrect_logic": ["T-SYS-F00"],
+      "integration_fail": ["T-SYS-F00"]
     },
-    {
-        "task_id": "T-SEC-F01",
-        "product": "Parikshak",
-        "layer": "Security",
-        "subsystem": "Middleware",
-        "capability": "CORS and Auth",
-        "difficulty": "intermediate",
-        "prerequisites": [],
-        "next_tasks": ["T-SEC-001"],
-        "failure_tasks": ["T-SYS-F00"],
-        "completion_signals": ["CORS headers present in response", "JWT_SECRET_KEY loaded from env"],
-        "assignment_payload": {
-            "objective": "Fix CORS misconfiguration blocking frontend requests",
-            "acceptance_criteria": ["ALLOWED_ORIGINS from .env applied", "preflight OPTIONS returns 200"],
-            "integration_metadata": {"upstream": "none", "downstream": "T-SEC-001", "trace_required": false}
-        },
-        "dharma": "Security failures are never acceptable."
+    "constraints": ["no_numeric_scoring", "no_fallback_routing"]
+  },
+  {
+    "task_id": "T-TST-F01",
+    "product": "Niyantran",
+    "layer": "Testing",
+    "subsystem": "QA Automation",
+    "capability": "Test Correction",
+    "dharma": "Ensure reliable and repeatable tests.",
+    "evaluation_inputs": ["task_title", "task_description", "repository_url", "module_id", "schema_version"],
+    "evaluation_rules": ["schema_validation", "completeness_validation", "logic_validation", "integration_validation"],
+    "completion_signals": ["flaky_tests_resolved", "all_test_cases_pass"],
+    "failure_type": "incomplete",
+    "prerequisites": [],
+    "next_tasks": ["T-TST-001"],
+    "failure_tasks": {
+      "schema_violation": ["T-SYS-F00"],
+      "incomplete": ["T-SYS-F00"],
+      "incorrect_logic": ["T-SYS-F00"],
+      "integration_fail": ["T-SYS-F00"]
     },
-    {
-        "task_id": "T-SIG-F01",
-        "product": "Parikshak",
-        "layer": "Governance",
-        "subsystem": "Signal Engine",
-        "capability": "Repository Analysis",
-        "difficulty": "intermediate",
-        "prerequisites": [],
-        "next_tasks": ["T-SIG-001"],
-        "failure_tasks": ["T-SYS-F00"],
-        "completion_signals": ["GitHub API returns valid repo structure", "layer_count computed correctly"],
-        "assignment_payload": {
-            "objective": "Fix repository analyzer returning empty signals on valid repo",
-            "acceptance_criteria": ["layer_count >= 1 for any non-empty repo", "readme_score computed from file size"],
-            "integration_metadata": {"upstream": "none", "downstream": "T-SIG-001", "trace_required": false}
-        },
-        "dharma": "Signals must reflect reality."
+    "constraints": ["no_numeric_scoring", "no_fallback_routing"]
+  },
+  {
+    "task_id": "T-VAA-F01",
+    "product": "Vaani_TTS",
+    "layer": "API",
+    "subsystem": "Gateway",
+    "capability": "TTS Correction",
+    "dharma": "Ensure stream stability at all times.",
+    "evaluation_inputs": ["task_title", "task_description", "repository_url", "module_id", "schema_version"],
+    "evaluation_rules": ["schema_validation", "completeness_validation", "logic_validation", "integration_validation"],
+    "completion_signals": ["gtts_returns_audio", "pyttsx3_fallback_activates"],
+    "failure_type": "integration_fail",
+    "prerequisites": [],
+    "next_tasks": ["T-VAA-001"],
+    "failure_tasks": {
+      "schema_violation": ["T-SYS-F00"],
+      "incomplete": ["T-SYS-F00"],
+      "incorrect_logic": ["T-SYS-F00"],
+      "integration_fail": ["T-SYS-F00"]
     },
-    {
-        "task_id": "T-SIG-F02",
-        "product": "Parikshak",
-        "layer": "Governance",
-        "subsystem": "Signal Engine",
-        "capability": "Feature Matching",
-        "difficulty": "intermediate",
-        "prerequisites": [],
-        "next_tasks": ["T-SIG-002"],
-        "failure_tasks": ["T-SYS-F00"],
-        "completion_signals": ["feature_match_ratio > 0 for valid repo", "missing_features list accurate"],
-        "assignment_payload": {
-            "objective": "Fix feature matcher returning 0 match ratio for valid submissions",
-            "acceptance_criteria": ["synonym matching works for api/service/model", "delivery_ratio passed correctly"],
-            "integration_metadata": {"upstream": "none", "downstream": "T-SIG-002", "trace_required": false}
-        },
-        "dharma": "Delivery must be measured, not assumed."
+    "constraints": ["no_numeric_scoring", "no_fallback_routing"]
+  },
+  {
+    "task_id": "T-SYS-F00",
+    "product": "Parikshak",
+    "layer": "Governance",
+    "subsystem": "Task Selection",
+    "capability": "Catastrophic Recovery",
+    "dharma": "Deep dive into catastrophic failure — restore order.",
+    "evaluation_inputs": ["task_title", "task_description", "repository_url", "module_id", "schema_version"],
+    "evaluation_rules": ["schema_validation", "completeness_validation", "logic_validation", "integration_validation"],
+    "completion_signals": ["health_check_returns_200", "production_status_all_green"],
+    "failure_type": "integration_fail",
+    "prerequisites": [],
+    "next_tasks": ["T-GOV-001"],
+    "failure_tasks": {
+      "schema_violation": ["T-SYS-F00"],
+      "incomplete": ["T-SYS-F00"],
+      "incorrect_logic": ["T-SYS-F00"],
+      "integration_fail": ["T-SYS-F00"]
     },
-    {
-        "task_id": "T-ASN-F01",
-        "product": "Parikshak",
-        "layer": "Governance",
-        "subsystem": "Assignment Engine",
-        "capability": "Binary PAC Detection",
-        "difficulty": "advanced",
-        "prerequisites": [],
-        "next_tasks": ["T-ASN-001"],
-        "failure_tasks": ["T-SYS-F00"],
-        "completion_signals": ["PAC returns correct binary values", "same input same PAC x3"],
-        "assignment_payload": {
-            "objective": "Fix PAC detection returning incorrect binary values",
-            "acceptance_criteria": ["proof=1 when README present", "code=1 when file_count > 0"],
-            "integration_metadata": {"upstream": "none", "downstream": "T-ASN-001", "trace_required": false}
-        },
-        "dharma": "Binary truth must be exact."
-    },
-    {
-        "task_id": "T-ASN-F02",
-        "product": "Parikshak",
-        "layer": "Governance",
-        "subsystem": "Assignment Engine",
-        "capability": "Score Formula",
-        "difficulty": "advanced",
-        "prerequisites": [],
-        "next_tasks": ["T-ASN-002"],
-        "failure_tasks": ["T-SYS-F00"],
-        "completion_signals": ["score_10 matches formula output", "caps applied correctly"],
-        "assignment_payload": {
-            "objective": "Fix scoring formula applying caps incorrectly",
-            "acceptance_criteria": ["Q_proof=0 caps at 4.0 not 5.0", "formula weights sum to 1.0"],
-            "integration_metadata": {"upstream": "none", "downstream": "T-ASN-002", "trace_required": false}
-        },
-        "dharma": "The formula is law."
-    },
-    {
-        "task_id": "T-DEC-F01",
-        "product": "Parikshak",
-        "layer": "Governance",
-        "subsystem": "Decision Engine",
-        "capability": "APPROVED/REJECTED Decision",
-        "difficulty": "advanced",
-        "prerequisites": [],
-        "next_tasks": ["T-DEC-001"],
-        "failure_tasks": ["T-SYS-F00"],
-        "completion_signals": ["decision matches threshold correctly", "narrative fields non-empty"],
-        "assignment_payload": {
-            "objective": "Fix decision engine returning wrong decision for borderline scores",
-            "acceptance_criteria": ["score=6.0 → APPROVED", "score=5.9 → REJECTED reinforcement"],
-            "integration_metadata": {"upstream": "none", "downstream": "T-DEC-001", "trace_required": false}
-        },
-        "dharma": "Thresholds are absolute."
-    },
-    {
-        "task_id": "T-HIL-F01",
-        "product": "Parikshak",
-        "layer": "Governance",
-        "subsystem": "Human-in-Loop",
-        "capability": "Escalation",
-        "difficulty": "advanced",
-        "prerequisites": [],
-        "next_tasks": ["T-HIL-001"],
-        "failure_tasks": ["T-SYS-F00"],
-        "completion_signals": ["escalation file created for confidence < 0.98", "trace_id in escalation file"],
-        "assignment_payload": {
-            "objective": "Fix human-in-loop not creating escalation files",
-            "acceptance_criteria": ["escalation file written to storage/escalations/", "trace_id present in file"],
-            "integration_metadata": {"upstream": "none", "downstream": "T-HIL-001", "trace_required": false}
-        },
-        "dharma": "Human oversight cannot be skipped."
-    },
-    {
-        "task_id": "T-TST-F01",
-        "product": "Niyantran",
-        "layer": "Testing",
-        "subsystem": "QA Automation",
-        "capability": "Determinism Proof",
-        "difficulty": "advanced",
-        "prerequisites": [],
-        "next_tasks": ["T-TST-001"],
-        "failure_tasks": ["T-SYS-F00"],
-        "completion_signals": ["flaky tests resolved", "all 7 TC pass consistently"],
-        "assignment_payload": {
-            "objective": "Fix flaky determinism tests failing intermittently",
-            "acceptance_criteria": ["TC-1 passes x10 consecutive runs", "no timestamp-dependent logic"],
-            "integration_metadata": {"upstream": "none", "downstream": "T-TST-001", "trace_required": false}
-        },
-        "dharma": "Ensure reliable and repeatable tests."
-    },
-    {
-        "task_id": "T-VAA-F01",
-        "product": "Vaani_TTS",
-        "layer": "API",
-        "subsystem": "Gateway",
-        "capability": "Audio Streaming",
-        "difficulty": "intermediate",
-        "prerequisites": [],
-        "next_tasks": ["T-VAA-001"],
-        "failure_tasks": ["T-SYS-F00"],
-        "completion_signals": ["gTTS returns audio bytes", "pyttsx3 fallback activates correctly"],
-        "assignment_payload": {
-            "objective": "Fix TTS endpoint returning 500 on gTTS failure",
-            "acceptance_criteria": ["pyttsx3 fallback activates when gTTS fails", "endpoint returns audio/mpeg"],
-            "integration_metadata": {"upstream": "none", "downstream": "T-VAA-001", "trace_required": false}
-        },
-        "dharma": "Ensure stream stability at all times."
-    },
-    {
-        "task_id": "T-SYS-F00",
-        "product": "Parikshak",
-        "layer": "Governance",
-        "subsystem": "Task Selection",
-        "capability": "Deterministic Routing",
-        "difficulty": "beginner",
-        "prerequisites": [],
-        "next_tasks": ["T-GOV-001"],
-        "failure_tasks": ["T-SYS-F00"],
-        "completion_signals": ["Fallback resolved manually", "system health check passes"],
-        "assignment_payload": {
-            "objective": "Resolve catastrophic system failure and restore pipeline",
-            "acceptance_criteria": ["GET /health returns 200", "GET /api/v1/production/system/production-status returns all green"],
-            "integration_metadata": {"upstream": "none", "downstream": "T-GOV-001", "trace_required": false}
-        },
-        "dharma": "Deep dive into catastrophic failure — restore order."
-    }
+    "constraints": ["no_numeric_scoring", "no_fallback_routing"]
+  }
 ]
