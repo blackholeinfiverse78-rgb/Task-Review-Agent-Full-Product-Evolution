@@ -95,9 +95,17 @@ class FinalConvergenceOrchestrator:
         )
 
         # Step 2.5: Domain routing — raises on no match
-        supporting_signals = domain_router.enrich_signals(
-            supporting_signals, task_title, task_description
-        )
+        try:
+            supporting_signals = domain_router.enrich_signals(
+                supporting_signals, task_title, task_description
+            )
+        except ValueError as e:
+            return self._hard_reject(
+                active_trace_id, task_title, task_description,
+                failure_type="schema_violation",
+                reason=str(e),
+                current_task_id=current_task_id
+            )
 
         # Step 3: Rule Engine evaluation (via assignment_engine)
         evaluation = assignment_engine.evaluate_and_assign(
@@ -143,17 +151,17 @@ class FinalConvergenceOrchestrator:
         # Validate output contract — reject if any field missing or extra
         self._enforce_output_contract(output)
 
-        # Step 8: Bucket logging
+        # Step 8: Bucket logging — non-fatal, log error but don't crash
         try:
             bucket_integration.log_evaluation(
-                evaluation, supporting_signals, decision, graph_result,
+                evaluation, supporting_signals, decision,
+                {"next_task_id": graph_result["selected_task_id"], **graph_result},
                 {"task_title": task_title, "task_description": task_description,
                  "submitted_by": submitted_by, "github_repo_link": repository_url,
                  "task_id": task_id}
             )
         except Exception as e:
-            logger.error(f"[CONVERGENCE] Bucket logging failed: {e}")
-            raise RuntimeError(f"BUCKET_WRITE_FAILURE: {e}")
+            logger.error(f"[CONVERGENCE] Bucket logging failed (non-fatal): {e}")
 
         logger.info(
             f"[CONVERGENCE] Done | trace_id={active_trace_id} | "

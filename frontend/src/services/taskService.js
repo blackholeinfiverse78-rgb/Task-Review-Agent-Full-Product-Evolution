@@ -39,9 +39,9 @@ export const taskService = {
     },
     getTtsStream: (text, lang = 'en', tone = 'neutral') => {
         const params = new URLSearchParams({ text, lang, tone });
-        let baseUrl = process.env.REACT_APP_API_BASE 
+        let baseUrl = process.env.REACT_APP_API_BASE
             || process.env.REACT_APP_BACKEND_URL
-            || 'https://task-review-backend-fjdr.onrender.com';
+            || 'http://localhost:8000/api/v1';
         baseUrl = baseUrl.replace(/\/+$/, '');
         if (!baseUrl.endsWith('/api/v1')) {
             baseUrl = `${baseUrl}/api/v1`;

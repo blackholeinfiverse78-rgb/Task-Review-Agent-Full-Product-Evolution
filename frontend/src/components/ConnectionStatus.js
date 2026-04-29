@@ -10,8 +10,7 @@ const ConnectionStatus = () => {
     }, []);
 
     const checkConnection = async () => {
-        let url = process.env.REACT_APP_BACKEND_URL 
-            || 'https://task-review-agent-full-product-evolution.onrender.com';
+        let url = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000';
         url = url.replace(/\/+$/, '');
         setBackendUrl(url);
 

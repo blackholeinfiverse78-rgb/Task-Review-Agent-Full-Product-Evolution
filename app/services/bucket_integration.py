@@ -129,25 +129,19 @@ class BucketIntegrationService:
         stats = {
             "total_evaluations": 0,
             "decisions": {"APPROVED": 0, "REJECTED": 0},
-            "avg_score": 0.0,
-            "avg_confidence": 0.0,
-            "quality_grades": {"A": 0, "B": 0, "C": 0, "D": 0}
+            "evaluation_results": {"PASS": 0, "FAIL": 0}
         }
         logs = self.get_evaluation_logs(1000)
         if not logs:
             return stats
         stats["total_evaluations"] = len(logs)
-        total_score = sum(l.get("score", 0) for l in logs)
-        total_conf  = sum(l.get("confidence", 0) for l in logs)
         for log in logs:
             d = log.get("decision", "REJECTED")
             if d in stats["decisions"]:
                 stats["decisions"][d] += 1
-            g = log.get("quality_grade", "D")
-            if g in stats["quality_grades"]:
-                stats["quality_grades"][g] += 1
-        stats["avg_score"]      = round(total_score / len(logs), 2)
-        stats["avg_confidence"] = round(total_conf  / len(logs), 3)
+            e = log.get("evaluation_result", "FAIL")
+            if e in stats["evaluation_results"]:
+                stats["evaluation_results"][e] += 1
         return stats
 
     # ── Entry builder — exact Phase 6 schema ─────────────────────────────
@@ -196,21 +190,21 @@ class BucketIntegrationService:
 
         desc = task_data.get("task_description", "")
         return {
-            "type":             "task_review",
-            "candidate_id":     task_data.get("submitted_by") or _hard_reject_field("submitted_by"),
-            "task_id":          task_data.get("task_id") or task_data.get("task_title", "")[:40],
+            "type":              "task_review",
+            "candidate_id":      task_data.get("submitted_by") or _hard_reject_field("submitted_by"),
+            "task_id":           task_data.get("task_id") or task_data.get("task_title", "")[:40],
             "evaluation_result": evaluation,
-            "failure_type":     failure_type,
-            "decision":         decision,
-            "review_summary":   review_summary,
-            "next_task":        next_task,
-            "trace_id":         trace_id,
-            "timestamp":        datetime.now().isoformat(),
-            "task_title":       task_data.get("task_title", ""),
-            "task_description": (desc[:500] + "...") if len(desc) > 500 else desc,
-            "repository_url":   task_data.get("github_repo_link") or task_data.get("repository_url"),
-            "domain":           supporting_signals.get("domain") or _hard_reject_field("domain"),
-            "signals_summary":  self._summarize_signals(supporting_signals),
+            "failure_type":      failure_type,
+            "decision":          decision,
+            "review_summary":    review_summary,
+            "next_task":         next_task,
+            "trace_id":          trace_id,
+            "timestamp":         datetime.now().isoformat(),
+            "task_title":        task_data.get("task_title", ""),
+            "task_description":  (desc[:500] + "...") if len(desc) > 500 else desc,
+            "repository_url":    task_data.get("github_repo_link") or task_data.get("repository_url"),
+            "domain":            supporting_signals.get("domain") or _hard_reject_field("domain"),
+            "signals_summary":   self._summarize_signals(supporting_signals),
             "canonical_authority": evaluation_result.get("canonical_authority", False)
         }
 
@@ -242,17 +236,15 @@ class BucketIntegrationService:
     def _update_index(self, entry: Dict[str, Any]) -> None:
         index_file = os.path.join(self.bucket_path, "evaluation_index.jsonl")
         index_entry = {
-            "trace_id":     entry["trace_id"],
-            "timestamp":    entry["timestamp"],
-            "type":         entry["type"],
-            "candidate_id": entry["candidate_id"],
-            "task_id":      entry["task_id"],
-            "score":        entry["score"],
-            "decision":     entry["decision"],
-            "confidence":   entry["confidence"],
-            "quality_grade": entry["quality_grade"],
-            "domain":       entry["domain"],
-            "task_title":   entry["task_title"][:80]
+            "trace_id":        entry["trace_id"],
+            "timestamp":       entry["timestamp"],
+            "type":            entry["type"],
+            "candidate_id":    entry["candidate_id"],
+            "task_id":         entry["task_id"],
+            "evaluation_result": entry["evaluation_result"],
+            "failure_type":    entry["failure_type"],
+            "decision":        entry["decision"],
+            "task_title":      entry["task_title"][:80]
         }
         try:
             with open(index_file, "a", encoding="utf-8") as f:
