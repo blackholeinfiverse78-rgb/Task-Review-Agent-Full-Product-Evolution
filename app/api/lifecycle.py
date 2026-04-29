@@ -30,6 +30,7 @@ class ReviewSummary(BaseModel):
     evaluation_result: str
     failure_type: Optional[str] = None
     decision: str
+    evaluation_summary: str = ""
 
 class NextTaskSummary(BaseModel):
     task_id: str
@@ -65,6 +66,8 @@ class ReviewDetailResponse(BaseModel):
     reviewed_at: datetime
     missing_features: List[str]
     evaluation_summary: str
+    selected_task_id: str = ""
+    selection_reason: str = ""
     registry_validation: Optional[dict] = None
 
 class NextTaskDetailResponse(BaseModel):
@@ -149,7 +152,8 @@ async def submit_task(
             review_summary=ReviewSummary(
                 evaluation_result=result["review"]["evaluation_result"],
                 failure_type=result["review"].get("failure_type"),
-                decision=result["review"].get("decision", "REJECTED")
+                decision=result["review"].get("decision", "REJECTED"),
+                evaluation_summary=result["review"].get("evaluation_summary", "")
             ),
             next_task_summary=NextTaskSummary(
                 task_id=result["next_task"]["task_id"],
@@ -232,6 +236,8 @@ def get_review(submission_id: str):
         reviewed_at=review.reviewed_at,
         missing_features=review.missing_features,
         evaluation_summary=review.evaluation_summary,
+        selected_task_id=getattr(review, "selected_task_id", ""),
+        selection_reason=getattr(review, "selection_reason", ""),
         registry_validation=registry_validation
     )
 

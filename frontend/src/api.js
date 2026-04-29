@@ -13,13 +13,17 @@ const api = axios.create({
 });
 
 export const lifecycleAPI = {
-    // Submit task for review and get next task assignment
     submitTask: async (taskData) => {
-        const response = await api.post('submit', {
-            task_title: taskData.title,
-            task_description: taskData.description,
-            submitted_by: taskData.submittedBy,
-            previous_task_id: taskData.previousTaskId || null
+        const form = new FormData();
+        form.append('task_title',       taskData.task_title);
+        form.append('task_description', taskData.task_description);
+        form.append('submitted_by',     taskData.submitted_by);
+        form.append('github_repo_link', taskData.github_repo_link || '');
+        form.append('module_id',        taskData.module_id || 'task-review-agent');
+        form.append('schema_version',   taskData.schema_version || 'v1.0');
+        if (taskData.pdf_file) form.append('pdf_file', taskData.pdf_file);
+        const response = await api.post('submit', form, {
+            headers: { 'Content-Type': 'multipart/form-data' }
         });
         return response.data;
     },

@@ -50,34 +50,21 @@ class TaskSubmission(BaseModel):
 
 
 class ReviewRecord(BaseModel):
-    """
-    Immutable record of review output.
-    Links to submission via submission_id.
-    """
-    review_id: str = Field(..., description="Explicit review identifier")
-    submission_id: str = Field(..., description="Links to TaskSubmission")
-    score: int = Field(..., ge=0, le=100)
-    readiness_percent: int = Field(..., ge=0, le=100)
-    status: str = Field(..., pattern="^(pass|borderline|fail)$")
+    review_id: str
+    submission_id: str
+    evaluation_result: str = Field(..., pattern="^(PASS|FAIL)$")
+    failure_type: Optional[str] = Field(None)
+    decision: str = Field(default="REJECTED")
     failure_reasons: list[str] = Field(default_factory=list)
     improvement_hints: list[str] = Field(default_factory=list)
-    analysis: Dict[str, int] = Field(..., description="technical_quality, clarity, discipline_signals")
-    reviewed_at: datetime = Field(..., description="Explicit review timestamp")
-    evaluation_time_ms: int = Field(..., description="Processing time")
-    feature_coverage: float = Field(default=0.0)
-    architecture_score: float = Field(default=0.0)
-    code_quality_score: float = Field(default=0.0)
-    completeness_score: float = Field(default=0.0)
+    analysis: Dict[str, Any] = Field(default_factory=dict)
+    reviewed_at: datetime
+    evaluation_time_ms: int = Field(default=0)
     missing_features: list[str] = Field(default_factory=list)
-    requirement_match: float = Field(default=0.0)
     evaluation_summary: str = Field(default="")
-    documentation_score: float = Field(default=0.0)
-    documentation_alignment: str = Field(default="unknown")
-    analysis_pdf: Optional[Dict[str, Any]] = Field(default=None)
-    title_score: float = Field(default=0.0)
-    description_score: float = Field(default=0.0)
-    repository_score: float = Field(default=0.0)
-    
+    selected_task_id: str = Field(default="")
+    selection_reason: str = Field(default="")
+
     class Config:
         use_enum_values = True
 

@@ -134,49 +134,36 @@ class NiyantranConnectionService:
             )
 
             # Step 2: Execute full evaluation pipeline
-            evaluation_result = self._execute_evaluation_pipeline(niyantran_task)
-
-            # Step 3: Make production decision
-            decision_result = production_decision_engine.make_decision(
-                evaluation_result["evaluation"],
-                evaluation_result["supporting_signals"],
-                evaluation_result.get("packet_data")
-            )
-
-            # Step 4: Context-aware task selection — uses graph_engine if current_task_id provided
-            score_10   = evaluation_result["evaluation"].get("score_10", 0)
-            decision   = decision_result.get("decision", "REJECTED")
-            difficulty = evaluation_result["evaluation"].get("difficulty", "beginner")
-            from .task_selector import task_selector
-            next_task_result = task_selector.select(
-                score_10=score_10,
-                decision=decision,
+            convergence_result = final_convergence.process_with_convergence(
                 task_title=niyantran_task.task_title,
                 task_description=niyantran_task.task_description,
-                current_task_id=niyantran_task.current_task_id,
-                current_difficulty=difficulty,
-            )
-            # Normalise key name for downstream compatibility
-            if "task_id" in next_task_result and "next_task_id" not in next_task_result:
-                next_task_result["next_task_id"] = next_task_result["task_id"]
-            # Step 5: Log to bucket with Niyantran trace_id + context
-            bucket_integration.log_evaluation(
-                evaluation_result["evaluation"],
-                evaluation_result["supporting_signals"],
-                decision_result,
-                next_task_result,
-                {**task_data, "product_context": product_context},
+                repository_url=niyantran_task.repository_url,
+                module_id=niyantran_task.module_id,
+                schema_version=niyantran_task.schema_version,
+                pdf_text=niyantran_task.pdf_text,
+                submitted_by=niyantran_task.submitted_by,
                 trace_id=trace_id
             )
 
-            # Step 6: Create Niyantran response
+            # Step 3: Build response directly from convergence output
             processing_time = int((datetime.now() - start_time).total_seconds() * 1000)
 
             response = NiyantranResponse(
                 task_id=niyantran_task.task_id,
                 trace_id=trace_id,
-                review=self._format_review_for_niyantran(evaluation_result["evaluation"], decision_result),
-                next_task=self._format_next_task_for_niyantran(next_task_result, decision_result, product_context),
+                review={
+                    "evaluation_result": convergence_result["evaluation_result"],
+                    "failure_type":      convergence_result["failure_type"],
+                    "decision":          "APPROVED" if convergence_result["evaluation_result"] == "PASS" else "REJECTED",
+                    "selected_task_id":  convergence_result["selected_task_id"],
+                    "selection_reason":  convergence_result["selection_reason"],
+                    "source":            convergence_result["source"],
+                },
+                next_task={
+                    "task_id":          convergence_result["selected_task_id"],
+                    "selection_reason": convergence_result["selection_reason"],
+                    "source":           convergence_result["source"],
+                },
                 processing_time_ms=processing_time,
                 timestamp=datetime.now().isoformat(),
                 status="completed"
