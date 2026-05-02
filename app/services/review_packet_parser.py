@@ -39,15 +39,15 @@ SECTION_MIN_WORDS: Dict[str, int] = {
 # Required sub-elements per section (at least one must be present)
 SECTION_REQUIRED_ELEMENTS: Dict[str, List[str]] = {
     "ENTRY POINT":   ["file", "route", "endpoint", "app", "main", "api"],
-    "CORE FLOW":     ["step", "→", "▼", "->", "pipeline", "flow", "engine", "gate"],
+    "CORE FLOW":     ["step", "->", "pipeline", "flow", "engine", "gate", "rule"],
     "LIVE FLOW":     ["endpoint", "request", "response", "submit", "post", "get", "http"],
-    "OUTPUT SAMPLE": ["{", "score", "decision", "trace_id"],
+    "OUTPUT SAMPLE": ["{", "evaluation_result", "failure_type", "trace_id"],
 }
 
 # Required keys in output_sample JSON
 OUTPUT_SAMPLE_REQUIRED_KEYS: List[str] = [
-    "score",
-    "decision",
+    "evaluation_result",
+    "failure_type",
     "trace_id",
 ]
 
