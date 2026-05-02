@@ -36,12 +36,8 @@ const Dashboard = () => {
 
     if (loading) return <LoadingState message="Loading dashboard..." />;
     
-    const recentTasks = historyData.slice(-3).reverse(); // Last 3 tasks, most recent first
-    const averageScore = historyData.length > 0
-        ? Math.round(historyData.reduce((acc, task) => acc + (task.score || 0), 0) / historyData.length)
-        : 0;
-    
-    const passedTasks = historyData.filter(t => t.status === 'pass').length;
+    const recentTasks = historyData.slice(-3).reverse();
+    const passedTasks = historyData.filter(t => t.evaluation_result === 'PASS').length;
     const totalTasks = historyData.length;
 
     return (
@@ -94,8 +90,8 @@ const Dashboard = () => {
                         <TrendingUp size={32} />
                     </div>
                     <div>
-                        <div className="text-sm font-bold text-slate-400 uppercase tracking-widest leading-none mb-1">Avg Score</div>
-                        <div className="text-3xl font-black">{averageScore}%</div>
+                        <div className="text-sm font-bold text-slate-400 uppercase tracking-widest leading-none mb-1">Passed</div>
+                        <div className="text-3xl font-black">{passedTasks}</div>
                     </div>
                 </div>
                 <div className="card border-b-4 border-b-green-500 flex items-center gap-4">
@@ -163,11 +159,10 @@ const Dashboard = () => {
                                     className="card !p-4 flex items-center justify-between hover:scale-[1.01] transition-all cursor-pointer group"
                                 >
                                     <div className="flex items-center gap-4">
-                                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center font-bold text-white ${
-                                            task.score >= 80 ? 'bg-green-500' : 
-                                            task.score >= 50 ? 'bg-yellow-500' : 'bg-red-500'
+                                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center font-bold text-white text-xs ${
+                                            task.evaluation_result === 'PASS' ? 'bg-green-500' : 'bg-red-500'
                                         }`}>
-                                            {task.score || '—'}
+                                            {task.evaluation_result || 'FAIL'}
                                         </div>
                                         <div>
                                             <div className="font-bold group-hover:text-blue-600 transition-colors uppercase tracking-tight">
@@ -180,7 +175,7 @@ const Dashboard = () => {
                                             </div>
                                         </div>
                                     </div>
-                                    <StatusBadge status={task.status} />
+                                    <StatusBadge status={task.evaluation_result === 'PASS' ? 'pass' : 'fail'} />
                                 </div>
                             ))
                         ) : (

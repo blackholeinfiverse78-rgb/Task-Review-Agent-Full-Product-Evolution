@@ -50,8 +50,8 @@ class SubmissionHistoryItem(BaseModel):
     task_title: str
     submitted_by: str
     submitted_at: datetime
-    score: int
-    status: str
+    evaluation_result: str = "FAIL"
+    failure_type: Optional[str] = None
     has_pdf: bool = False
 
 class ReviewDetailResponse(BaseModel):
@@ -191,8 +191,8 @@ def get_history():
             task_title=submission.task_title,
             submitted_by=submission.submitted_by,
             submitted_at=submission.submitted_at,
-            score=review.score if review else 0,
-            status=review.status if review else "unknown",
+            evaluation_result=getattr(review, "evaluation_result", "FAIL") if review else "FAIL",
+            failure_type=getattr(review, "failure_type", None) if review else None,
             has_pdf=bool(submission.pdf_file_path)
         ))
     

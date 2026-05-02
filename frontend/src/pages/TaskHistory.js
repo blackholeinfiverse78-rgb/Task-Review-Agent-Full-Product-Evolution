@@ -35,16 +35,14 @@ const TaskHistory = () => {
         }
     };
 
-    const getScoreColor = (score) => {
-        if (score >= 80) return 'text-green-600';
-        if (score >= 50) return 'text-yellow-600';
-        return 'text-red-600';
+    const getResultColor = (result) => {
+        return result === 'PASS' ? 'text-green-600' : 'text-red-600';
     };
 
-    const getScoreBgColor = (score) => {
-        if (score >= 80) return 'bg-green-100 dark:bg-green-900/30';
-        if (score >= 50) return 'bg-yellow-100 dark:bg-yellow-900/30';
-        return 'bg-red-100 dark:bg-red-900/30';
+    const getResultBgColor = (result) => {
+        return result === 'PASS'
+            ? 'bg-green-100 dark:bg-green-900/30'
+            : 'bg-red-100 dark:bg-red-900/30';
     };
 
     if (loading) return <LoadingState message="Loading task history..." />;
@@ -124,10 +122,10 @@ const TaskHistory = () => {
                         >
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-6 flex-1">
-                                    {/* Score Circle */}
-                                    <div className={`w-16 h-16 rounded-2xl ${getScoreBgColor(task.score)} flex items-center justify-center`}>
-                                        <div className={`text-xl font-black ${getScoreColor(task.score)}`}>
-                                            {task.score}
+                                    {/* Result Badge */}
+                                    <div className={`w-16 h-16 rounded-2xl ${getResultBgColor(task.evaluation_result)} flex items-center justify-center`}>
+                                        <div className={`text-sm font-black ${getResultColor(task.evaluation_result)}`}>
+                                            {task.evaluation_result || 'FAIL'}
                                         </div>
                                     </div>
 
@@ -137,7 +135,7 @@ const TaskHistory = () => {
                                             <h3 className="font-bold text-slate-900 dark:text-white group-hover:text-blue-600 transition-colors truncate">
                                                 {task.task_title}
                                             </h3>
-                                            <StatusBadge status={task.status} />
+                                            <StatusBadge status={task.evaluation_result === 'PASS' ? 'pass' : 'fail'} />
                                             {task.has_pdf && (
                                                 <div className="flex items-center gap-1 px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-400 rounded text-xs">
                                                     <FileText size={12} />
@@ -203,26 +201,26 @@ const TaskHistory = () => {
                     </div>
                     <div className="card text-center">
                         <div className="text-2xl font-black text-green-600 mb-1">
-                            {historyData.filter(t => t.status === 'pass').length}
+                            {historyData.filter(t => t.evaluation_result === 'PASS').length}
                         </div>
                         <div className="text-sm text-slate-600 dark:text-slate-400">
                             Passed
                         </div>
                     </div>
                     <div className="card text-center">
-                        <div className="text-2xl font-black text-yellow-600 mb-1">
-                            {historyData.filter(t => t.status === 'borderline').length}
+                        <div className="text-2xl font-black text-red-600 mb-1">
+                            {historyData.filter(t => t.evaluation_result === 'FAIL').length}
                         </div>
                         <div className="text-sm text-slate-600 dark:text-slate-400">
-                            Borderline
+                            Failed
                         </div>
                     </div>
                     <div className="card text-center">
                         <div className="text-2xl font-black text-slate-600 dark:text-slate-400 mb-1">
-                            {historyData.length > 0 ? Math.round(historyData.reduce((acc, task) => acc + task.score, 0) / historyData.length) : 0}
+                            {historyData.length}
                         </div>
                         <div className="text-sm text-slate-600 dark:text-slate-400">
-                            Average Score
+                            Total
                         </div>
                     </div>
                 </div>
