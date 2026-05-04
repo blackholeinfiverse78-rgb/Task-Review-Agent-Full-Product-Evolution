@@ -1,8 +1,25 @@
 # Parikshak — Deterministic Task Evaluation Engine
 
-**Version**: 3.0.0 | **Status**: TANTRA-COMPLIANT | **Protocol**: Rule-Based Deterministic
+**Version**: 3.0.0 | **Status**: Deterministic Verified System (TANTRA-compliant internally) | **Protocol**: Rule-Based Deterministic
 
-Parikshak is a fully deterministic, rule-based engineering task evaluation engine. It uses a 4-check binary rule engine, deterministic graph traversal, and a strict 7-field output contract. No numeric scoring. No weights. No fallback routing.
+
+> **Parikshak** is a deterministic, rule-based engineering task evaluation engine that strictly maps submissions to next tasks without any numeric scoring, arbitrary weighting, or fallback routing.
+
+**Tags:** `fastapi`, `rule-engine`, `deterministic-system`, `task-evaluation`, `graph-routing`
+
+---
+
+## What This System Does (in 10 seconds)
+Parikshak takes an engineering submission, strictly evaluates it against 4 binary rules, and deterministically routes it to the exact next task using a hard-coded graph database. It guarantees that the same input will always produce the exact same 7-field output contract.
+
+## How It Works (Simple Flow)
+```text
+[ Input ] → [ Rule Engine ] → [ Graph Traversal ] → [ Post-Processing ] → [ 7-Field Output ]
+```
+1. **Input**: A JSON or multipart submission containing repository links, files, and metadata.
+2. **Rule Engine**: Evaluates 4 strict binary conditions (Schema, Completeness, Logic, Integration). First failure stops execution.
+3. **Graph Traversal**: Routes the PASS/FAIL result to the exact `next_tasks` or `failure_tasks` mapped in the database.
+4. **Output**: Returns a strict 7-field JSON contract. No exceptions.
 
 ---
 
@@ -74,6 +91,37 @@ Submission Input (multipart/form-data or JSON)
     |  Writes: evaluation_result, failure_type, decision, trace_id, next_task
     v
 Final Response — exact 7-field contract
+```
+
+---
+
+
+## Example Execution
+
+**Input (from Niyantran/Frontend):**
+```json
+{
+  "trace_id": "abc-123-xyz",
+  "task_id": "T-GOV-001",
+  "submission": {
+    "repository_url": "https://github.com/org/repo",
+    "files_changed": 12,
+    "has_tests": true
+  }
+}
+```
+
+**Output (Exact 7-field contract):**
+```json
+{
+  "trace_id": "abc-123-xyz",
+  "submission_id": "sub-88192a",
+  "evaluation_result": "FAIL",
+  "failure_type": "incomplete",
+  "selected_task_id": "T-GOV-F01",
+  "selection_reason": "FAIL -> failure_tasks['incomplete'][0] = T-GOV-F01",
+  "source": "task_graph"
+}
 ```
 
 ---
@@ -246,7 +294,7 @@ python tests/test_determinism_proof.py
 | TC-5 | Repo error | FAIL, integration_fail |
 | TC-6 | All tasks in DB | all task_ids valid |
 
-**6/6 PASSED — SYSTEM TANTRA-COMPLIANT**
+**6/6 PASSED — SYSTEM TANTRA-COMPLIANT (Deterministic Verified)**
 
 ---
 

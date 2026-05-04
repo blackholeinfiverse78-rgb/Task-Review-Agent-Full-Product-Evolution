@@ -34,13 +34,7 @@
     "product": "Niyantran",
     "layer": "Governance",
     "subsystem": "Task Review Engine",
-    "capability": "Submission Evaluation",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Submission Evaluation"
   },
   {
     "task_id": "T-GOV-002",
@@ -79,13 +73,7 @@
     "product": "Niyantran",
     "layer": "Governance",
     "subsystem": "Task Review Engine",
-    "capability": "Task Enforcement",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Task Enforcement"
   },
   {
     "task_id": "T-COR-001",
@@ -123,13 +111,7 @@
     "product": "Niyantran",
     "layer": "Core",
     "subsystem": "Database",
-    "capability": "Relational Storage",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Relational Storage"
   },
   {
     "task_id": "T-COR-002",
@@ -167,13 +149,7 @@
     "product": "Niyantran",
     "layer": "Core",
     "subsystem": "Registry",
-    "capability": "Module Validation",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Module Validation"
   },
   {
     "task_id": "T-SEC-001",
@@ -211,13 +187,7 @@
     "product": "Parikshak",
     "layer": "Security",
     "subsystem": "Middleware",
-    "capability": "CORS and Auth",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "CORS and Auth"
   },
   {
     "task_id": "T-SIG-001",
@@ -256,13 +226,7 @@
     "product": "Parikshak",
     "layer": "Governance",
     "subsystem": "Signal Engine",
-    "capability": "Repository Analysis",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Repository Analysis"
   },
   {
     "task_id": "T-SIG-002",
@@ -301,13 +265,7 @@
     "product": "Parikshak",
     "layer": "Governance",
     "subsystem": "Signal Engine",
-    "capability": "Feature Matching",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Feature Matching"
   },
   {
     "task_id": "T-ASN-001",
@@ -347,13 +305,7 @@
     "product": "Parikshak",
     "layer": "Governance",
     "subsystem": "Rule Engine",
-    "capability": "Binary PAC Detection",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Binary PAC Detection"
   },
   {
     "task_id": "T-ASN-002",
@@ -392,13 +344,7 @@
     "product": "Parikshak",
     "layer": "Governance",
     "subsystem": "Rule Engine",
-    "capability": "PASS/FAIL Determination",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "PASS/FAIL Determination"
   },
   {
     "task_id": "T-DEC-001",
@@ -436,13 +382,7 @@
     "product": "Parikshak",
     "layer": "Governance",
     "subsystem": "Decision Engine",
-    "capability": "APPROVED/REJECTED Decision",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "APPROVED/REJECTED Decision"
   },
   {
     "task_id": "T-HIL-001",
@@ -480,13 +420,7 @@
     "product": "Parikshak",
     "layer": "Governance",
     "subsystem": "Human-in-Loop",
-    "capability": "Escalation",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Escalation"
   },
   {
     "task_id": "T-TST-001",
@@ -526,13 +460,7 @@
     "product": "Niyantran",
     "layer": "Testing",
     "subsystem": "QA Automation",
-    "capability": "Determinism Proof",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Determinism Proof"
   },
   {
     "task_id": "T-VAA-001",
@@ -571,13 +499,7 @@
     "product": "Vaani_TTS",
     "layer": "API",
     "subsystem": "Gateway",
-    "capability": "Audio Streaming",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Audio Streaming"
   },
   {
     "task_id": "T-GOV-F01",
@@ -612,13 +534,7 @@
     "product": "Niyantran",
     "layer": "Governance",
     "subsystem": "Task Review Engine",
-    "capability": "Schema Correction",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Schema Correction"
   },
   {
     "task_id": "T-GOV-F02",
@@ -653,13 +569,7 @@
     "product": "Niyantran",
     "layer": "Governance",
     "subsystem": "Task Review Engine",
-    "capability": "Logic Correction",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Logic Correction"
   },
   {
     "task_id": "T-COR-F01",
@@ -694,13 +604,7 @@
     "product": "Niyantran",
     "layer": "Core",
     "subsystem": "Database",
-    "capability": "Storage Correction",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Storage Correction"
   },
   {
     "task_id": "T-COR-F02",
@@ -735,13 +639,7 @@
     "product": "Niyantran",
     "layer": "Core",
     "subsystem": "Registry",
-    "capability": "Registry Correction",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Registry Correction"
   },
   {
     "task_id": "T-TST-F01",
@@ -776,13 +674,7 @@
     "product": "Niyantran",
     "layer": "Testing",
     "subsystem": "QA Automation",
-    "capability": "Test Correction",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Test Correction"
   },
   {
     "task_id": "T-VAA-F01",
@@ -817,13 +709,7 @@
     "product": "Vaani_TTS",
     "layer": "API",
     "subsystem": "Gateway",
-    "capability": "TTS Correction",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "TTS Correction"
   },
   {
     "task_id": "T-SYS-F00",
@@ -858,13 +744,7 @@
     "product": "Parikshak",
     "layer": "Governance",
     "subsystem": "Task Selection",
-    "capability": "Catastrophic Recovery",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Catastrophic Recovery"
   },
   {
     "task_id": "T-GEN-100",
@@ -901,13 +781,7 @@
     "product": "Niyantran",
     "layer": "Frontend",
     "subsystem": "API",
-    "capability": "Auto Niyantran Frontend",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Auto Niyantran Frontend"
   },
   {
     "task_id": "T-GEN-101",
@@ -944,13 +818,7 @@
     "product": "Niyantran",
     "layer": "Frontend",
     "subsystem": "Storage",
-    "capability": "Auto Niyantran Frontend",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Auto Niyantran Frontend"
   },
   {
     "task_id": "T-GEN-102",
@@ -987,13 +855,7 @@
     "product": "Niyantran",
     "layer": "Frontend",
     "subsystem": "Auth",
-    "capability": "Auto Niyantran Frontend",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Auto Niyantran Frontend"
   },
   {
     "task_id": "T-GEN-103",
@@ -1030,13 +892,7 @@
     "product": "Niyantran",
     "layer": "Frontend",
     "subsystem": "Compute",
-    "capability": "Auto Niyantran Frontend",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Auto Niyantran Frontend"
   },
   {
     "task_id": "T-GEN-104",
@@ -1073,13 +929,7 @@
     "product": "Niyantran",
     "layer": "Frontend",
     "subsystem": "UI",
-    "capability": "Auto Niyantran Frontend",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Auto Niyantran Frontend"
   },
   {
     "task_id": "T-GEN-105",
@@ -1116,13 +966,7 @@
     "product": "Niyantran",
     "layer": "Backend",
     "subsystem": "API",
-    "capability": "Auto Niyantran Backend",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Auto Niyantran Backend"
   },
   {
     "task_id": "T-GEN-106",
@@ -1159,13 +1003,7 @@
     "product": "Niyantran",
     "layer": "Backend",
     "subsystem": "Storage",
-    "capability": "Auto Niyantran Backend",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Auto Niyantran Backend"
   },
   {
     "task_id": "T-GEN-107",
@@ -1202,13 +1040,7 @@
     "product": "Niyantran",
     "layer": "Backend",
     "subsystem": "Auth",
-    "capability": "Auto Niyantran Backend",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Auto Niyantran Backend"
   },
   {
     "task_id": "T-GEN-108",
@@ -1245,13 +1077,7 @@
     "product": "Niyantran",
     "layer": "Backend",
     "subsystem": "Compute",
-    "capability": "Auto Niyantran Backend",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Auto Niyantran Backend"
   },
   {
     "task_id": "T-GEN-109",
@@ -1288,13 +1114,7 @@
     "product": "Niyantran",
     "layer": "Backend",
     "subsystem": "UI",
-    "capability": "Auto Niyantran Backend",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Auto Niyantran Backend"
   },
   {
     "task_id": "T-GEN-110",
@@ -1331,13 +1151,7 @@
     "product": "Niyantran",
     "layer": "Database",
     "subsystem": "API",
-    "capability": "Auto Niyantran Database",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Auto Niyantran Database"
   },
   {
     "task_id": "T-GEN-111",
@@ -1374,13 +1188,7 @@
     "product": "Niyantran",
     "layer": "Database",
     "subsystem": "Storage",
-    "capability": "Auto Niyantran Database",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Auto Niyantran Database"
   },
   {
     "task_id": "T-GEN-112",
@@ -1417,13 +1225,7 @@
     "product": "Niyantran",
     "layer": "Database",
     "subsystem": "Auth",
-    "capability": "Auto Niyantran Database",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Auto Niyantran Database"
   },
   {
     "task_id": "T-GEN-113",
@@ -1460,13 +1262,7 @@
     "product": "Niyantran",
     "layer": "Database",
     "subsystem": "Compute",
-    "capability": "Auto Niyantran Database",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Auto Niyantran Database"
   },
   {
     "task_id": "T-GEN-114",
@@ -1503,13 +1299,7 @@
     "product": "Niyantran",
     "layer": "Database",
     "subsystem": "UI",
-    "capability": "Auto Niyantran Database",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Auto Niyantran Database"
   },
   {
     "task_id": "T-GEN-115",
@@ -1546,13 +1336,7 @@
     "product": "Niyantran",
     "layer": "Security",
     "subsystem": "API",
-    "capability": "Auto Niyantran Security",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Auto Niyantran Security"
   },
   {
     "task_id": "T-GEN-116",
@@ -1589,13 +1373,7 @@
     "product": "Niyantran",
     "layer": "Security",
     "subsystem": "Storage",
-    "capability": "Auto Niyantran Security",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Auto Niyantran Security"
   },
   {
     "task_id": "T-GEN-117",
@@ -1632,13 +1410,7 @@
     "product": "Niyantran",
     "layer": "Security",
     "subsystem": "Auth",
-    "capability": "Auto Niyantran Security",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Auto Niyantran Security"
   },
   {
     "task_id": "T-GEN-118",
@@ -1675,13 +1447,7 @@
     "product": "Niyantran",
     "layer": "Security",
     "subsystem": "Compute",
-    "capability": "Auto Niyantran Security",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Auto Niyantran Security"
   },
   {
     "task_id": "T-GEN-119",
@@ -1718,13 +1484,7 @@
     "product": "Niyantran",
     "layer": "Security",
     "subsystem": "UI",
-    "capability": "Auto Niyantran Security",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Auto Niyantran Security"
   },
   {
     "task_id": "T-GEN-120",
@@ -1761,13 +1521,7 @@
     "product": "Niyantran",
     "layer": "Infrastructure",
     "subsystem": "API",
-    "capability": "Auto Niyantran Infrastructure",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Auto Niyantran Infrastructure"
   },
   {
     "task_id": "T-GEN-121",
@@ -1804,13 +1558,7 @@
     "product": "Niyantran",
     "layer": "Infrastructure",
     "subsystem": "Storage",
-    "capability": "Auto Niyantran Infrastructure",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Auto Niyantran Infrastructure"
   },
   {
     "task_id": "T-GEN-122",
@@ -1847,13 +1595,7 @@
     "product": "Niyantran",
     "layer": "Infrastructure",
     "subsystem": "Auth",
-    "capability": "Auto Niyantran Infrastructure",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Auto Niyantran Infrastructure"
   },
   {
     "task_id": "T-GEN-123",
@@ -1890,13 +1632,7 @@
     "product": "Niyantran",
     "layer": "Infrastructure",
     "subsystem": "Compute",
-    "capability": "Auto Niyantran Infrastructure",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Auto Niyantran Infrastructure"
   },
   {
     "task_id": "T-GEN-124",
@@ -1933,13 +1669,7 @@
     "product": "Niyantran",
     "layer": "Infrastructure",
     "subsystem": "UI",
-    "capability": "Auto Niyantran Infrastructure",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Auto Niyantran Infrastructure"
   },
   {
     "task_id": "T-GEN-125",
@@ -1976,13 +1706,7 @@
     "product": "Vaani_TTS",
     "layer": "Frontend",
     "subsystem": "API",
-    "capability": "Auto Vaani_TTS Frontend",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Auto Vaani_TTS Frontend"
   },
   {
     "task_id": "T-GEN-126",
@@ -2019,13 +1743,7 @@
     "product": "Vaani_TTS",
     "layer": "Frontend",
     "subsystem": "Storage",
-    "capability": "Auto Vaani_TTS Frontend",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Auto Vaani_TTS Frontend"
   },
   {
     "task_id": "T-GEN-127",
@@ -2062,13 +1780,7 @@
     "product": "Vaani_TTS",
     "layer": "Frontend",
     "subsystem": "Auth",
-    "capability": "Auto Vaani_TTS Frontend",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Auto Vaani_TTS Frontend"
   },
   {
     "task_id": "T-GEN-128",
@@ -2105,13 +1817,7 @@
     "product": "Vaani_TTS",
     "layer": "Frontend",
     "subsystem": "Compute",
-    "capability": "Auto Vaani_TTS Frontend",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Auto Vaani_TTS Frontend"
   },
   {
     "task_id": "T-GEN-129",
@@ -2148,13 +1854,7 @@
     "product": "Vaani_TTS",
     "layer": "Frontend",
     "subsystem": "UI",
-    "capability": "Auto Vaani_TTS Frontend",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Auto Vaani_TTS Frontend"
   },
   {
     "task_id": "T-GEN-130",
@@ -2191,13 +1891,7 @@
     "product": "Vaani_TTS",
     "layer": "Backend",
     "subsystem": "API",
-    "capability": "Auto Vaani_TTS Backend",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Auto Vaani_TTS Backend"
   },
   {
     "task_id": "T-GEN-131",
@@ -2234,13 +1928,7 @@
     "product": "Vaani_TTS",
     "layer": "Backend",
     "subsystem": "Storage",
-    "capability": "Auto Vaani_TTS Backend",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Auto Vaani_TTS Backend"
   },
   {
     "task_id": "T-GEN-132",
@@ -2277,13 +1965,7 @@
     "product": "Vaani_TTS",
     "layer": "Backend",
     "subsystem": "Auth",
-    "capability": "Auto Vaani_TTS Backend",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Auto Vaani_TTS Backend"
   },
   {
     "task_id": "T-GEN-133",
@@ -2320,13 +2002,7 @@
     "product": "Vaani_TTS",
     "layer": "Backend",
     "subsystem": "Compute",
-    "capability": "Auto Vaani_TTS Backend",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Auto Vaani_TTS Backend"
   },
   {
     "task_id": "T-GEN-134",
@@ -2363,13 +2039,7 @@
     "product": "Vaani_TTS",
     "layer": "Backend",
     "subsystem": "UI",
-    "capability": "Auto Vaani_TTS Backend",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Auto Vaani_TTS Backend"
   },
   {
     "task_id": "T-GEN-135",
@@ -2406,13 +2076,7 @@
     "product": "Vaani_TTS",
     "layer": "Database",
     "subsystem": "API",
-    "capability": "Auto Vaani_TTS Database",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Auto Vaani_TTS Database"
   },
   {
     "task_id": "T-GEN-136",
@@ -2449,13 +2113,7 @@
     "product": "Vaani_TTS",
     "layer": "Database",
     "subsystem": "Storage",
-    "capability": "Auto Vaani_TTS Database",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Auto Vaani_TTS Database"
   },
   {
     "task_id": "T-GEN-137",
@@ -2492,13 +2150,7 @@
     "product": "Vaani_TTS",
     "layer": "Database",
     "subsystem": "Auth",
-    "capability": "Auto Vaani_TTS Database",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Auto Vaani_TTS Database"
   },
   {
     "task_id": "T-GEN-138",
@@ -2535,13 +2187,7 @@
     "product": "Vaani_TTS",
     "layer": "Database",
     "subsystem": "Compute",
-    "capability": "Auto Vaani_TTS Database",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Auto Vaani_TTS Database"
   },
   {
     "task_id": "T-GEN-139",
@@ -2578,13 +2224,7 @@
     "product": "Vaani_TTS",
     "layer": "Database",
     "subsystem": "UI",
-    "capability": "Auto Vaani_TTS Database",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Auto Vaani_TTS Database"
   },
   {
     "task_id": "T-GEN-140",
@@ -2621,13 +2261,7 @@
     "product": "Vaani_TTS",
     "layer": "Security",
     "subsystem": "API",
-    "capability": "Auto Vaani_TTS Security",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Auto Vaani_TTS Security"
   },
   {
     "task_id": "T-GEN-141",
@@ -2664,13 +2298,7 @@
     "product": "Vaani_TTS",
     "layer": "Security",
     "subsystem": "Storage",
-    "capability": "Auto Vaani_TTS Security",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Auto Vaani_TTS Security"
   },
   {
     "task_id": "T-GEN-142",
@@ -2707,13 +2335,7 @@
     "product": "Vaani_TTS",
     "layer": "Security",
     "subsystem": "Auth",
-    "capability": "Auto Vaani_TTS Security",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Auto Vaani_TTS Security"
   },
   {
     "task_id": "T-GEN-143",
@@ -2750,13 +2372,7 @@
     "product": "Vaani_TTS",
     "layer": "Security",
     "subsystem": "Compute",
-    "capability": "Auto Vaani_TTS Security",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Auto Vaani_TTS Security"
   },
   {
     "task_id": "T-GEN-144",
@@ -2793,12 +2409,6 @@
     "product": "Vaani_TTS",
     "layer": "Security",
     "subsystem": "UI",
-    "capability": "Auto Vaani_TTS Security",
-    "evaluation_inputs": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ],
-    "evaluation_rules": [
-      "FOR_EVALUATION_ENGINE_ONLY"
-    ]
+    "capability": "Auto Vaani_TTS Security"
   }
 ]

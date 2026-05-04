@@ -35,7 +35,7 @@ results['CHECK3_trace'] = 'PASS' if fc_rejects and nc_rejects and nc_no_uuid and
 tasks = json.load(open('db/niyantran_tasks.json', encoding='utf-8'))
 task_count = len(tasks)
 required = {'task_id','product','layer','subsystem','capability','dharma',
-            'evaluation_inputs','evaluation_rules','completion_signals',
+            'completion_signals',
             'failure_type','prerequisites','next_tasks','failure_tasks','constraints'}
 missing_fields = []
 for t in tasks:
