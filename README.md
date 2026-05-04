@@ -132,7 +132,7 @@ Check 4 — integration_validation
 
 ## Task DB — FINAL Schema
 
-Every task must have all 14 fields:
+Every task must have all 12 fields:
 
 ```json
 {
@@ -270,7 +270,7 @@ python tests/test_determinism_proof.py
 | Assignment Engine (delegates to rule_engine) | `evaluation_engine/assignment_engine.py` |
 | Signal Engine (supporting only) | `evaluation_engine/signal_engine.py` |
 | Domain Router | `evaluation_engine/domain_router.py` |
-| Decision Engine (narrative only) | `task_selector/production_decision_engine.py` |
+| Decision Engine (Non-authoritative post-processing layer) | `task_selector/production_decision_engine.py` |
 | Graph Engine (deterministic traversal) | `engine/task_graph_engine.py` |
 | Final Convergence (orchestrator) | `task_selector/final_convergence.py` |
 | Review Orchestrator (lifecycle handler) | `task_selector/review_orchestrator.py` |
