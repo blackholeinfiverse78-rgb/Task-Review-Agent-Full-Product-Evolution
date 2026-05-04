@@ -1,6 +1,6 @@
 """
 Parikshak Production Decision Engine — Phase 5
-Operates on evaluation_result = PASS | FAIL from assignment engine.
+Operates on eval_res = PASS | FAIL from assignment engine.
 No numeric scoring. No thresholds. No weights.
 Generates: strengths, failures, root_cause, learning_feedback, next_direction.
 """

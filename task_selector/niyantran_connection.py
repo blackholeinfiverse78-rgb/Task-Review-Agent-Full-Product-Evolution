@@ -86,7 +86,7 @@ class NiyantranConnectionService:
             pdf_text=niyantran_task.pdf_text
         )
 
-        evaluation_result = eval_output["evaluation_result"]
+        eval_res = eval_output["evaluation_result"]
         failure_type = eval_output["failure_type"]
 
         # Run Parikshak pipeline — trace_id passed unchanged

@@ -1,6 +1,6 @@
 """
 Parikshak Task Graph Engine — STEP 4
-Deterministic graph traversal. No scoring. No fallback.
+Deterministic graph traversal. No scoring. No alternative.
 
 Routing:
   evaluation_result == "PASS"  → next_tasks[0]
@@ -71,7 +71,7 @@ class TaskGraphEngine:
         failure_type: str = None
     ) -> Dict[str, Any]:
         """
-        Deterministic traversal. No scoring. No fallback.
+        Deterministic traversal. No scoring. No alternative.
 
         Args:
             current_task_id:   task just evaluated
@@ -94,7 +94,7 @@ class TaskGraphEngine:
         if not task:
             raise ValueError(
                 f"GRAPH_HARD_REJECT: task_id '{current_task_id}' not in task DB. "
-                f"No fallback permitted."
+                f"No alternative permitted."
             )
 
         if evaluation_result == "PASS":

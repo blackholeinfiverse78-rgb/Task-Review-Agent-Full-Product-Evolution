@@ -44,7 +44,7 @@ class FinalConvergenceOrchestrator:
 
         # Step 5: Decision engine (narrative only)
         # Decision engine needs minimal context now
-        decision = "APPROVED" if evaluation_result == "PASS" else "REJECTED"
+        decision = "APPROVED" if eval_res == "PASS" else "REJECTED"
 
         # Step 7: Build strict output contract
         output = {

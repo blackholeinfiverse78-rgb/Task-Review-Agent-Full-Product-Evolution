@@ -123,9 +123,7 @@ Every task must have all 14 fields:
   "subsystem":          "Task Review Engine",
   "capability":         "Submission Evaluation",
   "dharma":             "Ensure accurate evaluation.",
-  "evaluation_inputs":  ["task_title", "task_description", "repository_url"],
-  "evaluation_rules":   ["schema_validation", "completeness_validation"],
-  "completion_signals": ["evaluation_api_returns_200", "trace_id_written"],
+      "completion_signals": ["evaluation_api_returns_200", "trace_id_written"],
   "failure_type":       null,
   "prerequisites":      [],
   "next_tasks":         ["T-GOV-002"],
@@ -249,17 +247,17 @@ python tests/test_determinism_proof.py
 
 | Engine | File |
 |--------|------|
-| Rule Engine (evaluation authority) | `app/services/rule_engine.py` |
-| Assignment Engine (delegates to rule_engine) | `app/services/assignment_engine.py` |
-| Signal Engine (supporting only) | `app/services/signal_engine.py` |
-| Domain Router | `app/services/domain_router.py` |
-| Decision Engine (narrative only) | `app/services/production_decision_engine.py` |
+| Rule Engine (evaluation authority) | `evaluation_engine/rule_engine.py` |
+| Assignment Engine (delegates to rule_engine) | `assignment_engine.py` |
+| Signal Engine (supporting only) | `signal_engine.py` |
+| Domain Router | `domain_router.py` |
+| Decision Engine (narrative only) | `production_decision_engine.py` |
 | Graph Engine (deterministic traversal) | `engine/task_graph_engine.py` |
-| Final Convergence (orchestrator) | `app/services/final_convergence.py` |
-| Review Orchestrator (lifecycle handler) | `app/services/review_orchestrator.py` |
-| Review Packet Parser (hard gate) | `app/services/review_packet_parser.py` |
-| Human-in-Loop | `app/services/human_in_loop.py` |
-| Bucket Integration | `app/services/bucket_integration.py` |
-| Validation Gate | `app/services/shraddha_validation.py` |
-| Registry Validator | `app/services/validator.py` |
-| Mandala Mapper | `app/services/mandala_mapper.py` |
+| Final Convergence (orchestrator) | `task_selector/final_convergence.py` |
+| Review Orchestrator (lifecycle handler) | `task_selector/review_orchestrator.py` |
+| Review Packet Parser (hard gate) | `review_packet_parser.py` |
+| Human-in-Loop | `human_in_loop.py` |
+| Bucket Integration | `bucket_integration.py` |
+| Validation Gate | `shraddha_validation.py` |
+| Registry Validator | `validator.py` |
+| Mandala Mapper | `mandala_mapper.py` |

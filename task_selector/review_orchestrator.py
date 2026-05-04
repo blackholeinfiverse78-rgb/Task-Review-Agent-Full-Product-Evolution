@@ -58,7 +58,7 @@ class ReviewOrchestrator:
             pdf_text=pdf_extracted_text or ""
         )
 
-        evaluation_result = eval_output["evaluation_result"]
+        eval_res = eval_output["evaluation_result"]
         failure_type = eval_output["failure_type"]
 
         # 2. Parikshak - Mapping & Graph Traversal
@@ -72,7 +72,7 @@ class ReviewOrchestrator:
 
         selected_task_id  = convergence_result["selected_task_id"]
         selection_reason  = convergence_result["selection_reason"]
-        decision          = "APPROVED" if evaluation_result == "PASS" else "REJECTED"
+        decision          = "APPROVED" if eval_res == "PASS" else "REJECTED"
 
         # Store submission
         submission = TaskSubmission(
@@ -117,7 +117,7 @@ class ReviewOrchestrator:
             next_task_id=selected_task_id,
             review_id=review_id,
             previous_submission_id=submission_id,
-            task_type="advancement" if evaluation_result == "PASS" else "correction",
+            task_type="advancement" if eval_res == "PASS" else "correction",
             title=selected_task_id,
             objective=selection_reason,
             focus_area="evaluation",
@@ -147,7 +147,7 @@ class ReviewOrchestrator:
             },
             "next_task": {
                 "task_id": selected_task_id,
-                "task_type": "advancement" if evaluation_result == "PASS" else "correction",
+                "task_type": "advancement" if eval_res == "PASS" else "correction",
                 "title": selected_task_id,
                 "difficulty": "beginner",
                 "selection_reason": selection_reason,

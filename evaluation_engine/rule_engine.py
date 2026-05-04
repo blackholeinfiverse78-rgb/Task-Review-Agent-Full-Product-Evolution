@@ -87,7 +87,7 @@ class RuleEngine:
         structure      = repo_signals.get("structure", {})
         file_count     = structure.get("total_files", 0)
         quality        = repo_signals.get("quality", {})
-        readme_score   = quality.get("readme_score", 0)
+        readme_val   = quality.get("readme_val", 0)
         components     = repo_signals.get("components", {})
         test_files     = components.get("tests", [])
         doc_files      = components.get("docs", [])
@@ -103,7 +103,7 @@ class RuleEngine:
         has_arch_kw    = any(kw in desc_text or kw in title_text for kw in arch_keywords)
 
         code_present  = repo_available and file_count > 0
-        proof_present = readme_score >= 1 or len(test_files) > 0 or len(doc_files) > 0
+        proof_present = readme_val >= 1 or len(test_files) > 0 or len(doc_files) > 0
         arch_present  = layer_count >= 2 or is_modular or (code_present and has_arch_kw)
 
         if not code_present:
@@ -127,7 +127,7 @@ class RuleEngine:
         """
         FAIL if:
         - delivery_ratio < 0.6 OR missing_features > 3
-        - word_count < 80 AND readme_score < 1
+        - word_count < 80 AND readme_val < 1
         """
         evd            = signals.get("expected_vs_delivered_evidence", {})
         delivery_ratio = evd.get("delivery_ratio", 0.0)
@@ -136,10 +136,10 @@ class RuleEngine:
         word_count     = desc_signals.get("word_count", 0) if isinstance(desc_signals, dict) else 0
         repo_signals   = signals.get("repository_signals") or {}
         quality        = repo_signals.get("quality", {})
-        readme_score   = quality.get("readme_score", 0)
+        readme_val     = quality.get("readme_val", 0)
 
         alignment = delivery_ratio >= 0.6 and len(missing) <= 3
-        effort    = word_count >= 80 or readme_score >= 1
+        effort    = word_count >= 80 or readme_val >= 1
 
         if not alignment:
             logger.info(
@@ -149,7 +149,7 @@ class RuleEngine:
             return "incorrect_logic"
         if not effort:
             logger.info(
-                f"[RULE ENGINE] incorrect_logic: word_count={word_count} readme_score={readme_score}"
+                f"[RULE ENGINE] incorrect_logic: word_count={word_count} readme_val={readme_val}"
             )
             return "incorrect_logic"
 

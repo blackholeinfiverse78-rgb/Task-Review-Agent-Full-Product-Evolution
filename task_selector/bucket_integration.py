@@ -2,7 +2,7 @@
 Parikshak Bucket Integration — Phase 6
 Every review MUST write a log entry. No exceptions.
 Exact schema per spec:
-  type, candidate_id, task_id, score, decision,
+  type, candidate_id, task_id, decision,
   review_summary, next_task, trace_id
 """
 import json
@@ -62,7 +62,7 @@ class BucketIntegrationService:
 
         logger.info(
             f"[BUCKET] Logged: trace_id={trace_id} | "
-            f"score={entry['score']} | decision={entry['decision']}"
+            f"decision={entry['decision']}"
         )
         return trace_id
 

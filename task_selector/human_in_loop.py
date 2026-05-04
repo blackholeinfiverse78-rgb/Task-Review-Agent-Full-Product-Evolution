@@ -38,7 +38,7 @@ class ConfidenceMetrics:
     evidence_adjustment: float
     consistency_adjustment: float
     final_confidence: float
-    score_consistency: float
+    proof_consistency: float
     signal_alignment: float
     decision_clarity: float
     evidence_strength: float
@@ -176,7 +176,7 @@ class HumanInLoopService:
             evidence_adjustment=0.0,         # not used in hardened formula
             consistency_adjustment=0.0,      # not used in hardened formula
             final_confidence=final_confidence,
-            score_consistency=proof,
+            proof_consistency=proof,
             signal_alignment=architecture,
             decision_clarity=code,
             evidence_strength=rubric_completeness,
