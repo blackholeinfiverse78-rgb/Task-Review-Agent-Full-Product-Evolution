@@ -1,21 +1,45 @@
 # Parikshak — Deterministic Task Evaluation Engine
 
+**Tech:** `FastAPI` | `Rule Engine` | `Graph Routing` | `Deterministic Systems`
+
+
 **Version**: 3.0.0 | **Status**: Deterministic Verified System (TANTRA-compliant internally) | **Protocol**: Rule-Based Deterministic
 
 
 > **Parikshak** is a deterministic, rule-based engineering task evaluation engine that strictly maps submissions to next tasks without any numeric scoring, arbitrary weighting, or fallback routing.
 
-**Tags:** `fastapi`, `rule-engine`, `deterministic-system`, `task-evaluation`, `graph-routing`
 
----
+
+## Why This System Exists
+
+Most evaluation systems rely on scoring, weights, or heuristics, which introduce ambiguity and inconsistency. 
+
+Parikshak removes this by enforcing:
+- Binary rule evaluation
+- Deterministic task routing
+- Zero fallback ambiguity
+
+This ensures identical inputs always produce identical outputs.
 
 ## What This System Does (in 10 seconds)
 Parikshak takes an engineering submission, strictly evaluates it against 4 binary rules, and deterministically routes it to the exact next task using a hard-coded graph database. It guarantees that the same input will always produce the exact same 7-field output contract.
 
 ## How It Works (Simple Flow)
 ```text
-[ Input ] → [ Rule Engine ] → [ Graph Traversal ] → [ Post-Processing ] → [ 7-Field Output ]
+[ Submission ] → [ Rule Engine (4 checks) ] → [ Task Graph ] → [ Decision Layer ] → [ 7-field Output ]
 ```
+
+```mermaid
+graph TD
+    A[User Submission] --> B[API Layer]
+    B --> C{Rule Engine<br/>4 binary checks}
+    C -- PASS --> D[Task Graph]
+    C -- FAIL --> E[Failure Routing]
+    D --> F[Decision Layer]
+    E --> F
+    F --> G((7-field JSON Output))
+```
+
 1. **Input**: A JSON or multipart submission containing repository links, files, and metadata.
 2. **Rule Engine**: Evaluates 4 strict binary conditions (Schema, Completeness, Logic, Integration). First failure stops execution.
 3. **Graph Traversal**: Routes the PASS/FAIL result to the exact `next_tasks` or `failure_tasks` mapped in the database.
