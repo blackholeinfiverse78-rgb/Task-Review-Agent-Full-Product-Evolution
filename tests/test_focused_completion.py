@@ -22,7 +22,7 @@ def test_focused_completion():
     print("\n1. Testing STRICT Registry Enforcement...")
     
     try:
-        from app.services.validator import validator
+        from evaluation_engine.validator import validator
         
         # Test valid module
         valid_result = validator.validate_complete("task-review-agent", "v1.0")
@@ -120,8 +120,8 @@ def test_focused_completion():
     
     try:
         from app.services.autonomous_loop_runner import AutonomousLoopRunner, LoopState
-        from app.services.review_orchestrator import ReviewOrchestrator
-        from app.services.review_engine import ReviewEngine
+        from task_selector.review_orchestrator import ReviewOrchestrator
+        from evaluation_engine.review_engine import ReviewEngine
         from app.services.next_task_generator import NextTaskGenerator
         
         # Create minimal orchestrator

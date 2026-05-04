@@ -6,7 +6,7 @@ import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from app.services.validator import validator, ValidationStatus
+from evaluation_engine.validator import validator, ValidationStatus
 
 def test_registry_validation():
     print("=" * 60)

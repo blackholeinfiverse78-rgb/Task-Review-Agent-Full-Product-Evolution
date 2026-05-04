@@ -18,5 +18,5 @@ def validator(output):
     return output
 
 # Compatibility with existing internal architecture
-from app.services.validator import Validator
+from evaluation_engine.validator import Validator
 validator_service = Validator()

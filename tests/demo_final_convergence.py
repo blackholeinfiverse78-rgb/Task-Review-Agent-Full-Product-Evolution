@@ -10,9 +10,9 @@ project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, project_root)
 sys.path.insert(0, os.path.join(project_root, 'intelligence-integration-module-main'))
 
-from app.services.final_convergence import final_convergence
-from app.services.review_orchestrator import ReviewOrchestrator
-from app.models.schemas import Task
+from task_selector.final_convergence import final_convergence
+from task_selector.review_orchestrator import ReviewOrchestrator
+from models.schemas import Task
 from datetime import datetime
 import json
 

@@ -1,0 +1,126 @@
+{
+  "version": "1.0.0",
+  "description": "BHIV Product Registry — static context definitions for Parikshak",
+  "products": {
+    "gurukul": {
+      "product": "gurukul",
+      "role": "Learning Management System — delivers structured learning paths to candidates",
+      "layer": "execution",
+      "subsystem": "learning_delivery",
+      "tantra_layers": ["execution", "memory"],
+      "keywords": [
+        "learning", "course", "curriculum", "lesson", "quiz", "assessment",
+        "student", "mentor", "education", "lms", "module", "progress"
+      ],
+      "dependencies": ["niyantran", "parikshak"],
+      "allowed_next_tasks": ["NT-ADV-B-001", "NT-ADV-I-001", "NT-REI-B-001"],
+      "difficulty_levels": ["beginner", "intermediate", "advanced"]
+    },
+    "niyantran": {
+      "product": "niyantran",
+      "role": "Task Orchestration Engine — manages task graph, trace_ids, and candidate routing",
+      "layer": "governance",
+      "subsystem": "task_orchestration",
+      "tantra_layers": ["governance", "execution"],
+      "keywords": [
+        "niyantran", "task", "orchestration", "routing", "trace", "graph",
+        "pipeline", "workflow", "assignment", "scheduling", "queue"
+      ],
+      "dependencies": ["parikshak"],
+      "allowed_next_tasks": ["NT-ADV-I-001", "NT-ADV-A-001", "NT-REI-I-001"],
+      "difficulty_levels": ["intermediate", "advanced"]
+    },
+    "parikshak": {
+      "product": "parikshak",
+      "role": "Sovereign Evaluation Authority — deterministic task review and scoring engine",
+      "layer": "governance",
+      "subsystem": "evaluation_engine",
+      "tantra_layers": ["governance", "intelligence"],
+      "keywords": [
+        "parikshak", "evaluation", "scoring", "review", "rubric", "assessment",
+        "deterministic", "pac", "confidence", "bucket", "trace", "packet"
+      ],
+      "dependencies": ["niyantran", "gurukul"],
+      "allowed_next_tasks": ["NT-ADV-I-001", "NT-ADV-A-001", "NT-REI-I-001"],
+      "difficulty_levels": ["intermediate", "advanced"]
+    },
+    "mitra": {
+      "product": "mitra",
+      "role": "AI Companion — conversational assistant for candidate support and guidance",
+      "layer": "intelligence",
+      "subsystem": "conversational_ai",
+      "tantra_layers": ["intelligence", "execution"],
+      "keywords": [
+        "mitra", "chatbot", "assistant", "conversation", "nlp", "dialogue",
+        "intent", "response", "support", "guidance", "chat", "llm"
+      ],
+      "dependencies": ["gurukul"],
+      "allowed_next_tasks": ["NT-ADV-B-001", "NT-ADV-I-001", "NT-REI-B-001"],
+      "difficulty_levels": ["beginner", "intermediate", "advanced"]
+    },
+    "insightflow": {
+      "product": "insightflow",
+      "role": "Analytics and Reporting Engine — provides insights on candidate and system performance",
+      "layer": "intelligence",
+      "subsystem": "analytics",
+      "tantra_layers": ["intelligence", "memory"],
+      "keywords": [
+        "insightflow", "analytics", "dashboard", "metrics", "reporting",
+        "visualization", "chart", "graph", "kpi", "data", "insight", "trend"
+      ],
+      "dependencies": ["parikshak", "niyantran"],
+      "allowed_next_tasks": ["NT-ADV-I-001", "NT-ADV-A-001"],
+      "difficulty_levels": ["intermediate", "advanced"]
+    },
+    "robotics": {
+      "product": "robotics",
+      "role": "Robotics Engineering Track — ROS2, embedded systems, and hardware integration tasks",
+      "layer": "execution",
+      "subsystem": "robotics_engineering",
+      "tantra_layers": ["execution"],
+      "keywords": [
+        "ros", "ros2", "robot", "robotics", "embedded", "firmware", "sensor",
+        "actuator", "hardware", "navigation", "slam", "lidar", "motor",
+        "arduino", "raspberry", "microcontroller", "iot", "autonomous"
+      ],
+      "dependencies": [],
+      "allowed_next_tasks": ["NT-ADV-B-001", "NT-ADV-I-001", "NT-ADV-A-001"],
+      "difficulty_levels": ["beginner", "intermediate", "advanced"]
+    },
+    "blockchain": {
+      "product": "blockchain",
+      "role": "Blockchain Engineering Track — smart contracts, DeFi, and distributed ledger tasks",
+      "layer": "execution",
+      "subsystem": "blockchain_engineering",
+      "tantra_layers": ["execution", "governance"],
+      "keywords": [
+        "blockchain", "smart contract", "solidity", "ethereum", "web3",
+        "defi", "nft", "token", "wallet", "consensus", "ledger", "crypto",
+        "truffle", "hardhat", "metamask", "ipfs"
+      ],
+      "dependencies": [],
+      "allowed_next_tasks": ["NT-ADV-B-001", "NT-ADV-I-001", "NT-ADV-A-001"],
+      "difficulty_levels": ["beginner", "intermediate", "advanced"]
+    }
+  },
+  "tantra_layers": {
+    "intelligence": {
+      "description": "AI reasoning, NLP, model inference — Sankalp's domain",
+      "products": ["mitra", "insightflow", "parikshak"]
+    },
+    "governance": {
+      "description": "Orchestration, evaluation, compliance — Niyantran + Parikshak",
+      "products": ["niyantran", "parikshak", "blockchain"]
+    },
+    "execution": {
+      "description": "Task delivery, learning, engineering tracks",
+      "products": ["gurukul", "robotics", "blockchain", "niyantran"]
+    },
+    "memory": {
+      "description": "Storage, history, context persistence",
+      "products": ["gurukul", "insightflow"]
+    }
+  },
+  "default_product": "parikshak",
+  "default_layer": "execution"
+}

@@ -8,8 +8,8 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from app.services.evaluation_engine import EvaluationEngine
-from app.services.title_analyzer import TitleAnalyzer
-from app.services.description_analyzer import DescriptionAnalyzer
+from evaluation_engine.title_analyzer import TitleAnalyzer
+from evaluation_engine.description_analyzer import DescriptionAnalyzer
 from app.services.scoring_engine import ScoringEngine
 
 class TestDynamicEvaluationEngine:

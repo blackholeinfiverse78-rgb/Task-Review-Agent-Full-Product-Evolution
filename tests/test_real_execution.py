@@ -18,9 +18,9 @@ def test_direct_execution():
     print("TESTING DIRECT EXECUTION...")
     
     try:
-        from app.services.review_orchestrator import ReviewOrchestrator
-        from app.services.review_engine import ReviewEngine
-        from app.models.schemas import Task
+        from task_selector.review_orchestrator import ReviewOrchestrator
+        from evaluation_engine.review_engine import ReviewEngine
+        from models.schemas import Task
         
         # Create real components
         review_engine = ReviewEngine()

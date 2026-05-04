@@ -1,4 +1,4 @@
-from app.services.repository_analyzer import RepositoryAnalyzer
+from evaluation_engine.repository_analyzer import RepositoryAnalyzer
 r = RepositoryAnalyzer()
 result = r.analyze('https://github.com/octocat/Hello-World')
 print('Error:', result.get('error'))

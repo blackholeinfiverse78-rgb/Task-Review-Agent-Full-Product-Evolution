@@ -1,5 +1,5 @@
 import unittest
-from app.services.review_orchestrator import ReviewOrchestrator
+from task_selector.review_orchestrator import ReviewOrchestrator
 
 class TestReadinessClassification(unittest.TestCase):
     def test_pass_scores(self):

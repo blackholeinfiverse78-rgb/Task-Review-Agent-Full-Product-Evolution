@@ -10,10 +10,10 @@ from datetime import datetime
 # Add the app directory to the Python path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'app'))
 
-from app.services.review_orchestrator import ReviewOrchestrator
-from app.services.review_engine import ReviewEngine
+from task_selector.review_orchestrator import ReviewOrchestrator
+from evaluation_engine.review_engine import ReviewEngine
 from app.services.next_task_generator import NextTaskGenerator
-from app.models.schemas import Task
+from models.schemas import Task
 
 def test_hybrid_integration():
     """Test complete integration flow"""

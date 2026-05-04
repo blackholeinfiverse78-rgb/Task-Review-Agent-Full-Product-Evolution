@@ -3,7 +3,7 @@ import os
 import json
 from unittest.mock import patch
 
-from app.services.final_convergence import final_convergence
+from task_selector.final_convergence import final_convergence
 
 task_1_pass = {
     "task_title": "Voice Synthesis Inference Engine",
@@ -29,7 +29,7 @@ task_3_edge = {
 def test_cases():
     print("Running tests...")
     
-    with patch('app.services.final_convergence.assignment_engine.evaluate_and_assign') as mock_satya:
+    with patch('task_selector.final_convergence.assignment_engine.evaluate_and_assign') as mock_satya:
         
         # CASE 1: PASS
         print("\n--- CASE 1: PASS (Score >= 6) ---")

@@ -10,7 +10,7 @@ project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, project_root)
 sys.path.insert(0, os.path.join(project_root, 'intelligence-integration-module-main'))
 
-from app.services.shraddha_validation import validation_gate
+from evaluation_engine.shraddha_validation import validation_gate
 import json
 
 def test_malformed_input_correction():

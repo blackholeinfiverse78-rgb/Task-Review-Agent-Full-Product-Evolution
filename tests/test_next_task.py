@@ -8,9 +8,9 @@ import os
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, project_root)
 
-from app.models.persistent_storage import product_storage
-from app.services.review_orchestrator import ReviewOrchestrator
-from app.models.schemas import Task
+from models.persistent_storage import product_storage
+from task_selector.review_orchestrator import ReviewOrchestrator
+from models.schemas import Task
 from datetime import datetime
 
 def test_next_task_storage():

@@ -10,10 +10,10 @@ project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, project_root)
 sys.path.insert(0, os.path.join(project_root, 'intelligence-integration-module-main'))
 
-from app.services.final_convergence import final_convergence
-from app.services.validator import validator, ValidationStatus
-from app.models.schemas import Task
-from app.services.review_orchestrator import ReviewOrchestrator
+from task_selector.final_convergence import final_convergence
+from evaluation_engine.validator import validator, ValidationStatus
+from models.schemas import Task
+from task_selector.review_orchestrator import ReviewOrchestrator
 from datetime import datetime
 import logging
 

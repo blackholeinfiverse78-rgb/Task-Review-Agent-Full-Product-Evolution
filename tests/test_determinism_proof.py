@@ -179,6 +179,40 @@ def tc6():
 results.append(run_test("TC-6: All selected tasks exist in DB", tc6))
 
 
+# ── TC-7: Missing trace_id → reject ──────────────────────────────────────
+
+def tc7():
+    from task_selector.niyantran_connection import NiyantranTask
+    try:
+        NiyantranTask.from_dict({"task_id": "T-GOV-001"}) # missing trace_id
+        return {"status": FAIL_LINE, "expected": "ValueError", "actual": "No error raised"}
+    except ValueError as e:
+        passed = "trace_id" in str(e).lower()
+        return {
+            "status": PASS_LINE if passed else FAIL_LINE,
+            "expected": "ValueError with trace_id mention",
+            "actual": str(e)
+        }
+
+results.append(run_test("TC-7: Missing trace_id → reject", tc7))
+
+# ── TC-8: Unknown mapping → reject ───────────────────────────────────────
+
+def tc8():
+    from task_selector.mandala_mapper import mandala_mapper
+    try:
+        mandala_mapper.map_task_to_context("INVALID_TASK_ID")
+        return {"status": FAIL_LINE, "expected": "ValueError", "actual": "No error raised"}
+    except ValueError as e:
+        passed = "MANDALA_HARD_REJECT" in str(e)
+        return {
+            "status": PASS_LINE if passed else FAIL_LINE,
+            "expected": "MANDALA_HARD_REJECT",
+            "actual": str(e)
+        }
+
+results.append(run_test("TC-8: Unknown mapping → reject", tc8))
+
 # ── Summary ───────────────────────────────────────────────────────────────
 
 print(f"\n{SEPARATOR}")

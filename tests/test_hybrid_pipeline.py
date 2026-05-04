@@ -10,7 +10,7 @@ import os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'app'))
 
 from app.services.hybrid_evaluation_pipeline import HybridEvaluationPipeline
-from app.services.assignment_engine import AssignmentEngine, AssignmentStatus
+from evaluation_engine.assignment_engine import AssignmentEngine, AssignmentStatus
 from app.services.evaluation_engine import EvaluationEngine
 from app.services.output_validator import OutputValidator
 

@@ -6,9 +6,9 @@ import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from app.services.final_convergence import final_convergence
+from task_selector.final_convergence import final_convergence
 from app.services.assignment_authority import assignment_authority
-from app.services.shraddha_validation import validation_gate
+from evaluation_engine.shraddha_validation import validation_gate
 import json
 
 def test_final_convergence():

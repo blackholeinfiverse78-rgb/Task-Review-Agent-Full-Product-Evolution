@@ -17,7 +17,7 @@ import pytest
 # ─────────────────────────────────────────────
 class TestRepoAvailability:
     def setup_method(self):
-        from app.services.signal_engine import SignalEngine
+        from evaluation_engine.signal_engine import SignalEngine
         self.sc = SignalEngine()
 
     def test_repo_available_true_when_metadata_name_present(self):
@@ -93,7 +93,7 @@ class TestRepoScoreNetworkFailure:
 # ─────────────────────────────────────────────
 class TestFeatureMatcher:
     def setup_method(self):
-        from app.services.feature_matcher import FeatureMatcher
+        from evaluation_engine.feature_matcher import FeatureMatcher
         self.fm = FeatureMatcher()
 
     def _make_signals(self, paths):
@@ -159,7 +159,7 @@ class TestFeatureMatcher:
 # ─────────────────────────────────────────────
 class TestTitleAnalyzer:
     def setup_method(self):
-        from app.services.title_analyzer import TitleAnalyzer
+        from evaluation_engine.title_analyzer import TitleAnalyzer
         self.ta = TitleAnalyzer()
 
     def test_clarity_score_present_in_metrics(self):
@@ -196,7 +196,7 @@ class TestTitleAnalyzer:
 # ─────────────────────────────────────────────
 class TestDeliveryRatio:
     def setup_method(self):
-        from app.services.signal_engine import SignalEngine
+        from evaluation_engine.signal_engine import SignalEngine
         self.sc = SignalEngine()
 
     def test_delivery_ratio_is_1_when_no_features_expected(self):
@@ -219,7 +219,7 @@ class TestDeliveryRatio:
 # ─────────────────────────────────────────────
 class TestFailureIndicators:
     def setup_method(self):
-        from app.services.signal_engine import SignalEngine
+        from evaluation_engine.signal_engine import SignalEngine
         self.sc = SignalEngine()
 
     def test_scope_indicator_not_fired_when_repo_unavailable(self):
@@ -280,7 +280,7 @@ class TestNoPenaltyDoubleCounting:
 # ─────────────────────────────────────────────
 class TestIntentExtractor:
     def setup_method(self):
-        from app.services.intent_extractor import IntentExtractor
+        from evaluation_engine.intent_extractor import IntentExtractor
         self.ie = IntentExtractor()
 
     def test_unit_not_extracted_as_feature(self):
@@ -316,7 +316,7 @@ class TestIntentExtractor:
 # ─────────────────────────────────────────────
 class TestDescriptionAnalyzer:
     def setup_method(self):
-        from app.services.description_analyzer import DescriptionAnalyzer
+        from evaluation_engine.description_analyzer import DescriptionAnalyzer
         self.da = DescriptionAnalyzer()
 
     def test_metrics_has_required_keys(self):

@@ -18,7 +18,7 @@ def test_hybrid_components():
     try:
         # Test Assignment Engine
         print("\n1. Testing Assignment Engine...")
-        from app.services.assignment_engine import AssignmentEngine
+        from evaluation_engine.assignment_engine import AssignmentEngine
         
         assignment_engine = AssignmentEngine()
         

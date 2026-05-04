@@ -81,7 +81,7 @@ def test_path_traversal_security():
     
     for path in traversal_paths:
         # Check if path sanitization exists
-        from app.services.pdf_analyzer import PDFAnalyzer
+        from evaluation_engine.pdf_analyzer import PDFAnalyzer
         analyzer = PDFAnalyzer()
         
         # Test path handling
@@ -161,7 +161,7 @@ def test_input_size_limits():
     large_input = "A" * 1000000  # 1MB string
     try:
         # Test if large inputs are handled properly
-        from app.models.schemas import Task
+        from models.schemas import Task
         from pydantic import ValidationError
         
         try:
@@ -219,7 +219,7 @@ def test_error_handling_security():
     # Test 1: Check if stack traces are exposed
     try:
         # Simulate error condition
-        from app.services.assignment_engine import assignment_engine
+        from evaluation_engine.assignment_engine import assignment_engine
         result = assignment_engine.evaluate_and_assign(
             task_title=None,  # This should cause an error
             task_description=None,
@@ -292,7 +292,7 @@ def test_logging_security():
     print("="*60)
     
     # Test 1: Check if sensitive data is logged
-    from app.services.assignment_engine import assignment_engine
+    from evaluation_engine.assignment_engine import assignment_engine
     import logging
     
     # Capture log output
@@ -310,7 +310,7 @@ def test_business_logic_security():
     
     # Test 1: Score manipulation
     try:
-        from app.services.shraddha_validation import validation_gate
+        from evaluation_engine.shraddha_validation import validation_gate
         
         # Try to submit invalid score
         invalid_result = {
@@ -336,7 +336,7 @@ def test_data_integrity():
     print("="*60)
     
     # Test 1: Data validation
-    from app.models.schemas import Task
+    from models.schemas import Task
     from pydantic import ValidationError
     
     try:
@@ -363,7 +363,7 @@ def run_functionality_tests():
     
     # Test 1: Assignment Authority
     try:
-        from app.services.assignment_engine import assignment_engine
+        from evaluation_engine.assignment_engine import assignment_engine
         
         supporting_signals = {
             "expected_vs_delivered_evidence": {
@@ -397,7 +397,7 @@ def run_functionality_tests():
     
     # Test 2: Signal Collector
     try:
-        from app.services.signal_engine import signal_engine
+        from evaluation_engine.signal_engine import signal_engine
         
         signals = signal_engine.collect_supporting_signals(
             "Test Task",
@@ -414,7 +414,7 @@ def run_functionality_tests():
     
     # Test 3: Validation Gate
     try:
-        from app.services.shraddha_validation import validation_gate
+        from evaluation_engine.shraddha_validation import validation_gate
         
         test_result = {
             "submission_id": "test-123",

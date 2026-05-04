@@ -16,9 +16,9 @@ import os
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from app.services.context_registry import context_registry
-from app.services.mandala_mapper import mandala_mapper
-from app.services.task_selection_engine import task_selection_engine
+from task_selector.context_registry import context_registry
+from task_selector.mandala_mapper import mandala_mapper
+from task_selector.task_selection_engine import task_selection_engine
 
 
 # ── TC-1: 5 tasks mapped to correct product/layer ────────────────────────

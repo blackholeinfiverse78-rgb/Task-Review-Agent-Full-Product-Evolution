@@ -1,0 +1,52 @@
+{
+  "schema_version": "1.0.0",
+  "description": "Mandala Schema — canonical structure for BHIV product hierarchy",
+  "schema": {
+    "product": {
+      "type": "string",
+      "description": "Top-level BHIV product identifier",
+      "required": true
+    },
+    "layer": {
+      "type": "string",
+      "enum": ["intelligence", "governance", "execution", "memory"],
+      "description": "TANTRA layer this product belongs to",
+      "required": true
+    },
+    "subsystem": {
+      "type": "string",
+      "description": "Functional subsystem within the product",
+      "required": true
+    },
+    "capability": {
+      "type": "string",
+      "description": "Specific capability within the subsystem",
+      "required": true
+    },
+    "keywords": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Keywords used for deterministic task-to-context mapping",
+      "required": true,
+      "minItems": 3
+    },
+    "difficulty_levels": {
+      "type": "array",
+      "items": {"type": "string", "enum": ["beginner", "intermediate", "advanced"]},
+      "description": "Supported difficulty levels for tasks in this context",
+      "required": true
+    },
+    "dependencies": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Other products this product depends on",
+      "required": false
+    }
+  },
+  "layer_definitions": {
+    "intelligence": "AI reasoning, NLP, model inference, analytics",
+    "governance": "Orchestration, evaluation, compliance, task management",
+    "execution": "Task delivery, engineering tracks, learning delivery",
+    "memory": "Storage, history, context persistence, data retrieval"
+  }
+}

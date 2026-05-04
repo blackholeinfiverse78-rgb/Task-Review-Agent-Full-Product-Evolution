@@ -1,0 +1,140 @@
+{
+  "version": "1.0.0",
+  "description": "BHIV Mandala Dataset — full Product→Layer→Subsystem→Capability definitions",
+  "products": {
+    "parikshak": {
+      "product": "parikshak",
+      "layer": "governance",
+      "subsystem": "evaluation_engine",
+      "capability": "task_scoring",
+      "role": "Sovereign Evaluation Authority — deterministic task review and scoring engine",
+      "keywords": [
+        "parikshak", "evaluation", "scoring", "review", "rubric", "assessment",
+        "deterministic", "pac", "confidence", "bucket", "trace", "packet",
+        "assignment", "engine", "canonical"
+      ],
+      "difficulty_levels": ["beginner", "intermediate", "advanced"],
+      "dependencies": ["niyantran", "gurukul"],
+      "capabilities": {
+        "task_scoring": "Binary rubric scoring with PAC detection and formula-based final score",
+        "review_packet": "Hard gate enforcement for REVIEW_PACKET.md validation",
+        "bucket_logging": "Mandatory evaluation logging with trace_id governance",
+        "human_in_loop": "Confidence-based escalation with persistence"
+      }
+    },
+    "niyantran": {
+      "product": "niyantran",
+      "layer": "governance",
+      "subsystem": "task_orchestration",
+      "capability": "graph_traversal",
+      "role": "Task Orchestration Engine — manages task graph, trace_ids, and candidate routing",
+      "keywords": [
+        "niyantran", "task", "orchestration", "routing", "trace", "graph",
+        "pipeline", "workflow", "assignment", "scheduling", "queue",
+        "traversal", "state", "transition"
+      ],
+      "difficulty_levels": ["intermediate", "advanced"],
+      "dependencies": ["parikshak"],
+      "capabilities": {
+        "graph_traversal": "Deterministic next-task selection from task graph",
+        "trace_management": "trace_id generation and lifecycle tracking",
+        "candidate_routing": "Route candidates to correct task based on evaluation"
+      }
+    },
+    "gurukul": {
+      "product": "gurukul",
+      "layer": "execution",
+      "subsystem": "learning_delivery",
+      "capability": "skill_assessment",
+      "role": "Learning Management System — delivers structured learning paths to candidates",
+      "keywords": [
+        "learning", "course", "curriculum", "lesson", "quiz", "assessment",
+        "student", "mentor", "education", "lms", "module", "progress",
+        "skill", "path", "track"
+      ],
+      "difficulty_levels": ["beginner", "intermediate", "advanced"],
+      "dependencies": ["niyantran", "parikshak"],
+      "capabilities": {
+        "skill_assessment": "Evaluate candidate skill level and readiness",
+        "learning_path": "Deliver structured curriculum based on assessment",
+        "progress_tracking": "Track candidate progress across modules"
+      }
+    },
+    "mitra": {
+      "product": "mitra",
+      "layer": "intelligence",
+      "subsystem": "conversational_ai",
+      "capability": "intent_resolution",
+      "role": "AI Companion — conversational assistant for candidate support and guidance",
+      "keywords": [
+        "mitra", "chatbot", "assistant", "conversation", "nlp", "dialogue",
+        "intent", "response", "support", "guidance", "chat", "llm",
+        "natural language", "context", "memory"
+      ],
+      "difficulty_levels": ["beginner", "intermediate", "advanced"],
+      "dependencies": ["gurukul"],
+      "capabilities": {
+        "intent_resolution": "Detect and resolve candidate intent from natural language",
+        "context_memory": "Maintain conversation context across sessions",
+        "guidance_delivery": "Provide structured guidance based on candidate state"
+      }
+    },
+    "insightflow": {
+      "product": "insightflow",
+      "layer": "intelligence",
+      "subsystem": "analytics",
+      "capability": "performance_reporting",
+      "role": "Analytics and Reporting Engine — provides insights on candidate and system performance",
+      "keywords": [
+        "insightflow", "analytics", "dashboard", "metrics", "reporting",
+        "visualization", "chart", "kpi", "data", "insight", "trend",
+        "performance", "report", "statistics"
+      ],
+      "difficulty_levels": ["intermediate", "advanced"],
+      "dependencies": ["parikshak", "niyantran"],
+      "capabilities": {
+        "performance_reporting": "Generate candidate and system performance reports",
+        "trend_analysis": "Identify trends across evaluation data",
+        "dashboard_delivery": "Deliver real-time dashboards for system monitoring"
+      }
+    },
+    "robotics": {
+      "product": "robotics",
+      "layer": "execution",
+      "subsystem": "robotics_engineering",
+      "capability": "hardware_integration",
+      "role": "Robotics Engineering Track — ROS2, embedded systems, and hardware integration tasks",
+      "keywords": [
+        "ros", "ros2", "robot", "robotics", "embedded", "firmware", "sensor",
+        "actuator", "hardware", "navigation", "slam", "lidar", "motor",
+        "arduino", "raspberry", "microcontroller", "iot", "autonomous"
+      ],
+      "difficulty_levels": ["beginner", "intermediate", "advanced"],
+      "dependencies": [],
+      "capabilities": {
+        "hardware_integration": "Integrate sensors, actuators, and embedded hardware",
+        "navigation": "Implement autonomous navigation with SLAM",
+        "firmware": "Write and deploy firmware for microcontrollers"
+      }
+    },
+    "blockchain": {
+      "product": "blockchain",
+      "layer": "execution",
+      "subsystem": "blockchain_engineering",
+      "capability": "smart_contract_development",
+      "role": "Blockchain Engineering Track — smart contracts, DeFi, and distributed ledger tasks",
+      "keywords": [
+        "blockchain", "smart contract", "solidity", "ethereum", "web3",
+        "defi", "nft", "token", "wallet", "consensus", "ledger", "crypto",
+        "truffle", "hardhat", "metamask", "ipfs"
+      ],
+      "difficulty_levels": ["beginner", "intermediate", "advanced"],
+      "dependencies": [],
+      "capabilities": {
+        "smart_contract_development": "Write and deploy Solidity smart contracts",
+        "defi_protocol": "Build DeFi protocols with token economics",
+        "web3_integration": "Integrate Web3 frontend with blockchain backend"
+      }
+    }
+  }
+}

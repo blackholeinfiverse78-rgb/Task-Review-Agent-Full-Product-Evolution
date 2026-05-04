@@ -1,5 +1,5 @@
 import json
-from app.services.task_selector import task_selector
+from task_selector.task_selector import task_selector
 
 def run_tests():
     results = []

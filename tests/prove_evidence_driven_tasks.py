@@ -10,7 +10,7 @@ project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, project_root)
 sys.path.insert(0, os.path.join(project_root, 'intelligence-integration-module-main'))
 
-from app.services.final_convergence import final_convergence
+from task_selector.final_convergence import final_convergence
 import json
 
 def demonstrate_evidence_mapping():

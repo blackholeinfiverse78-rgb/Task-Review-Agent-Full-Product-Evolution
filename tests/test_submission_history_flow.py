@@ -8,10 +8,10 @@ import os
 current_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, current_dir)
 
-from app.services.review_orchestrator import ReviewOrchestrator
-from app.services.review_engine import ReviewEngine
-from app.models.schemas import Task
-from app.models.persistent_storage import product_storage
+from task_selector.review_orchestrator import ReviewOrchestrator
+from evaluation_engine.review_engine import ReviewEngine
+from models.schemas import Task
+from models.persistent_storage import product_storage
 from datetime import datetime
 
 def test_submission_to_history_flow():

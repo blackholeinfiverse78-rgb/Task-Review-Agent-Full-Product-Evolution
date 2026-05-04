@@ -109,18 +109,18 @@ def test_api_imports():
     
     try:
         # Test importing main FastAPI app
-        from app.main import app
+        from main import app
         print("PASS: FastAPI app imports successfully")
         
         # Test importing core services
-        from app.services.review_orchestrator import ReviewOrchestrator
+        from task_selector.review_orchestrator import ReviewOrchestrator
         print("PASS: ReviewOrchestrator imports successfully")
         
-        from app.services.assignment_engine import AssignmentEngine
+        from evaluation_engine.assignment_engine import AssignmentEngine
         print("PASS: AssignmentEngine imports successfully")
         
         # Test importing models
-        from app.models.schemas import Task
+        from models.schemas import Task
         print("PASS: Schemas import successfully")
         
     except ImportError as e:
@@ -132,8 +132,8 @@ def test_real_execution_simulation():
     print("\nTESTING REAL EXECUTION SIMULATION...")
     
     try:
-        from app.services.review_orchestrator import ReviewOrchestrator
-        from app.models.schemas import Task
+        from task_selector.review_orchestrator import ReviewOrchestrator
+        from models.schemas import Task
         from datetime import datetime
         
         # Create orchestrator

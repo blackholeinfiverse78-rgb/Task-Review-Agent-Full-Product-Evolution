@@ -6,8 +6,8 @@ import pytest
 from fastapi.testclient import TestClient
 from datetime import datetime
 
-from app.main import app
-from app.models.persistent_storage import product_storage
+from main import app
+from models.persistent_storage import product_storage
 
 client = TestClient(app)
 

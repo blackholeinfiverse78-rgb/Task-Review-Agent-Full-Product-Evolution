@@ -6,12 +6,12 @@ import sys
 import os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
-from app.services.review_packet_parser import review_packet_parser
-from app.services.final_convergence import final_convergence
-from app.services.production_decision_engine import production_decision_engine
-from app.services.bucket_integration import bucket_integration
-from app.services.niyantran_connection import niyantran_connection
-from app.services.human_in_loop import human_in_loop
+from evaluation_engine.review_packet_parser import review_packet_parser
+from task_selector.final_convergence import final_convergence
+from task_selector.production_decision_engine import production_decision_engine
+from task_selector.bucket_integration import bucket_integration
+from task_selector.niyantran_connection import niyantran_connection
+from task_selector.human_in_loop import human_in_loop
 
 def test_phase_1_review_packet_enforcement():
     """Test Phase 1: Review Packet Enforcement (Hard Gate)"""

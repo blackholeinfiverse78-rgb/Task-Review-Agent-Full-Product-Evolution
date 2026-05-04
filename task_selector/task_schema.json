@@ -1,0 +1,73 @@
+{
+  "schema_version": "1.0.0",
+  "description": "Parikshak Task Schema — strict definition for all task database entries",
+  "required_fields": [
+    "task_id", "product", "layer", "subsystem", "capability",
+    "title", "description", "difficulty",
+    "prerequisites", "next_tasks", "failure_tasks",
+    "completion_signals", "dharma"
+  ],
+  "field_definitions": {
+    "task_id": {
+      "type": "string",
+      "pattern": "^[A-Z]{2,3}-[A-Z]{3}-[A-Z]-\\d{3}$",
+      "description": "Unique task identifier. Format: PRODUCT-TYPE-DIFFICULTY-SEQ",
+      "examples": ["NT-ADV-B-001", "NT-COR-I-002", "GK-REI-A-001"]
+    },
+    "product": {
+      "type": "string",
+      "enum": ["parikshak", "niyantran", "gurukul", "mitra", "insightflow", "robotics", "blockchain"],
+      "description": "BHIV product this task belongs to"
+    },
+    "layer": {
+      "type": "string",
+      "enum": ["intelligence", "governance", "execution", "memory"],
+      "description": "TANTRA layer"
+    },
+    "subsystem": {
+      "type": "string",
+      "description": "Functional subsystem within the product"
+    },
+    "capability": {
+      "type": "string",
+      "description": "Specific capability being assessed"
+    },
+    "title": {
+      "type": "string",
+      "description": "Human-readable task title"
+    },
+    "description": {
+      "type": "string",
+      "description": "What the candidate must build or demonstrate"
+    },
+    "difficulty": {
+      "type": "string",
+      "enum": ["beginner", "intermediate", "advanced"],
+      "description": "Task difficulty level"
+    },
+    "prerequisites": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "task_ids that must be completed before this task"
+    },
+    "next_tasks": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "task_ids to assign on PASS (score >= 6)"
+    },
+    "failure_tasks": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "task_ids to assign on FAIL (score < 6)"
+    },
+    "completion_signals": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Observable signals that indicate task completion"
+    },
+    "dharma": {
+      "type": "string",
+      "description": "The purpose/intent of this task in the candidate's learning journey"
+    }
+  }
+}

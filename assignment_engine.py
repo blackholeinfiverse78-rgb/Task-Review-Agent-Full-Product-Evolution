@@ -31,5 +31,5 @@ def assignment_engine(input_data):
     }
 
 # Compatibility with existing internal architecture
-from app.services.assignment_engine import AssignmentEngine
+from evaluation_engine.assignment_engine import AssignmentEngine
 assignment_service = AssignmentEngine()

@@ -1,8 +1,8 @@
 import unittest
 import hashlib
 import json
-from app.services.review_orchestrator import ReviewOrchestrator
-from app.models.schemas import Task
+from task_selector.review_orchestrator import ReviewOrchestrator
+from models.schemas import Task
 from datetime import datetime
 
 class MockEngine:
@@ -20,7 +20,7 @@ class MockEngine:
 
 class MockGenerator:
     def generate_next_task(self, review, classification):
-        from app.models.orchestration import V2NextTask
+        from models.orchestration import V2NextTask
         return V2NextTask(
             title="Stable Task",
             objective="Stable Objective",

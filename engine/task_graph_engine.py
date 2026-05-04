@@ -18,9 +18,9 @@ logger = logging.getLogger("task_graph_engine")
 _DB_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "db", "niyantran_tasks.json")
 
 REQUIRED_TASK_FIELDS = {
-    "task_id", "product", "layer", "subsystem", "capability", "dharma",
-    "evaluation_inputs", "evaluation_rules", "completion_signals",
-    "failure_type", "prerequisites", "next_tasks", "failure_tasks", "constraints"
+    "task_id", "dharma", "completion_signals",
+    "failure_type", "prerequisites", "next_tasks", "failure_tasks", "constraints",
+    "mandala_mapping"
 }
 
 VALID_FAILURE_TYPES = {"schema_violation", "incomplete", "incorrect_logic", "integration_fail"}
@@ -100,12 +100,11 @@ class TaskGraphEngine:
         if evaluation_result == "PASS":
             candidates = task.get("next_tasks", [])
             if not candidates:
-                raise ValueError(
-                    f"GRAPH_HARD_REJECT: task '{current_task_id}' has no next_tasks "
-                    f"for PASS branch."
-                )
-            selected = candidates[0]
-            reason = f"PASS → next_tasks[0] = {selected}"
+                selected = "TERMINAL_STATE"
+                reason = "PASS → next_tasks empty (TERMINAL_STATE)"
+            else:
+                selected = candidates[0]
+                reason = f"PASS → next_tasks[0] = {selected}"
 
         else:  # FAIL
             if failure_type not in VALID_FAILURE_TYPES:
@@ -128,7 +127,7 @@ class TaskGraphEngine:
             selected = candidates[0]
             reason = f"FAIL({failure_type}) → failure_tasks['{failure_type}'][0] = {selected}"
 
-        if selected not in self._tasks and selected != "COMPLETED":
+        if selected not in self._tasks and selected not in ("COMPLETED", "TERMINAL_STATE"):
             raise ValueError(
                 f"GRAPH_HARD_REJECT: selected task_id '{selected}' not in task DB."
             )

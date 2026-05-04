@@ -342,7 +342,7 @@ def test_core_functionality():
     
     # Test Signal Collector
     try:
-        from app.services.signal_engine import signal_engine
+        from evaluation_engine.signal_engine import signal_engine
         
         signals = signal_engine.collect_supporting_signals(
             "Test Task",
@@ -372,7 +372,7 @@ def test_core_functionality():
     
     # Test Validation Gate
     try:
-        from app.services.shraddha_validation import validation_gate
+        from evaluation_engine.shraddha_validation import validation_gate
         
         test_result = {
             "submission_id": "test-123",

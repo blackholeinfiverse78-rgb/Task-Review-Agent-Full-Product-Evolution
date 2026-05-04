@@ -65,7 +65,7 @@ def test_day_2_signal_evaluation():
     
     try:
         from app.services.evaluation_engine import EvaluationEngine
-        from app.services.repository_analyzer import RepositoryAnalyzer
+        from evaluation_engine.repository_analyzer import RepositoryAnalyzer
         
         # Test signal extraction
         eval_engine = EvaluationEngine()
@@ -110,10 +110,10 @@ def test_day_3_output_validation():
     print("=" * 80)
     
     try:
-        from app.models.schemas import ReviewOutput, Analysis, Meta
-        from app.services.review_orchestrator import ReviewOrchestrator
-        from app.services.review_engine import ReviewEngine
-        from app.models.schemas import Task
+        from models.schemas import ReviewOutput, Analysis, Meta
+        from task_selector.review_orchestrator import ReviewOrchestrator
+        from evaluation_engine.review_engine import ReviewEngine
+        from models.schemas import Task
         from datetime import datetime
         
         # Test contract validation
@@ -170,10 +170,10 @@ def test_hybrid_integration():
     print("=" * 80)
     
     try:
-        from app.services.review_orchestrator import ReviewOrchestrator
-        from app.services.review_engine import ReviewEngine
-        from app.models.schemas import Task
-        from app.models.persistent_storage import product_storage
+        from task_selector.review_orchestrator import ReviewOrchestrator
+        from evaluation_engine.review_engine import ReviewEngine
+        from models.schemas import Task
+        from models.persistent_storage import product_storage
         from datetime import datetime
         
         # Clear storage
@@ -298,10 +298,10 @@ def test_determinism():
     print("=" * 80)
     
     try:
-        from app.services.review_orchestrator import ReviewOrchestrator
-        from app.services.review_engine import ReviewEngine
-        from app.models.schemas import Task
-        from app.models.persistent_storage import product_storage
+        from task_selector.review_orchestrator import ReviewOrchestrator
+        from evaluation_engine.review_engine import ReviewEngine
+        from models.schemas import Task
+        from models.persistent_storage import product_storage
         from datetime import datetime
         
         orchestrator = ReviewOrchestrator(ReviewEngine())
@@ -343,8 +343,8 @@ def test_api_stability():
     print("=" * 80)
     
     try:
-        from app.api.lifecycle import router
-        from app.models.persistent_storage import product_storage
+        from api.lifecycle import router
+        from models.persistent_storage import product_storage
         
         # Check critical endpoints exist
         endpoints = []

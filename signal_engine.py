@@ -16,5 +16,5 @@ def signal_engine(input_data):
     }
 
 # Compatibility with existing internal architecture
-from app.services.signal_engine import SignalEngine
+from evaluation_engine.signal_engine import SignalEngine
 signal_service = SignalEngine()
