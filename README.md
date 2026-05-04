@@ -267,16 +267,16 @@ python tests/test_determinism_proof.py
 | Engine | File |
 |--------|------|
 | Rule Engine (evaluation authority) | `evaluation_engine/rule_engine.py` |
-| Assignment Engine (delegates to rule_engine) | `assignment_engine.py` |
-| Signal Engine (supporting only) | `signal_engine.py` |
-| Domain Router | `domain_router.py` |
-| Decision Engine (narrative only) | `production_decision_engine.py` |
+| Assignment Engine (delegates to rule_engine) | `evaluation_engine/assignment_engine.py` |
+| Signal Engine (supporting only) | `evaluation_engine/signal_engine.py` |
+| Domain Router | `evaluation_engine/domain_router.py` |
+| Decision Engine (narrative only) | `task_selector/production_decision_engine.py` |
 | Graph Engine (deterministic traversal) | `engine/task_graph_engine.py` |
 | Final Convergence (orchestrator) | `task_selector/final_convergence.py` |
 | Review Orchestrator (lifecycle handler) | `task_selector/review_orchestrator.py` |
-| Review Packet Parser (hard gate) | `review_packet_parser.py` |
-| Human-in-Loop | `human_in_loop.py` |
-| Bucket Integration | `bucket_integration.py` |
-| Validation Gate | `shraddha_validation.py` |
-| Registry Validator | `validator.py` |
-| Mandala Mapper | `mandala_mapper.py` |
+| Review Packet Parser (hard gate) | `evaluation_engine/review_packet_parser.py` |
+| Human-in-Loop | `task_selector/human_in_loop.py` |
+| Bucket Integration | `task_selector/bucket_integration.py` |
+| Validation Gate | `evaluation_engine/shraddha_validation.py` |
+| Registry Validator | `evaluation_engine/validator.py` |
+| Mandala Mapper | `task_selector/mandala_mapper.py` |
