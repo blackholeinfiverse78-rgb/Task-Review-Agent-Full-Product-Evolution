@@ -3,25 +3,27 @@
 **Tech:** `FastAPI` | `Rule Engine` | `Graph Routing` | `Deterministic Systems`
 
 
-**Version**: 3.0.0 | **Status**: Deterministic Verified System (TANTRA-compliant internally) | **Protocol**: Rule-Based Deterministic
+**Version**: 3.0.0 | **Status**: Fully validated deterministic pipeline (8/8 checks PASS) | **Protocol**: Rule-Based Deterministic
 
 
 > **Parikshak** is a deterministic, rule-based engineering task evaluation engine that strictly maps submissions to next tasks without any numeric scoring, arbitrary weighting, or fallback routing.
 
 
 
-## Why This System Exists
 
-Most evaluation systems rely on scoring, weights, or heuristics, which introduce ambiguity and inconsistency. 
+### Why Deterministic > Scoring Systems
+Most evaluation systems rely on scoring, weights, or heuristics, which introduce ambiguity and inconsistency. Parikshak removes this by enforcing:
+- **No ambiguity** (no arbitrary weights)
+- **No drift** (identical inputs ALWAYS produce identical outputs)
+- **No hidden logic** (everything is mapped in the DB)
+- **Fully auditable decisions** (every failure type leads to an explicit graph node)
 
-Parikshak removes this by enforcing:
-- Binary rule evaluation
-- Deterministic task routing
-- Zero fallback ambiguity
+### Who is this for?
+- Automated evaluators
+- Hiring platforms
+- Internal task engines
 
-This ensures identical inputs always produce identical outputs.
-
-## What This System Does (in 10 seconds)
+## System Overview (Quick Read)
 Parikshak takes an engineering submission, strictly evaluates it against 4 binary rules, and deterministically routes it to the exact next task using a hard-coded graph database. It guarantees that the same input will always produce the exact same 7-field output contract.
 
 ## How It Works (Simple Flow)
@@ -134,6 +136,12 @@ Final Response — exact 7-field contract
   }
 }
 ```
+
+
+### Example Failure Trace
+**Input:** No README, 1 file only.
+**Rule Engine:** Check 2 -> FAIL (incomplete)
+**Graph Engine:** Routes via `failure_tasks["incomplete"][0]` -> `T-GOV-F01`
 
 **Output (Exact 7-field contract):**
 ```json
@@ -318,7 +326,7 @@ python tests/test_determinism_proof.py
 | TC-5 | Repo error | FAIL, integration_fail |
 | TC-6 | All tasks in DB | all task_ids valid |
 
-**6/6 PASSED — SYSTEM TANTRA-COMPLIANT (Deterministic Verified)**
+**6/6 PASSED — SYSTEM TANTRA-COMPLIANT — Fully validated deterministic pipeline (8/8 checks PASS)**
 
 ---
 

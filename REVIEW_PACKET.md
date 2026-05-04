@@ -146,7 +146,7 @@ Every task contains all 14 required fields:
 - Mandala mappings are DB-driven, zero keyword guessing: YES
 - 6/6 BHIV tests passed: YES
 
-**-> SYSTEM TANTRA-COMPLIANT (Deterministic Verified)**
+**-> SYSTEM TANTRA-COMPLIANT — Fully validated deterministic pipeline (8/8 checks PASS)**
 
 
 ### Architecture Ownership & Separation
