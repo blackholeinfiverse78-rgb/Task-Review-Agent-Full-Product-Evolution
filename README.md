@@ -8,6 +8,25 @@ Parikshak is a fully deterministic, rule-based engineering task evaluation engin
 
 ## Architecture
 
+### Architecture Ownership & Separation
+
+**Evaluation Engine owns:**
+- rule_engine
+- assignment_engine
+- signal_engine
+- validator
+
+**Task Selector owns:**
+- final_convergence
+- mandala_mapper
+
+**Post-Processing Layers:**
+- Decision Engine
+- Human-in-Loop
+- Bucket Logging
+*(Note: These are strictly downstream and DO NOT affect task selection or the evaluation result. They are only post-processing layers.)*
+
+
 ```
 Submission Input (multipart/form-data or JSON)
     |
@@ -190,7 +209,7 @@ No match -> `schema_violation` HARD REJECT.
 ```bash
 cd "g:\Live Task Review Agent - 2"
 pip install -r requirements.txt
-python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+python -m uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 ```
 API docs: `http://localhost:8000/docs`
 

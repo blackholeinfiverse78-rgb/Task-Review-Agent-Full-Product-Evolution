@@ -147,3 +147,22 @@ Every task contains all 14 required fields:
 - 6/6 BHIV tests passed: YES
 
 **-> SYSTEM TANTRA-COMPLIANT**
+
+
+### Architecture Ownership & Separation
+
+**Evaluation Engine owns:**
+- rule_engine
+- assignment_engine
+- signal_engine
+- validator
+
+**Task Selector owns:**
+- final_convergence
+- mandala_mapper
+
+**Post-Processing Layers:**
+- Decision Engine
+- Human-in-Loop
+- Bucket Logging
+*(Note: These are strictly downstream and DO NOT affect task selection or the evaluation result. They are only post-processing layers.)*
