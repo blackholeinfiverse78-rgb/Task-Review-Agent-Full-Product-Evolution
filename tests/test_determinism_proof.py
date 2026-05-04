@@ -7,7 +7,7 @@ import os
 import json
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
-from app.services.rule_engine import rule_engine
+from evaluation_engine.rule_engine import rule_engine
 from engine.task_graph_engine import task_graph_engine
 
 PASS_LINE  = "PASS"

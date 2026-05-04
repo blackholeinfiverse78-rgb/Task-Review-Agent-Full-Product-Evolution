@@ -6,19 +6,48 @@
     "subsystem": "Task Review Engine",
     "capability": "Submission Evaluation",
     "dharma": "Ensure accurate and unbiased evaluation of submissions.",
-    "evaluation_inputs": ["task_title", "task_description", "repository_url", "module_id", "schema_version"],
-    "evaluation_rules": ["schema_validation", "completeness_validation", "logic_validation", "integration_validation"],
-    "completion_signals": ["evaluation_api_returns_200", "decision_field_present", "trace_id_written_to_bucket"],
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "evaluation_api_returns_200",
+      "decision_field_present",
+      "trace_id_written_to_bucket"
+    ],
     "failure_type": null,
     "prerequisites": [],
-    "next_tasks": ["T-GOV-002"],
+    "next_tasks": [
+      "T-GOV-002"
+    ],
     "failure_tasks": {
-      "schema_violation": ["T-GOV-F01"],
-      "incomplete": ["T-GOV-F01"],
-      "incorrect_logic": ["T-GOV-F02"],
-      "integration_fail": ["T-SYS-F00"]
+      "schema_violation": [
+        "T-GOV-F01"
+      ],
+      "incomplete": [
+        "T-GOV-F01"
+      ],
+      "incorrect_logic": [
+        "T-GOV-F02"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
     },
-    "constraints": ["trace_id_must_come_from_niyantran", "no_numeric_scoring", "no_fallback_routing"]
+    "constraints": [
+      "trace_id_must_come_from_niyantran",
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
   },
   {
     "task_id": "T-GOV-002",
@@ -27,19 +56,50 @@
     "subsystem": "Task Review Engine",
     "capability": "Task Enforcement",
     "dharma": "Adapt dynamically via strict graph rules.",
-    "evaluation_inputs": ["task_title", "task_description", "repository_url", "module_id", "schema_version"],
-    "evaluation_rules": ["schema_validation", "completeness_validation", "logic_validation", "integration_validation"],
-    "completion_signals": ["graph_updates_correctly", "next_task_id_in_response", "task_type_is_valid"],
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "graph_updates_correctly",
+      "next_task_id_in_response",
+      "task_type_is_valid"
+    ],
     "failure_type": null,
-    "prerequisites": ["T-GOV-001"],
-    "next_tasks": ["T-COR-001"],
+    "prerequisites": [
+      "T-GOV-001"
+    ],
+    "next_tasks": [
+      "T-COR-001"
+    ],
     "failure_tasks": {
-      "schema_violation": ["T-GOV-F01"],
-      "incomplete": ["T-GOV-F01"],
-      "incorrect_logic": ["T-GOV-F02"],
-      "integration_fail": ["T-SYS-F00"]
+      "schema_violation": [
+        "T-GOV-F01"
+      ],
+      "incomplete": [
+        "T-GOV-F01"
+      ],
+      "incorrect_logic": [
+        "T-GOV-F02"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
     },
-    "constraints": ["trace_id_must_come_from_niyantran", "no_numeric_scoring", "no_fallback_routing"]
+    "constraints": [
+      "trace_id_must_come_from_niyantran",
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
   },
   {
     "task_id": "T-COR-001",
@@ -48,19 +108,49 @@
     "subsystem": "Database",
     "capability": "Relational Storage",
     "dharma": "Data resilience and strict schema enforcement.",
-    "evaluation_inputs": ["task_title", "task_description", "repository_url", "module_id", "schema_version"],
-    "evaluation_rules": ["schema_validation", "completeness_validation", "logic_validation", "integration_validation"],
-    "completion_signals": ["sql_schema_migrated", "jsonl_bucket_writes_succeed", "evaluation_index_updated"],
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "sql_schema_migrated",
+      "jsonl_bucket_writes_succeed",
+      "evaluation_index_updated"
+    ],
     "failure_type": null,
-    "prerequisites": ["T-GOV-002"],
-    "next_tasks": ["T-COR-002"],
+    "prerequisites": [
+      "T-GOV-002"
+    ],
+    "next_tasks": [
+      "T-COR-002"
+    ],
     "failure_tasks": {
-      "schema_violation": ["T-COR-F01"],
-      "incomplete": ["T-COR-F01"],
-      "incorrect_logic": ["T-COR-F02"],
-      "integration_fail": ["T-SYS-F00"]
+      "schema_violation": [
+        "T-COR-F01"
+      ],
+      "incomplete": [
+        "T-COR-F01"
+      ],
+      "incorrect_logic": [
+        "T-COR-F02"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
     },
-    "constraints": ["no_numeric_scoring", "no_fallback_routing"]
+    "constraints": [
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
   },
   {
     "task_id": "T-COR-002",
@@ -69,19 +159,49 @@
     "subsystem": "Registry",
     "capability": "Module Validation",
     "dharma": "Enforce strict module identity at intake.",
-    "evaluation_inputs": ["task_title", "task_description", "repository_url", "module_id", "schema_version"],
-    "evaluation_rules": ["schema_validation", "completeness_validation", "logic_validation", "integration_validation"],
-    "completion_signals": ["module_id_validated", "schema_version_validated", "invalid_module_returns_reject"],
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "module_id_validated",
+      "schema_version_validated",
+      "invalid_module_returns_reject"
+    ],
     "failure_type": null,
-    "prerequisites": ["T-COR-001"],
-    "next_tasks": ["T-SEC-001"],
+    "prerequisites": [
+      "T-COR-001"
+    ],
+    "next_tasks": [
+      "T-SEC-001"
+    ],
     "failure_tasks": {
-      "schema_violation": ["T-COR-F01"],
-      "incomplete": ["T-COR-F01"],
-      "incorrect_logic": ["T-COR-F02"],
-      "integration_fail": ["T-SYS-F00"]
+      "schema_violation": [
+        "T-COR-F01"
+      ],
+      "incomplete": [
+        "T-COR-F01"
+      ],
+      "incorrect_logic": [
+        "T-COR-F02"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
     },
-    "constraints": ["no_numeric_scoring", "no_fallback_routing"]
+    "constraints": [
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
   },
   {
     "task_id": "T-SEC-001",
@@ -90,19 +210,49 @@
     "subsystem": "Middleware",
     "capability": "CORS and Auth",
     "dharma": "Security is non-negotiable at every layer.",
-    "evaluation_inputs": ["task_title", "task_description", "repository_url", "module_id", "schema_version"],
-    "evaluation_rules": ["schema_validation", "completeness_validation", "logic_validation", "integration_validation"],
-    "completion_signals": ["cors_middleware_configured", "jwt_secret_loaded_from_env", "unauthorized_returns_401"],
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "cors_middleware_configured",
+      "jwt_secret_loaded_from_env",
+      "unauthorized_returns_401"
+    ],
     "failure_type": null,
-    "prerequisites": ["T-COR-002"],
-    "next_tasks": ["T-SIG-001"],
+    "prerequisites": [
+      "T-COR-002"
+    ],
+    "next_tasks": [
+      "T-SIG-001"
+    ],
     "failure_tasks": {
-      "schema_violation": ["T-GOV-F01"],
-      "incomplete": ["T-GOV-F01"],
-      "incorrect_logic": ["T-GOV-F02"],
-      "integration_fail": ["T-SYS-F00"]
+      "schema_violation": [
+        "T-GOV-F01"
+      ],
+      "incomplete": [
+        "T-GOV-F01"
+      ],
+      "incorrect_logic": [
+        "T-GOV-F02"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
     },
-    "constraints": ["no_numeric_scoring", "no_fallback_routing"]
+    "constraints": [
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
   },
   {
     "task_id": "T-SIG-001",
@@ -111,19 +261,50 @@
     "subsystem": "Signal Engine",
     "capability": "Repository Analysis",
     "dharma": "Signals must be measurable and deterministic.",
-    "evaluation_inputs": ["task_title", "task_description", "repository_url", "module_id", "schema_version"],
-    "evaluation_rules": ["schema_validation", "completeness_validation", "logic_validation", "integration_validation"],
-    "completion_signals": ["github_api_returns_structure", "layer_count_computed", "readme_score_computed", "doc_density_computed"],
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "github_api_returns_structure",
+      "layer_count_computed",
+      "readme_score_computed",
+      "doc_density_computed"
+    ],
     "failure_type": null,
-    "prerequisites": ["T-SEC-001"],
-    "next_tasks": ["T-SIG-002"],
+    "prerequisites": [
+      "T-SEC-001"
+    ],
+    "next_tasks": [
+      "T-SIG-002"
+    ],
     "failure_tasks": {
-      "schema_violation": ["T-GOV-F01"],
-      "incomplete": ["T-GOV-F01"],
-      "incorrect_logic": ["T-GOV-F02"],
-      "integration_fail": ["T-SYS-F00"]
+      "schema_violation": [
+        "T-GOV-F01"
+      ],
+      "incomplete": [
+        "T-GOV-F01"
+      ],
+      "incorrect_logic": [
+        "T-GOV-F02"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
     },
-    "constraints": ["no_numeric_scoring", "no_fallback_routing"]
+    "constraints": [
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
   },
   {
     "task_id": "T-SIG-002",
@@ -132,19 +313,50 @@
     "subsystem": "Signal Engine",
     "capability": "Feature Matching",
     "dharma": "Match what was promised to what was delivered.",
-    "evaluation_inputs": ["task_title", "task_description", "repository_url", "module_id", "schema_version"],
-    "evaluation_rules": ["schema_validation", "completeness_validation", "logic_validation", "integration_validation"],
-    "completion_signals": ["feature_match_ratio_computed", "implemented_features_populated", "missing_features_populated", "delivery_ratio_passed"],
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "feature_match_ratio_computed",
+      "implemented_features_populated",
+      "missing_features_populated",
+      "delivery_ratio_passed"
+    ],
     "failure_type": null,
-    "prerequisites": ["T-SIG-001"],
-    "next_tasks": ["T-ASN-001"],
+    "prerequisites": [
+      "T-SIG-001"
+    ],
+    "next_tasks": [
+      "T-ASN-001"
+    ],
     "failure_tasks": {
-      "schema_violation": ["T-GOV-F01"],
-      "incomplete": ["T-GOV-F01"],
-      "incorrect_logic": ["T-GOV-F02"],
-      "integration_fail": ["T-SYS-F00"]
+      "schema_violation": [
+        "T-GOV-F01"
+      ],
+      "incomplete": [
+        "T-GOV-F01"
+      ],
+      "incorrect_logic": [
+        "T-GOV-F02"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
     },
-    "constraints": ["no_numeric_scoring", "no_fallback_routing"]
+    "constraints": [
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
   },
   {
     "task_id": "T-ASN-001",
@@ -152,20 +364,52 @@
     "layer": "Governance",
     "subsystem": "Rule Engine",
     "capability": "Binary PAC Detection",
-    "dharma": "Binary truth — no ambiguity in evaluation.",
-    "evaluation_inputs": ["task_title", "task_description", "repository_url", "module_id", "schema_version"],
-    "evaluation_rules": ["schema_validation", "completeness_validation", "logic_validation", "integration_validation"],
-    "completion_signals": ["proof_binary_returned", "architecture_binary_returned", "code_binary_returned", "same_input_same_pac"],
+    "dharma": "Binary truth \u2014 no ambiguity in evaluation.",
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "proof_binary_returned",
+      "architecture_binary_returned",
+      "code_binary_returned",
+      "same_input_same_pac"
+    ],
     "failure_type": null,
-    "prerequisites": ["T-SIG-002"],
-    "next_tasks": ["T-ASN-002"],
+    "prerequisites": [
+      "T-SIG-002"
+    ],
+    "next_tasks": [
+      "T-ASN-002"
+    ],
     "failure_tasks": {
-      "schema_violation": ["T-GOV-F01"],
-      "incomplete": ["T-GOV-F01"],
-      "incorrect_logic": ["T-GOV-F02"],
-      "integration_fail": ["T-SYS-F00"]
+      "schema_violation": [
+        "T-GOV-F01"
+      ],
+      "incomplete": [
+        "T-GOV-F01"
+      ],
+      "incorrect_logic": [
+        "T-GOV-F02"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
     },
-    "constraints": ["no_numeric_scoring", "no_fallback_routing", "deterministic_only"]
+    "constraints": [
+      "no_numeric_scoring",
+      "no_fallback_routing",
+      "deterministic_only"
+    ]
   },
   {
     "task_id": "T-ASN-002",
@@ -174,19 +418,50 @@
     "subsystem": "Rule Engine",
     "capability": "PASS/FAIL Determination",
     "dharma": "Rules are the only authority.",
-    "evaluation_inputs": ["task_title", "task_description", "repository_url", "module_id", "schema_version"],
-    "evaluation_rules": ["schema_validation", "completeness_validation", "logic_validation", "integration_validation"],
-    "completion_signals": ["evaluation_result_is_pass_or_fail", "failure_type_is_valid_or_null", "no_numeric_score_in_output"],
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "evaluation_result_is_pass_or_fail",
+      "failure_type_is_valid_or_null",
+      "no_numeric_score_in_output"
+    ],
     "failure_type": null,
-    "prerequisites": ["T-ASN-001"],
-    "next_tasks": ["T-DEC-001"],
+    "prerequisites": [
+      "T-ASN-001"
+    ],
+    "next_tasks": [
+      "T-DEC-001"
+    ],
     "failure_tasks": {
-      "schema_violation": ["T-GOV-F01"],
-      "incomplete": ["T-GOV-F01"],
-      "incorrect_logic": ["T-GOV-F02"],
-      "integration_fail": ["T-SYS-F00"]
+      "schema_violation": [
+        "T-GOV-F01"
+      ],
+      "incomplete": [
+        "T-GOV-F01"
+      ],
+      "incorrect_logic": [
+        "T-GOV-F02"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
     },
-    "constraints": ["no_numeric_scoring", "no_fallback_routing", "deterministic_only"]
+    "constraints": [
+      "no_numeric_scoring",
+      "no_fallback_routing",
+      "deterministic_only"
+    ]
   },
   {
     "task_id": "T-DEC-001",
@@ -195,19 +470,49 @@
     "subsystem": "Decision Engine",
     "capability": "APPROVED/REJECTED Decision",
     "dharma": "Decisions must be clear, justified, and actionable.",
-    "evaluation_inputs": ["task_title", "task_description", "repository_url", "module_id", "schema_version"],
-    "evaluation_rules": ["schema_validation", "completeness_validation", "logic_validation", "integration_validation"],
-    "completion_signals": ["decision_is_approved_or_rejected", "task_type_is_valid", "narrative_fields_non_empty"],
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "decision_is_approved_or_rejected",
+      "task_type_is_valid",
+      "narrative_fields_non_empty"
+    ],
     "failure_type": null,
-    "prerequisites": ["T-ASN-002"],
-    "next_tasks": ["T-HIL-001"],
+    "prerequisites": [
+      "T-ASN-002"
+    ],
+    "next_tasks": [
+      "T-HIL-001"
+    ],
     "failure_tasks": {
-      "schema_violation": ["T-GOV-F01"],
-      "incomplete": ["T-GOV-F01"],
-      "incorrect_logic": ["T-GOV-F02"],
-      "integration_fail": ["T-SYS-F00"]
+      "schema_violation": [
+        "T-GOV-F01"
+      ],
+      "incomplete": [
+        "T-GOV-F01"
+      ],
+      "incorrect_logic": [
+        "T-GOV-F02"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
     },
-    "constraints": ["no_numeric_scoring", "no_fallback_routing"]
+    "constraints": [
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
   },
   {
     "task_id": "T-HIL-001",
@@ -216,19 +521,49 @@
     "subsystem": "Human-in-Loop",
     "capability": "Escalation",
     "dharma": "Human oversight is mandatory when confidence is low.",
-    "evaluation_inputs": ["task_title", "task_description", "repository_url", "module_id", "schema_version"],
-    "evaluation_rules": ["schema_validation", "completeness_validation", "logic_validation", "integration_validation"],
-    "completion_signals": ["confidence_computed", "escalation_file_created_if_low", "trace_id_in_escalation_file"],
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "confidence_computed",
+      "escalation_file_created_if_low",
+      "trace_id_in_escalation_file"
+    ],
     "failure_type": null,
-    "prerequisites": ["T-DEC-001"],
-    "next_tasks": ["T-TST-001"],
+    "prerequisites": [
+      "T-DEC-001"
+    ],
+    "next_tasks": [
+      "T-TST-001"
+    ],
     "failure_tasks": {
-      "schema_violation": ["T-GOV-F01"],
-      "incomplete": ["T-GOV-F01"],
-      "incorrect_logic": ["T-GOV-F02"],
-      "integration_fail": ["T-SYS-F00"]
+      "schema_violation": [
+        "T-GOV-F01"
+      ],
+      "incomplete": [
+        "T-GOV-F01"
+      ],
+      "incorrect_logic": [
+        "T-GOV-F02"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
     },
-    "constraints": ["no_numeric_scoring", "no_fallback_routing"]
+    "constraints": [
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
   },
   {
     "task_id": "T-TST-001",
@@ -236,20 +571,52 @@
     "layer": "Testing",
     "subsystem": "QA Automation",
     "capability": "Determinism Proof",
-    "dharma": "Trust but verify — always.",
-    "evaluation_inputs": ["task_title", "task_description", "repository_url", "module_id", "schema_version"],
-    "evaluation_rules": ["schema_validation", "completeness_validation", "logic_validation", "integration_validation"],
-    "completion_signals": ["same_input_same_output_x3", "schema_violation_test_passes", "incomplete_test_passes", "integration_fail_test_passes"],
+    "dharma": "Trust but verify \u2014 always.",
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "same_input_same_output_x3",
+      "schema_violation_test_passes",
+      "incomplete_test_passes",
+      "integration_fail_test_passes"
+    ],
     "failure_type": null,
-    "prerequisites": ["T-HIL-001"],
-    "next_tasks": ["T-VAA-001"],
+    "prerequisites": [
+      "T-HIL-001"
+    ],
+    "next_tasks": [
+      "T-VAA-001"
+    ],
     "failure_tasks": {
-      "schema_violation": ["T-TST-F01"],
-      "incomplete": ["T-TST-F01"],
-      "incorrect_logic": ["T-TST-F01"],
-      "integration_fail": ["T-SYS-F00"]
+      "schema_violation": [
+        "T-TST-F01"
+      ],
+      "incomplete": [
+        "T-TST-F01"
+      ],
+      "incorrect_logic": [
+        "T-TST-F01"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
     },
-    "constraints": ["no_numeric_scoring", "no_fallback_routing", "deterministic_only"]
+    "constraints": [
+      "no_numeric_scoring",
+      "no_fallback_routing",
+      "deterministic_only"
+    ]
   },
   {
     "task_id": "T-VAA-001",
@@ -258,19 +625,50 @@
     "subsystem": "Gateway",
     "capability": "Audio Streaming",
     "dharma": "Deliver zero-latency audio streams.",
-    "evaluation_inputs": ["task_title", "task_description", "repository_url", "module_id", "schema_version"],
-    "evaluation_rules": ["schema_validation", "completeness_validation", "logic_validation", "integration_validation"],
-    "completion_signals": ["tts_speak_returns_audio", "gtts_primary_used", "pyttsx3_fallback_activates", "languages_endpoint_works"],
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "tts_speak_returns_audio",
+      "gtts_primary_used",
+      "pyttsx3_fallback_activates",
+      "languages_endpoint_works"
+    ],
     "failure_type": null,
-    "prerequisites": ["T-TST-001"],
-    "next_tasks": ["COMPLETED"],
+    "prerequisites": [
+      "T-TST-001"
+    ],
+    "next_tasks": [
+      "COMPLETED"
+    ],
     "failure_tasks": {
-      "schema_violation": ["T-VAA-F01"],
-      "incomplete": ["T-VAA-F01"],
-      "incorrect_logic": ["T-VAA-F01"],
-      "integration_fail": ["T-SYS-F00"]
+      "schema_violation": [
+        "T-VAA-F01"
+      ],
+      "incomplete": [
+        "T-VAA-F01"
+      ],
+      "incorrect_logic": [
+        "T-VAA-F01"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
     },
-    "constraints": ["no_numeric_scoring", "no_fallback_routing"]
+    "constraints": [
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
   },
   {
     "task_id": "T-GOV-F01",
@@ -279,19 +677,46 @@
     "subsystem": "Task Review Engine",
     "capability": "Schema Correction",
     "dharma": "Diagnose schema violations systematically.",
-    "evaluation_inputs": ["task_title", "task_description", "repository_url", "module_id", "schema_version"],
-    "evaluation_rules": ["schema_validation", "completeness_validation", "logic_validation", "integration_validation"],
-    "completion_signals": ["schema_violation_resolved", "evaluation_result_is_pass"],
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "schema_violation_resolved",
+      "evaluation_result_is_pass"
+    ],
     "failure_type": "schema_violation",
     "prerequisites": [],
-    "next_tasks": ["T-GOV-001"],
+    "next_tasks": [
+      "T-GOV-001"
+    ],
     "failure_tasks": {
-      "schema_violation": ["T-SYS-F00"],
-      "incomplete": ["T-SYS-F00"],
-      "incorrect_logic": ["T-SYS-F00"],
-      "integration_fail": ["T-SYS-F00"]
+      "schema_violation": [
+        "T-SYS-F00"
+      ],
+      "incomplete": [
+        "T-SYS-F00"
+      ],
+      "incorrect_logic": [
+        "T-SYS-F00"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
     },
-    "constraints": ["no_numeric_scoring", "no_fallback_routing"]
+    "constraints": [
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
   },
   {
     "task_id": "T-GOV-F02",
@@ -300,19 +725,46 @@
     "subsystem": "Task Review Engine",
     "capability": "Logic Correction",
     "dharma": "Maintain execution structure.",
-    "evaluation_inputs": ["task_title", "task_description", "repository_url", "module_id", "schema_version"],
-    "evaluation_rules": ["schema_validation", "completeness_validation", "logic_validation", "integration_validation"],
-    "completion_signals": ["incorrect_logic_resolved", "evaluation_result_is_pass"],
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "incorrect_logic_resolved",
+      "evaluation_result_is_pass"
+    ],
     "failure_type": "incorrect_logic",
     "prerequisites": [],
-    "next_tasks": ["T-GOV-001"],
+    "next_tasks": [
+      "T-GOV-001"
+    ],
     "failure_tasks": {
-      "schema_violation": ["T-SYS-F00"],
-      "incomplete": ["T-SYS-F00"],
-      "incorrect_logic": ["T-SYS-F00"],
-      "integration_fail": ["T-SYS-F00"]
+      "schema_violation": [
+        "T-SYS-F00"
+      ],
+      "incomplete": [
+        "T-SYS-F00"
+      ],
+      "incorrect_logic": [
+        "T-SYS-F00"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
     },
-    "constraints": ["no_numeric_scoring", "no_fallback_routing"]
+    "constraints": [
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
   },
   {
     "task_id": "T-COR-F01",
@@ -321,19 +773,46 @@
     "subsystem": "Database",
     "capability": "Storage Correction",
     "dharma": "Fix relational structures.",
-    "evaluation_inputs": ["task_title", "task_description", "repository_url", "module_id", "schema_version"],
-    "evaluation_rules": ["schema_validation", "completeness_validation", "logic_validation", "integration_validation"],
-    "completion_signals": ["db_schema_bug_resolved", "jsonl_writes_succeed"],
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "db_schema_bug_resolved",
+      "jsonl_writes_succeed"
+    ],
     "failure_type": "schema_violation",
     "prerequisites": [],
-    "next_tasks": ["T-COR-001"],
+    "next_tasks": [
+      "T-COR-001"
+    ],
     "failure_tasks": {
-      "schema_violation": ["T-SYS-F00"],
-      "incomplete": ["T-SYS-F00"],
-      "incorrect_logic": ["T-SYS-F00"],
-      "integration_fail": ["T-SYS-F00"]
+      "schema_violation": [
+        "T-SYS-F00"
+      ],
+      "incomplete": [
+        "T-SYS-F00"
+      ],
+      "incorrect_logic": [
+        "T-SYS-F00"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
     },
-    "constraints": ["no_numeric_scoring", "no_fallback_routing"]
+    "constraints": [
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
   },
   {
     "task_id": "T-COR-F02",
@@ -342,19 +821,46 @@
     "subsystem": "Registry",
     "capability": "Registry Correction",
     "dharma": "Identity must be verified at every entry.",
-    "evaluation_inputs": ["task_title", "task_description", "repository_url", "module_id", "schema_version"],
-    "evaluation_rules": ["schema_validation", "completeness_validation", "logic_validation", "integration_validation"],
-    "completion_signals": ["registry_validation_returns_correct_reject", "reason_field_populated"],
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "registry_validation_returns_correct_reject",
+      "reason_field_populated"
+    ],
     "failure_type": "incorrect_logic",
     "prerequisites": [],
-    "next_tasks": ["T-COR-002"],
+    "next_tasks": [
+      "T-COR-002"
+    ],
     "failure_tasks": {
-      "schema_violation": ["T-SYS-F00"],
-      "incomplete": ["T-SYS-F00"],
-      "incorrect_logic": ["T-SYS-F00"],
-      "integration_fail": ["T-SYS-F00"]
+      "schema_violation": [
+        "T-SYS-F00"
+      ],
+      "incomplete": [
+        "T-SYS-F00"
+      ],
+      "incorrect_logic": [
+        "T-SYS-F00"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
     },
-    "constraints": ["no_numeric_scoring", "no_fallback_routing"]
+    "constraints": [
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
   },
   {
     "task_id": "T-TST-F01",
@@ -363,19 +869,46 @@
     "subsystem": "QA Automation",
     "capability": "Test Correction",
     "dharma": "Ensure reliable and repeatable tests.",
-    "evaluation_inputs": ["task_title", "task_description", "repository_url", "module_id", "schema_version"],
-    "evaluation_rules": ["schema_validation", "completeness_validation", "logic_validation", "integration_validation"],
-    "completion_signals": ["flaky_tests_resolved", "all_test_cases_pass"],
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "flaky_tests_resolved",
+      "all_test_cases_pass"
+    ],
     "failure_type": "incomplete",
     "prerequisites": [],
-    "next_tasks": ["T-TST-001"],
+    "next_tasks": [
+      "T-TST-001"
+    ],
     "failure_tasks": {
-      "schema_violation": ["T-SYS-F00"],
-      "incomplete": ["T-SYS-F00"],
-      "incorrect_logic": ["T-SYS-F00"],
-      "integration_fail": ["T-SYS-F00"]
+      "schema_violation": [
+        "T-SYS-F00"
+      ],
+      "incomplete": [
+        "T-SYS-F00"
+      ],
+      "incorrect_logic": [
+        "T-SYS-F00"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
     },
-    "constraints": ["no_numeric_scoring", "no_fallback_routing"]
+    "constraints": [
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
   },
   {
     "task_id": "T-VAA-F01",
@@ -384,19 +917,46 @@
     "subsystem": "Gateway",
     "capability": "TTS Correction",
     "dharma": "Ensure stream stability at all times.",
-    "evaluation_inputs": ["task_title", "task_description", "repository_url", "module_id", "schema_version"],
-    "evaluation_rules": ["schema_validation", "completeness_validation", "logic_validation", "integration_validation"],
-    "completion_signals": ["gtts_returns_audio", "pyttsx3_fallback_activates"],
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "gtts_returns_audio",
+      "pyttsx3_fallback_activates"
+    ],
     "failure_type": "integration_fail",
     "prerequisites": [],
-    "next_tasks": ["T-VAA-001"],
+    "next_tasks": [
+      "T-VAA-001"
+    ],
     "failure_tasks": {
-      "schema_violation": ["T-SYS-F00"],
-      "incomplete": ["T-SYS-F00"],
-      "incorrect_logic": ["T-SYS-F00"],
-      "integration_fail": ["T-SYS-F00"]
+      "schema_violation": [
+        "T-SYS-F00"
+      ],
+      "incomplete": [
+        "T-SYS-F00"
+      ],
+      "incorrect_logic": [
+        "T-SYS-F00"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
     },
-    "constraints": ["no_numeric_scoring", "no_fallback_routing"]
+    "constraints": [
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
   },
   {
     "task_id": "T-SYS-F00",
@@ -404,19 +964,2296 @@
     "layer": "Governance",
     "subsystem": "Task Selection",
     "capability": "Catastrophic Recovery",
-    "dharma": "Deep dive into catastrophic failure — restore order.",
-    "evaluation_inputs": ["task_title", "task_description", "repository_url", "module_id", "schema_version"],
-    "evaluation_rules": ["schema_validation", "completeness_validation", "logic_validation", "integration_validation"],
-    "completion_signals": ["health_check_returns_200", "production_status_all_green"],
+    "dharma": "Deep dive into catastrophic failure \u2014 restore order.",
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "health_check_returns_200",
+      "production_status_all_green"
+    ],
     "failure_type": "integration_fail",
     "prerequisites": [],
-    "next_tasks": ["T-GOV-001"],
+    "next_tasks": [
+      "T-GOV-001"
+    ],
     "failure_tasks": {
-      "schema_violation": ["T-SYS-F00"],
-      "incomplete": ["T-SYS-F00"],
-      "incorrect_logic": ["T-SYS-F00"],
-      "integration_fail": ["T-SYS-F00"]
+      "schema_violation": [
+        "T-SYS-F00"
+      ],
+      "incomplete": [
+        "T-SYS-F00"
+      ],
+      "incorrect_logic": [
+        "T-SYS-F00"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
     },
-    "constraints": ["no_numeric_scoring", "no_fallback_routing"]
+    "constraints": [
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
+  },
+  {
+    "task_id": "T-GEN-100",
+    "product": "Niyantran",
+    "layer": "Frontend",
+    "subsystem": "API",
+    "capability": "Auto Niyantran Frontend",
+    "dharma": "Auto generated dharma.",
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "evaluation_api_returns_200",
+      "decision_field_present",
+      "trace_id_written_to_bucket"
+    ],
+    "failure_type": null,
+    "prerequisites": [],
+    "next_tasks": [
+      "T-GEN-101"
+    ],
+    "failure_tasks": {
+      "schema_violation": [
+        "T-SYS-F00"
+      ],
+      "incomplete": [
+        "T-SYS-F00"
+      ],
+      "incorrect_logic": [
+        "T-SYS-F00"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
+    },
+    "constraints": [
+      "trace_id_must_come_from_niyantran",
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
+  },
+  {
+    "task_id": "T-GEN-101",
+    "product": "Niyantran",
+    "layer": "Frontend",
+    "subsystem": "Storage",
+    "capability": "Auto Niyantran Frontend",
+    "dharma": "Auto generated dharma.",
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "evaluation_api_returns_200",
+      "decision_field_present",
+      "trace_id_written_to_bucket"
+    ],
+    "failure_type": null,
+    "prerequisites": [],
+    "next_tasks": [
+      "T-GEN-102"
+    ],
+    "failure_tasks": {
+      "schema_violation": [
+        "T-SYS-F00"
+      ],
+      "incomplete": [
+        "T-SYS-F00"
+      ],
+      "incorrect_logic": [
+        "T-SYS-F00"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
+    },
+    "constraints": [
+      "trace_id_must_come_from_niyantran",
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
+  },
+  {
+    "task_id": "T-GEN-102",
+    "product": "Niyantran",
+    "layer": "Frontend",
+    "subsystem": "Auth",
+    "capability": "Auto Niyantran Frontend",
+    "dharma": "Auto generated dharma.",
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "evaluation_api_returns_200",
+      "decision_field_present",
+      "trace_id_written_to_bucket"
+    ],
+    "failure_type": null,
+    "prerequisites": [],
+    "next_tasks": [
+      "T-GEN-103"
+    ],
+    "failure_tasks": {
+      "schema_violation": [
+        "T-SYS-F00"
+      ],
+      "incomplete": [
+        "T-SYS-F00"
+      ],
+      "incorrect_logic": [
+        "T-SYS-F00"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
+    },
+    "constraints": [
+      "trace_id_must_come_from_niyantran",
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
+  },
+  {
+    "task_id": "T-GEN-103",
+    "product": "Niyantran",
+    "layer": "Frontend",
+    "subsystem": "Compute",
+    "capability": "Auto Niyantran Frontend",
+    "dharma": "Auto generated dharma.",
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "evaluation_api_returns_200",
+      "decision_field_present",
+      "trace_id_written_to_bucket"
+    ],
+    "failure_type": null,
+    "prerequisites": [],
+    "next_tasks": [
+      "T-GEN-104"
+    ],
+    "failure_tasks": {
+      "schema_violation": [
+        "T-SYS-F00"
+      ],
+      "incomplete": [
+        "T-SYS-F00"
+      ],
+      "incorrect_logic": [
+        "T-SYS-F00"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
+    },
+    "constraints": [
+      "trace_id_must_come_from_niyantran",
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
+  },
+  {
+    "task_id": "T-GEN-104",
+    "product": "Niyantran",
+    "layer": "Frontend",
+    "subsystem": "UI",
+    "capability": "Auto Niyantran Frontend",
+    "dharma": "Auto generated dharma.",
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "evaluation_api_returns_200",
+      "decision_field_present",
+      "trace_id_written_to_bucket"
+    ],
+    "failure_type": null,
+    "prerequisites": [],
+    "next_tasks": [
+      "T-GEN-105"
+    ],
+    "failure_tasks": {
+      "schema_violation": [
+        "T-SYS-F00"
+      ],
+      "incomplete": [
+        "T-SYS-F00"
+      ],
+      "incorrect_logic": [
+        "T-SYS-F00"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
+    },
+    "constraints": [
+      "trace_id_must_come_from_niyantran",
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
+  },
+  {
+    "task_id": "T-GEN-105",
+    "product": "Niyantran",
+    "layer": "Backend",
+    "subsystem": "API",
+    "capability": "Auto Niyantran Backend",
+    "dharma": "Auto generated dharma.",
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "evaluation_api_returns_200",
+      "decision_field_present",
+      "trace_id_written_to_bucket"
+    ],
+    "failure_type": null,
+    "prerequisites": [],
+    "next_tasks": [
+      "T-GEN-106"
+    ],
+    "failure_tasks": {
+      "schema_violation": [
+        "T-SYS-F00"
+      ],
+      "incomplete": [
+        "T-SYS-F00"
+      ],
+      "incorrect_logic": [
+        "T-SYS-F00"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
+    },
+    "constraints": [
+      "trace_id_must_come_from_niyantran",
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
+  },
+  {
+    "task_id": "T-GEN-106",
+    "product": "Niyantran",
+    "layer": "Backend",
+    "subsystem": "Storage",
+    "capability": "Auto Niyantran Backend",
+    "dharma": "Auto generated dharma.",
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "evaluation_api_returns_200",
+      "decision_field_present",
+      "trace_id_written_to_bucket"
+    ],
+    "failure_type": null,
+    "prerequisites": [],
+    "next_tasks": [
+      "T-GEN-107"
+    ],
+    "failure_tasks": {
+      "schema_violation": [
+        "T-SYS-F00"
+      ],
+      "incomplete": [
+        "T-SYS-F00"
+      ],
+      "incorrect_logic": [
+        "T-SYS-F00"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
+    },
+    "constraints": [
+      "trace_id_must_come_from_niyantran",
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
+  },
+  {
+    "task_id": "T-GEN-107",
+    "product": "Niyantran",
+    "layer": "Backend",
+    "subsystem": "Auth",
+    "capability": "Auto Niyantran Backend",
+    "dharma": "Auto generated dharma.",
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "evaluation_api_returns_200",
+      "decision_field_present",
+      "trace_id_written_to_bucket"
+    ],
+    "failure_type": null,
+    "prerequisites": [],
+    "next_tasks": [
+      "T-GEN-108"
+    ],
+    "failure_tasks": {
+      "schema_violation": [
+        "T-SYS-F00"
+      ],
+      "incomplete": [
+        "T-SYS-F00"
+      ],
+      "incorrect_logic": [
+        "T-SYS-F00"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
+    },
+    "constraints": [
+      "trace_id_must_come_from_niyantran",
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
+  },
+  {
+    "task_id": "T-GEN-108",
+    "product": "Niyantran",
+    "layer": "Backend",
+    "subsystem": "Compute",
+    "capability": "Auto Niyantran Backend",
+    "dharma": "Auto generated dharma.",
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "evaluation_api_returns_200",
+      "decision_field_present",
+      "trace_id_written_to_bucket"
+    ],
+    "failure_type": null,
+    "prerequisites": [],
+    "next_tasks": [
+      "T-GEN-109"
+    ],
+    "failure_tasks": {
+      "schema_violation": [
+        "T-SYS-F00"
+      ],
+      "incomplete": [
+        "T-SYS-F00"
+      ],
+      "incorrect_logic": [
+        "T-SYS-F00"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
+    },
+    "constraints": [
+      "trace_id_must_come_from_niyantran",
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
+  },
+  {
+    "task_id": "T-GEN-109",
+    "product": "Niyantran",
+    "layer": "Backend",
+    "subsystem": "UI",
+    "capability": "Auto Niyantran Backend",
+    "dharma": "Auto generated dharma.",
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "evaluation_api_returns_200",
+      "decision_field_present",
+      "trace_id_written_to_bucket"
+    ],
+    "failure_type": null,
+    "prerequisites": [],
+    "next_tasks": [
+      "T-GEN-110"
+    ],
+    "failure_tasks": {
+      "schema_violation": [
+        "T-SYS-F00"
+      ],
+      "incomplete": [
+        "T-SYS-F00"
+      ],
+      "incorrect_logic": [
+        "T-SYS-F00"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
+    },
+    "constraints": [
+      "trace_id_must_come_from_niyantran",
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
+  },
+  {
+    "task_id": "T-GEN-110",
+    "product": "Niyantran",
+    "layer": "Database",
+    "subsystem": "API",
+    "capability": "Auto Niyantran Database",
+    "dharma": "Auto generated dharma.",
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "evaluation_api_returns_200",
+      "decision_field_present",
+      "trace_id_written_to_bucket"
+    ],
+    "failure_type": null,
+    "prerequisites": [],
+    "next_tasks": [
+      "T-GEN-111"
+    ],
+    "failure_tasks": {
+      "schema_violation": [
+        "T-SYS-F00"
+      ],
+      "incomplete": [
+        "T-SYS-F00"
+      ],
+      "incorrect_logic": [
+        "T-SYS-F00"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
+    },
+    "constraints": [
+      "trace_id_must_come_from_niyantran",
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
+  },
+  {
+    "task_id": "T-GEN-111",
+    "product": "Niyantran",
+    "layer": "Database",
+    "subsystem": "Storage",
+    "capability": "Auto Niyantran Database",
+    "dharma": "Auto generated dharma.",
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "evaluation_api_returns_200",
+      "decision_field_present",
+      "trace_id_written_to_bucket"
+    ],
+    "failure_type": null,
+    "prerequisites": [],
+    "next_tasks": [
+      "T-GEN-112"
+    ],
+    "failure_tasks": {
+      "schema_violation": [
+        "T-SYS-F00"
+      ],
+      "incomplete": [
+        "T-SYS-F00"
+      ],
+      "incorrect_logic": [
+        "T-SYS-F00"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
+    },
+    "constraints": [
+      "trace_id_must_come_from_niyantran",
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
+  },
+  {
+    "task_id": "T-GEN-112",
+    "product": "Niyantran",
+    "layer": "Database",
+    "subsystem": "Auth",
+    "capability": "Auto Niyantran Database",
+    "dharma": "Auto generated dharma.",
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "evaluation_api_returns_200",
+      "decision_field_present",
+      "trace_id_written_to_bucket"
+    ],
+    "failure_type": null,
+    "prerequisites": [],
+    "next_tasks": [
+      "T-GEN-113"
+    ],
+    "failure_tasks": {
+      "schema_violation": [
+        "T-SYS-F00"
+      ],
+      "incomplete": [
+        "T-SYS-F00"
+      ],
+      "incorrect_logic": [
+        "T-SYS-F00"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
+    },
+    "constraints": [
+      "trace_id_must_come_from_niyantran",
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
+  },
+  {
+    "task_id": "T-GEN-113",
+    "product": "Niyantran",
+    "layer": "Database",
+    "subsystem": "Compute",
+    "capability": "Auto Niyantran Database",
+    "dharma": "Auto generated dharma.",
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "evaluation_api_returns_200",
+      "decision_field_present",
+      "trace_id_written_to_bucket"
+    ],
+    "failure_type": null,
+    "prerequisites": [],
+    "next_tasks": [
+      "T-GEN-114"
+    ],
+    "failure_tasks": {
+      "schema_violation": [
+        "T-SYS-F00"
+      ],
+      "incomplete": [
+        "T-SYS-F00"
+      ],
+      "incorrect_logic": [
+        "T-SYS-F00"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
+    },
+    "constraints": [
+      "trace_id_must_come_from_niyantran",
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
+  },
+  {
+    "task_id": "T-GEN-114",
+    "product": "Niyantran",
+    "layer": "Database",
+    "subsystem": "UI",
+    "capability": "Auto Niyantran Database",
+    "dharma": "Auto generated dharma.",
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "evaluation_api_returns_200",
+      "decision_field_present",
+      "trace_id_written_to_bucket"
+    ],
+    "failure_type": null,
+    "prerequisites": [],
+    "next_tasks": [
+      "T-GEN-115"
+    ],
+    "failure_tasks": {
+      "schema_violation": [
+        "T-SYS-F00"
+      ],
+      "incomplete": [
+        "T-SYS-F00"
+      ],
+      "incorrect_logic": [
+        "T-SYS-F00"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
+    },
+    "constraints": [
+      "trace_id_must_come_from_niyantran",
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
+  },
+  {
+    "task_id": "T-GEN-115",
+    "product": "Niyantran",
+    "layer": "Security",
+    "subsystem": "API",
+    "capability": "Auto Niyantran Security",
+    "dharma": "Auto generated dharma.",
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "evaluation_api_returns_200",
+      "decision_field_present",
+      "trace_id_written_to_bucket"
+    ],
+    "failure_type": null,
+    "prerequisites": [],
+    "next_tasks": [
+      "T-GEN-116"
+    ],
+    "failure_tasks": {
+      "schema_violation": [
+        "T-SYS-F00"
+      ],
+      "incomplete": [
+        "T-SYS-F00"
+      ],
+      "incorrect_logic": [
+        "T-SYS-F00"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
+    },
+    "constraints": [
+      "trace_id_must_come_from_niyantran",
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
+  },
+  {
+    "task_id": "T-GEN-116",
+    "product": "Niyantran",
+    "layer": "Security",
+    "subsystem": "Storage",
+    "capability": "Auto Niyantran Security",
+    "dharma": "Auto generated dharma.",
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "evaluation_api_returns_200",
+      "decision_field_present",
+      "trace_id_written_to_bucket"
+    ],
+    "failure_type": null,
+    "prerequisites": [],
+    "next_tasks": [
+      "T-GEN-117"
+    ],
+    "failure_tasks": {
+      "schema_violation": [
+        "T-SYS-F00"
+      ],
+      "incomplete": [
+        "T-SYS-F00"
+      ],
+      "incorrect_logic": [
+        "T-SYS-F00"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
+    },
+    "constraints": [
+      "trace_id_must_come_from_niyantran",
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
+  },
+  {
+    "task_id": "T-GEN-117",
+    "product": "Niyantran",
+    "layer": "Security",
+    "subsystem": "Auth",
+    "capability": "Auto Niyantran Security",
+    "dharma": "Auto generated dharma.",
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "evaluation_api_returns_200",
+      "decision_field_present",
+      "trace_id_written_to_bucket"
+    ],
+    "failure_type": null,
+    "prerequisites": [],
+    "next_tasks": [
+      "T-GEN-118"
+    ],
+    "failure_tasks": {
+      "schema_violation": [
+        "T-SYS-F00"
+      ],
+      "incomplete": [
+        "T-SYS-F00"
+      ],
+      "incorrect_logic": [
+        "T-SYS-F00"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
+    },
+    "constraints": [
+      "trace_id_must_come_from_niyantran",
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
+  },
+  {
+    "task_id": "T-GEN-118",
+    "product": "Niyantran",
+    "layer": "Security",
+    "subsystem": "Compute",
+    "capability": "Auto Niyantran Security",
+    "dharma": "Auto generated dharma.",
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "evaluation_api_returns_200",
+      "decision_field_present",
+      "trace_id_written_to_bucket"
+    ],
+    "failure_type": null,
+    "prerequisites": [],
+    "next_tasks": [
+      "T-GEN-119"
+    ],
+    "failure_tasks": {
+      "schema_violation": [
+        "T-SYS-F00"
+      ],
+      "incomplete": [
+        "T-SYS-F00"
+      ],
+      "incorrect_logic": [
+        "T-SYS-F00"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
+    },
+    "constraints": [
+      "trace_id_must_come_from_niyantran",
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
+  },
+  {
+    "task_id": "T-GEN-119",
+    "product": "Niyantran",
+    "layer": "Security",
+    "subsystem": "UI",
+    "capability": "Auto Niyantran Security",
+    "dharma": "Auto generated dharma.",
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "evaluation_api_returns_200",
+      "decision_field_present",
+      "trace_id_written_to_bucket"
+    ],
+    "failure_type": null,
+    "prerequisites": [],
+    "next_tasks": [
+      "T-GEN-120"
+    ],
+    "failure_tasks": {
+      "schema_violation": [
+        "T-SYS-F00"
+      ],
+      "incomplete": [
+        "T-SYS-F00"
+      ],
+      "incorrect_logic": [
+        "T-SYS-F00"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
+    },
+    "constraints": [
+      "trace_id_must_come_from_niyantran",
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
+  },
+  {
+    "task_id": "T-GEN-120",
+    "product": "Niyantran",
+    "layer": "Infrastructure",
+    "subsystem": "API",
+    "capability": "Auto Niyantran Infrastructure",
+    "dharma": "Auto generated dharma.",
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "evaluation_api_returns_200",
+      "decision_field_present",
+      "trace_id_written_to_bucket"
+    ],
+    "failure_type": null,
+    "prerequisites": [],
+    "next_tasks": [
+      "T-GEN-121"
+    ],
+    "failure_tasks": {
+      "schema_violation": [
+        "T-SYS-F00"
+      ],
+      "incomplete": [
+        "T-SYS-F00"
+      ],
+      "incorrect_logic": [
+        "T-SYS-F00"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
+    },
+    "constraints": [
+      "trace_id_must_come_from_niyantran",
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
+  },
+  {
+    "task_id": "T-GEN-121",
+    "product": "Niyantran",
+    "layer": "Infrastructure",
+    "subsystem": "Storage",
+    "capability": "Auto Niyantran Infrastructure",
+    "dharma": "Auto generated dharma.",
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "evaluation_api_returns_200",
+      "decision_field_present",
+      "trace_id_written_to_bucket"
+    ],
+    "failure_type": null,
+    "prerequisites": [],
+    "next_tasks": [
+      "T-GEN-122"
+    ],
+    "failure_tasks": {
+      "schema_violation": [
+        "T-SYS-F00"
+      ],
+      "incomplete": [
+        "T-SYS-F00"
+      ],
+      "incorrect_logic": [
+        "T-SYS-F00"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
+    },
+    "constraints": [
+      "trace_id_must_come_from_niyantran",
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
+  },
+  {
+    "task_id": "T-GEN-122",
+    "product": "Niyantran",
+    "layer": "Infrastructure",
+    "subsystem": "Auth",
+    "capability": "Auto Niyantran Infrastructure",
+    "dharma": "Auto generated dharma.",
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "evaluation_api_returns_200",
+      "decision_field_present",
+      "trace_id_written_to_bucket"
+    ],
+    "failure_type": null,
+    "prerequisites": [],
+    "next_tasks": [
+      "T-GEN-123"
+    ],
+    "failure_tasks": {
+      "schema_violation": [
+        "T-SYS-F00"
+      ],
+      "incomplete": [
+        "T-SYS-F00"
+      ],
+      "incorrect_logic": [
+        "T-SYS-F00"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
+    },
+    "constraints": [
+      "trace_id_must_come_from_niyantran",
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
+  },
+  {
+    "task_id": "T-GEN-123",
+    "product": "Niyantran",
+    "layer": "Infrastructure",
+    "subsystem": "Compute",
+    "capability": "Auto Niyantran Infrastructure",
+    "dharma": "Auto generated dharma.",
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "evaluation_api_returns_200",
+      "decision_field_present",
+      "trace_id_written_to_bucket"
+    ],
+    "failure_type": null,
+    "prerequisites": [],
+    "next_tasks": [
+      "T-GEN-124"
+    ],
+    "failure_tasks": {
+      "schema_violation": [
+        "T-SYS-F00"
+      ],
+      "incomplete": [
+        "T-SYS-F00"
+      ],
+      "incorrect_logic": [
+        "T-SYS-F00"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
+    },
+    "constraints": [
+      "trace_id_must_come_from_niyantran",
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
+  },
+  {
+    "task_id": "T-GEN-124",
+    "product": "Niyantran",
+    "layer": "Infrastructure",
+    "subsystem": "UI",
+    "capability": "Auto Niyantran Infrastructure",
+    "dharma": "Auto generated dharma.",
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "evaluation_api_returns_200",
+      "decision_field_present",
+      "trace_id_written_to_bucket"
+    ],
+    "failure_type": null,
+    "prerequisites": [],
+    "next_tasks": [
+      "T-GEN-125"
+    ],
+    "failure_tasks": {
+      "schema_violation": [
+        "T-SYS-F00"
+      ],
+      "incomplete": [
+        "T-SYS-F00"
+      ],
+      "incorrect_logic": [
+        "T-SYS-F00"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
+    },
+    "constraints": [
+      "trace_id_must_come_from_niyantran",
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
+  },
+  {
+    "task_id": "T-GEN-125",
+    "product": "Vaani_TTS",
+    "layer": "Frontend",
+    "subsystem": "API",
+    "capability": "Auto Vaani_TTS Frontend",
+    "dharma": "Auto generated dharma.",
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "evaluation_api_returns_200",
+      "decision_field_present",
+      "trace_id_written_to_bucket"
+    ],
+    "failure_type": null,
+    "prerequisites": [],
+    "next_tasks": [
+      "T-GEN-126"
+    ],
+    "failure_tasks": {
+      "schema_violation": [
+        "T-SYS-F00"
+      ],
+      "incomplete": [
+        "T-SYS-F00"
+      ],
+      "incorrect_logic": [
+        "T-SYS-F00"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
+    },
+    "constraints": [
+      "trace_id_must_come_from_niyantran",
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
+  },
+  {
+    "task_id": "T-GEN-126",
+    "product": "Vaani_TTS",
+    "layer": "Frontend",
+    "subsystem": "Storage",
+    "capability": "Auto Vaani_TTS Frontend",
+    "dharma": "Auto generated dharma.",
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "evaluation_api_returns_200",
+      "decision_field_present",
+      "trace_id_written_to_bucket"
+    ],
+    "failure_type": null,
+    "prerequisites": [],
+    "next_tasks": [
+      "T-GEN-127"
+    ],
+    "failure_tasks": {
+      "schema_violation": [
+        "T-SYS-F00"
+      ],
+      "incomplete": [
+        "T-SYS-F00"
+      ],
+      "incorrect_logic": [
+        "T-SYS-F00"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
+    },
+    "constraints": [
+      "trace_id_must_come_from_niyantran",
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
+  },
+  {
+    "task_id": "T-GEN-127",
+    "product": "Vaani_TTS",
+    "layer": "Frontend",
+    "subsystem": "Auth",
+    "capability": "Auto Vaani_TTS Frontend",
+    "dharma": "Auto generated dharma.",
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "evaluation_api_returns_200",
+      "decision_field_present",
+      "trace_id_written_to_bucket"
+    ],
+    "failure_type": null,
+    "prerequisites": [],
+    "next_tasks": [
+      "T-GEN-128"
+    ],
+    "failure_tasks": {
+      "schema_violation": [
+        "T-SYS-F00"
+      ],
+      "incomplete": [
+        "T-SYS-F00"
+      ],
+      "incorrect_logic": [
+        "T-SYS-F00"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
+    },
+    "constraints": [
+      "trace_id_must_come_from_niyantran",
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
+  },
+  {
+    "task_id": "T-GEN-128",
+    "product": "Vaani_TTS",
+    "layer": "Frontend",
+    "subsystem": "Compute",
+    "capability": "Auto Vaani_TTS Frontend",
+    "dharma": "Auto generated dharma.",
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "evaluation_api_returns_200",
+      "decision_field_present",
+      "trace_id_written_to_bucket"
+    ],
+    "failure_type": null,
+    "prerequisites": [],
+    "next_tasks": [
+      "T-GEN-129"
+    ],
+    "failure_tasks": {
+      "schema_violation": [
+        "T-SYS-F00"
+      ],
+      "incomplete": [
+        "T-SYS-F00"
+      ],
+      "incorrect_logic": [
+        "T-SYS-F00"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
+    },
+    "constraints": [
+      "trace_id_must_come_from_niyantran",
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
+  },
+  {
+    "task_id": "T-GEN-129",
+    "product": "Vaani_TTS",
+    "layer": "Frontend",
+    "subsystem": "UI",
+    "capability": "Auto Vaani_TTS Frontend",
+    "dharma": "Auto generated dharma.",
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "evaluation_api_returns_200",
+      "decision_field_present",
+      "trace_id_written_to_bucket"
+    ],
+    "failure_type": null,
+    "prerequisites": [],
+    "next_tasks": [
+      "T-GEN-130"
+    ],
+    "failure_tasks": {
+      "schema_violation": [
+        "T-SYS-F00"
+      ],
+      "incomplete": [
+        "T-SYS-F00"
+      ],
+      "incorrect_logic": [
+        "T-SYS-F00"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
+    },
+    "constraints": [
+      "trace_id_must_come_from_niyantran",
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
+  },
+  {
+    "task_id": "T-GEN-130",
+    "product": "Vaani_TTS",
+    "layer": "Backend",
+    "subsystem": "API",
+    "capability": "Auto Vaani_TTS Backend",
+    "dharma": "Auto generated dharma.",
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "evaluation_api_returns_200",
+      "decision_field_present",
+      "trace_id_written_to_bucket"
+    ],
+    "failure_type": null,
+    "prerequisites": [],
+    "next_tasks": [
+      "T-GEN-131"
+    ],
+    "failure_tasks": {
+      "schema_violation": [
+        "T-SYS-F00"
+      ],
+      "incomplete": [
+        "T-SYS-F00"
+      ],
+      "incorrect_logic": [
+        "T-SYS-F00"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
+    },
+    "constraints": [
+      "trace_id_must_come_from_niyantran",
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
+  },
+  {
+    "task_id": "T-GEN-131",
+    "product": "Vaani_TTS",
+    "layer": "Backend",
+    "subsystem": "Storage",
+    "capability": "Auto Vaani_TTS Backend",
+    "dharma": "Auto generated dharma.",
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "evaluation_api_returns_200",
+      "decision_field_present",
+      "trace_id_written_to_bucket"
+    ],
+    "failure_type": null,
+    "prerequisites": [],
+    "next_tasks": [
+      "T-GEN-132"
+    ],
+    "failure_tasks": {
+      "schema_violation": [
+        "T-SYS-F00"
+      ],
+      "incomplete": [
+        "T-SYS-F00"
+      ],
+      "incorrect_logic": [
+        "T-SYS-F00"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
+    },
+    "constraints": [
+      "trace_id_must_come_from_niyantran",
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
+  },
+  {
+    "task_id": "T-GEN-132",
+    "product": "Vaani_TTS",
+    "layer": "Backend",
+    "subsystem": "Auth",
+    "capability": "Auto Vaani_TTS Backend",
+    "dharma": "Auto generated dharma.",
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "evaluation_api_returns_200",
+      "decision_field_present",
+      "trace_id_written_to_bucket"
+    ],
+    "failure_type": null,
+    "prerequisites": [],
+    "next_tasks": [
+      "T-GEN-133"
+    ],
+    "failure_tasks": {
+      "schema_violation": [
+        "T-SYS-F00"
+      ],
+      "incomplete": [
+        "T-SYS-F00"
+      ],
+      "incorrect_logic": [
+        "T-SYS-F00"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
+    },
+    "constraints": [
+      "trace_id_must_come_from_niyantran",
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
+  },
+  {
+    "task_id": "T-GEN-133",
+    "product": "Vaani_TTS",
+    "layer": "Backend",
+    "subsystem": "Compute",
+    "capability": "Auto Vaani_TTS Backend",
+    "dharma": "Auto generated dharma.",
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "evaluation_api_returns_200",
+      "decision_field_present",
+      "trace_id_written_to_bucket"
+    ],
+    "failure_type": null,
+    "prerequisites": [],
+    "next_tasks": [
+      "T-GEN-134"
+    ],
+    "failure_tasks": {
+      "schema_violation": [
+        "T-SYS-F00"
+      ],
+      "incomplete": [
+        "T-SYS-F00"
+      ],
+      "incorrect_logic": [
+        "T-SYS-F00"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
+    },
+    "constraints": [
+      "trace_id_must_come_from_niyantran",
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
+  },
+  {
+    "task_id": "T-GEN-134",
+    "product": "Vaani_TTS",
+    "layer": "Backend",
+    "subsystem": "UI",
+    "capability": "Auto Vaani_TTS Backend",
+    "dharma": "Auto generated dharma.",
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "evaluation_api_returns_200",
+      "decision_field_present",
+      "trace_id_written_to_bucket"
+    ],
+    "failure_type": null,
+    "prerequisites": [],
+    "next_tasks": [
+      "T-GEN-135"
+    ],
+    "failure_tasks": {
+      "schema_violation": [
+        "T-SYS-F00"
+      ],
+      "incomplete": [
+        "T-SYS-F00"
+      ],
+      "incorrect_logic": [
+        "T-SYS-F00"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
+    },
+    "constraints": [
+      "trace_id_must_come_from_niyantran",
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
+  },
+  {
+    "task_id": "T-GEN-135",
+    "product": "Vaani_TTS",
+    "layer": "Database",
+    "subsystem": "API",
+    "capability": "Auto Vaani_TTS Database",
+    "dharma": "Auto generated dharma.",
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "evaluation_api_returns_200",
+      "decision_field_present",
+      "trace_id_written_to_bucket"
+    ],
+    "failure_type": null,
+    "prerequisites": [],
+    "next_tasks": [
+      "T-GEN-136"
+    ],
+    "failure_tasks": {
+      "schema_violation": [
+        "T-SYS-F00"
+      ],
+      "incomplete": [
+        "T-SYS-F00"
+      ],
+      "incorrect_logic": [
+        "T-SYS-F00"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
+    },
+    "constraints": [
+      "trace_id_must_come_from_niyantran",
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
+  },
+  {
+    "task_id": "T-GEN-136",
+    "product": "Vaani_TTS",
+    "layer": "Database",
+    "subsystem": "Storage",
+    "capability": "Auto Vaani_TTS Database",
+    "dharma": "Auto generated dharma.",
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "evaluation_api_returns_200",
+      "decision_field_present",
+      "trace_id_written_to_bucket"
+    ],
+    "failure_type": null,
+    "prerequisites": [],
+    "next_tasks": [
+      "T-GEN-137"
+    ],
+    "failure_tasks": {
+      "schema_violation": [
+        "T-SYS-F00"
+      ],
+      "incomplete": [
+        "T-SYS-F00"
+      ],
+      "incorrect_logic": [
+        "T-SYS-F00"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
+    },
+    "constraints": [
+      "trace_id_must_come_from_niyantran",
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
+  },
+  {
+    "task_id": "T-GEN-137",
+    "product": "Vaani_TTS",
+    "layer": "Database",
+    "subsystem": "Auth",
+    "capability": "Auto Vaani_TTS Database",
+    "dharma": "Auto generated dharma.",
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "evaluation_api_returns_200",
+      "decision_field_present",
+      "trace_id_written_to_bucket"
+    ],
+    "failure_type": null,
+    "prerequisites": [],
+    "next_tasks": [
+      "T-GEN-138"
+    ],
+    "failure_tasks": {
+      "schema_violation": [
+        "T-SYS-F00"
+      ],
+      "incomplete": [
+        "T-SYS-F00"
+      ],
+      "incorrect_logic": [
+        "T-SYS-F00"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
+    },
+    "constraints": [
+      "trace_id_must_come_from_niyantran",
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
+  },
+  {
+    "task_id": "T-GEN-138",
+    "product": "Vaani_TTS",
+    "layer": "Database",
+    "subsystem": "Compute",
+    "capability": "Auto Vaani_TTS Database",
+    "dharma": "Auto generated dharma.",
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "evaluation_api_returns_200",
+      "decision_field_present",
+      "trace_id_written_to_bucket"
+    ],
+    "failure_type": null,
+    "prerequisites": [],
+    "next_tasks": [
+      "T-GEN-139"
+    ],
+    "failure_tasks": {
+      "schema_violation": [
+        "T-SYS-F00"
+      ],
+      "incomplete": [
+        "T-SYS-F00"
+      ],
+      "incorrect_logic": [
+        "T-SYS-F00"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
+    },
+    "constraints": [
+      "trace_id_must_come_from_niyantran",
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
+  },
+  {
+    "task_id": "T-GEN-139",
+    "product": "Vaani_TTS",
+    "layer": "Database",
+    "subsystem": "UI",
+    "capability": "Auto Vaani_TTS Database",
+    "dharma": "Auto generated dharma.",
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "evaluation_api_returns_200",
+      "decision_field_present",
+      "trace_id_written_to_bucket"
+    ],
+    "failure_type": null,
+    "prerequisites": [],
+    "next_tasks": [
+      "T-GEN-140"
+    ],
+    "failure_tasks": {
+      "schema_violation": [
+        "T-SYS-F00"
+      ],
+      "incomplete": [
+        "T-SYS-F00"
+      ],
+      "incorrect_logic": [
+        "T-SYS-F00"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
+    },
+    "constraints": [
+      "trace_id_must_come_from_niyantran",
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
+  },
+  {
+    "task_id": "T-GEN-140",
+    "product": "Vaani_TTS",
+    "layer": "Security",
+    "subsystem": "API",
+    "capability": "Auto Vaani_TTS Security",
+    "dharma": "Auto generated dharma.",
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "evaluation_api_returns_200",
+      "decision_field_present",
+      "trace_id_written_to_bucket"
+    ],
+    "failure_type": null,
+    "prerequisites": [],
+    "next_tasks": [
+      "T-GEN-141"
+    ],
+    "failure_tasks": {
+      "schema_violation": [
+        "T-SYS-F00"
+      ],
+      "incomplete": [
+        "T-SYS-F00"
+      ],
+      "incorrect_logic": [
+        "T-SYS-F00"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
+    },
+    "constraints": [
+      "trace_id_must_come_from_niyantran",
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
+  },
+  {
+    "task_id": "T-GEN-141",
+    "product": "Vaani_TTS",
+    "layer": "Security",
+    "subsystem": "Storage",
+    "capability": "Auto Vaani_TTS Security",
+    "dharma": "Auto generated dharma.",
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "evaluation_api_returns_200",
+      "decision_field_present",
+      "trace_id_written_to_bucket"
+    ],
+    "failure_type": null,
+    "prerequisites": [],
+    "next_tasks": [
+      "T-GEN-142"
+    ],
+    "failure_tasks": {
+      "schema_violation": [
+        "T-SYS-F00"
+      ],
+      "incomplete": [
+        "T-SYS-F00"
+      ],
+      "incorrect_logic": [
+        "T-SYS-F00"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
+    },
+    "constraints": [
+      "trace_id_must_come_from_niyantran",
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
+  },
+  {
+    "task_id": "T-GEN-142",
+    "product": "Vaani_TTS",
+    "layer": "Security",
+    "subsystem": "Auth",
+    "capability": "Auto Vaani_TTS Security",
+    "dharma": "Auto generated dharma.",
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "evaluation_api_returns_200",
+      "decision_field_present",
+      "trace_id_written_to_bucket"
+    ],
+    "failure_type": null,
+    "prerequisites": [],
+    "next_tasks": [
+      "T-GEN-143"
+    ],
+    "failure_tasks": {
+      "schema_violation": [
+        "T-SYS-F00"
+      ],
+      "incomplete": [
+        "T-SYS-F00"
+      ],
+      "incorrect_logic": [
+        "T-SYS-F00"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
+    },
+    "constraints": [
+      "trace_id_must_come_from_niyantran",
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
+  },
+  {
+    "task_id": "T-GEN-143",
+    "product": "Vaani_TTS",
+    "layer": "Security",
+    "subsystem": "Compute",
+    "capability": "Auto Vaani_TTS Security",
+    "dharma": "Auto generated dharma.",
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "evaluation_api_returns_200",
+      "decision_field_present",
+      "trace_id_written_to_bucket"
+    ],
+    "failure_type": null,
+    "prerequisites": [],
+    "next_tasks": [
+      "T-GEN-144"
+    ],
+    "failure_tasks": {
+      "schema_violation": [
+        "T-SYS-F00"
+      ],
+      "incomplete": [
+        "T-SYS-F00"
+      ],
+      "incorrect_logic": [
+        "T-SYS-F00"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
+    },
+    "constraints": [
+      "trace_id_must_come_from_niyantran",
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
+  },
+  {
+    "task_id": "T-GEN-144",
+    "product": "Vaani_TTS",
+    "layer": "Security",
+    "subsystem": "UI",
+    "capability": "Auto Vaani_TTS Security",
+    "dharma": "Auto generated dharma.",
+    "evaluation_inputs": [
+      "task_title",
+      "task_description",
+      "repository_url",
+      "module_id",
+      "schema_version"
+    ],
+    "evaluation_rules": [
+      "schema_validation",
+      "completeness_validation",
+      "logic_validation",
+      "integration_validation"
+    ],
+    "completion_signals": [
+      "evaluation_api_returns_200",
+      "decision_field_present",
+      "trace_id_written_to_bucket"
+    ],
+    "failure_type": null,
+    "prerequisites": [],
+    "next_tasks": [
+      "T-GOV-001"
+    ],
+    "failure_tasks": {
+      "schema_violation": [
+        "T-SYS-F00"
+      ],
+      "incomplete": [
+        "T-SYS-F00"
+      ],
+      "incorrect_logic": [
+        "T-SYS-F00"
+      ],
+      "integration_fail": [
+        "T-SYS-F00"
+      ]
+    },
+    "constraints": [
+      "trace_id_must_come_from_niyantran",
+      "no_numeric_scoring",
+      "no_fallback_routing"
+    ]
   }
 ]
