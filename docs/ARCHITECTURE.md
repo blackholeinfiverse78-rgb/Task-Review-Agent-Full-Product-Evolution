@@ -1,127 +1,92 @@
-# 🏗️ System Architecture (v5.1)
+# 🏗️ System Architecture (v6.0)
 
-The Live Task Review Agent is a full-stack autonomous evaluation platform. It analyzes GitHub repositories against task requirements and produces deterministic, structured feedback with audio readback.
-
----
-
-## Component Overview
-
-### 1. Frontend (React + TanStack Query)
-
-- **Role**: Full SPA for task submission, review display, history, and next task
-- **Tech**: React 18, React Router v6, TanStack Query v5, Lucide Icons, TailwindCSS
-- **Key Pages**:
-  - `/` — Dashboard with recent activity and stats
-  - `/submit` — Task submission form (title, description, GitHub URL, optional PDF)
-  - `/review/:id` — Full review result with score breakdown and 🔊 TTS playback
-  - `/next/:id` — Next task recommendation
-  - `/history` — Full submission history
+The Parikshak-Niyantran system is a fully deterministic, rule-based evaluation and task-routing platform. It eliminates numeric scoring and heuristics in favor of strict binary rules and a pre-defined task graph.
 
 ---
 
-### 2. Backend (FastAPI)
+## 1. System Boundary Validation
 
-- **Role**: REST API, evaluation orchestration, TTS
-- **Tech**: FastAPI, Pydantic v2, uvicorn, python-dotenv
-- **Routers**:
+The system enforces a strict separation between evaluation (authority) and routing (execution).
 
-  | Router | Prefix | Purpose |
-  |--------|--------|---------|
-  | `lifecycle.py` | `/api/v1/lifecycle` | Submit, review, history, next task |
-  | `tts.py` | `/api/v1/tts` | Vaani TTS speak & prosody endpoints |
-  | `task_submit.py` | `/api/v1/task` | (Legacy) direct task submission |
-  | `orchestration.py` | `/api/v1/orchestration` | V2 autonomous orchestration |
+### 1.1 Sri Satya (Evaluation Engine)
+- **Primary Responsibility**: Computes `evaluation_result` (PASS/FAIL) and `failure_type`.
+- **Authority**: The ONLY component allowed to perform scoring or evaluation.
+- **Independence**: Has zero knowledge of the task graph, mapping, or traversal logic.
 
----
-
-### 3. Evaluation Engine (v5.1 — 5-Step Pipeline)
-
-```
-ProductOrchestrator.process_submission()
-  └─► ReviewEngine.review_task()
-        └─► EvaluationEngine.evaluate()
-              ├── Step 1: IntentExtractor.extract(title, desc, pdf_text)
-              │           → expected_features, expected_tech_stack, expected_architecture
-              │
-              ├── Step 2: RepositoryAnalyzer.analyze(github_url)
-              │           → structure, components, architecture, quality
-              │           (authenticated via GITHUB_TOKEN)
-              │
-              ├── Step 3: FeatureMatcher.compute_match(intent, repo_signals)
-              │           → feature_match_ratio, tech_stack_match, architecture_match
-              │           → missing_features list
-              │
-              ├── Step 4: ScoringEngine.calculate_final_score(...)
-              │           → score (0–100), requirement_match, all sub-scores
-              │           → evaluation_summary, documentation_alignment
-              │
-              └── Step 5: PDFAnalyzer.analyze_content(pdf_text)
-                          → documented_features, architecture_description, technical_stack
-```
+### 1.2 Parikshak (Task Selector)
+- **Primary Responsibility**: Mapping results to nodes and performing graph traversal.
+- **Constraint**: MUST NOT perform evaluation or infer failure types.
+- **Inputs**: Accepts exactly `{ evaluation_result, failure_type, trace_id, submission_id }`.
 
 ---
 
-### 4. Vaani TTS Standalone
+## 2. Core Components
 
-Provides audio readback of evaluation results.
+### 2.1 Rule Engine (`evaluation_engine/rule_engine.py`)
+Deterministic binary rule resolver. Runs 4 checks in strict order:
+1. **Schema Check**: Validates minimum description length and repository presence.
+2. **Completeness Check**: Verifies presence of code, proof (README/tests), and architecture signals.
+3. **Logic Check**: Validates effort (word count) and delivery alignment.
+4. **Integration Check**: Verifies repository accessibility and metadata.
 
-- **Engine**: gTTS (Google TTS) → returns MP3; pyttsx3 → WAV fallback
-- **Translation**: Optional, via Groq API (`GROQ_API_KEY`) for non-English languages
-- **Prosody**: `prosody_mapper.py` maps language+tone to pitch/speed/emphasis hints
-- **Integration**: `app/api/tts.py` exposes REST endpoints; `TtsButton.js` in frontend plays audio inline
+### 2.2 Graph Engine (`engine/task_graph_engine.py`)
+Stateless graph traversal utility.
+- Loads `db/niyantran_tasks.json`.
+- Traverses from `current_task_id` based on result.
+- PASS → `next_tasks[0]`
+- FAIL → `failure_tasks[failure_type][0]`
+
+### 2.3 Final Convergence (`task_selector/final_convergence.py`)
+The system orchestrator.
+- Calls Sri Satya for evaluation.
+- Calls TaskGraphEngine for routing.
+- Enforces the **7-field Output Contract**.
+- Triggers **Bucket Logging**.
 
 ---
 
-### 5. Storage Layer (In-Memory)
+## 3. Data Flow
 
-Three entity types stored in `ProductStorage`:
-
-| Entity | ID Format | Key Fields |
-|--------|-----------|-----------|
-| `TaskSubmission` | `sub-{hex12}` | task_id, pdf_file_path, pdf_extracted_text |
-| `ReviewRecord` | `rev-{hex12}` | score, requirement_match, all sub-scores, missing_features |
-| `NextTaskRecord` | `next-{hex12}` | task_type, title, objective, difficulty |
-
-> ⚠️ Storage is in-memory and resets on backend restart. Add a database adapter to `ProductStorage` for persistence.
-
----
-
-## Data Flow: Full Lifecycle
-
-```
-Browser
-  │
-  ├─ POST /api/v1/lifecycle/submit (multipart/form-data)
-  │     task_title, task_description, github_repo_link, pdf_file
-  │
-  ▼
-ProductOrchestrator
-  ├─ Creates TaskSubmission (sub-xxx)
-  ├─ Calls ReviewEngine → EvaluationEngine (5 steps)
-  ├─ Creates ReviewRecord (rev-xxx) with all scores
-  ├─ Calls NextTaskGenerator (based on score)
-  └─ Creates NextTaskRecord (next-xxx)
-  │
-  └─► Returns { submission_id, review_summary, next_task_summary }
-
-Browser polls:
-  GET /api/v1/lifecycle/review/{submission_id}   → Full ReviewDetailResponse
-  GET /api/v1/lifecycle/next/{submission_id}     → NextTaskDetailResponse
-  GET /api/v1/lifecycle/history                  → All SubmissionHistoryItems
-
-TTS:
-  GET /api/v1/tts/speak?text=...&lang=en         → MP3 audio bytes
+```mermaid
+graph TD
+    A[Niyantran Submission] --> B[niyantran_connection.py]
+    B --> C[Sri Satya Orchestrator]
+    C --> D[ReviewPacketParser]
+    D -- Pass --> E[RegistryValidator]
+    E -- Pass --> F[SignalEngine]
+    F --> G[RuleEngine]
+    G -- Result --> H[FinalConvergence]
+    H --> I[TaskGraphEngine]
+    I --> J[Output Contract Guard]
+    J --> K((7-field JSON Response))
 ```
 
 ---
 
-## Key Design Decisions
+## 4. Determinism Guards
 
-| Decision | Rationale |
-|----------|-----------|
-| **Requirement-matching over text analysis** | Text length/keyword presence doesn't correlate with implementation quality |
-| **GitHub API (not clone)** | File tree analysis via API is fast, stateless, and requires no disk space |
-| **gTTS over neural TTS** | Free, reliable, 30+ languages, no GPU required |
-| **In-memory storage** | Zero-dependency for demos; swap to Redis/Postgres via `ProductStorage` adapter |
-| **Pydantic v2** | Fast validation, strict schema enforcement, great OpenAPI generation |
-| **No LLM in scoring** | Ensures full determinism — identical inputs always yield identical scores |
+1. **Upstream Trace ID**: The `trace_id` is never generated internally. It must come from Niyantran. Missing ID = HARD REJECT.
+2. **Deterministic Submission ID**: Generated as `sub-{content_hash}-{attempt_hash}` using MD5 on task metadata + trace_id.
+3. **No Randomness**: No use of `uuid.uuid4()`, `random`, or `time.time()` in the decision path.
+4. **Pure Mapping**: No keyword-based domain routing or keyword-guessing in graph selection.
+
+---
+
+## 5. Output Contract (EXACT)
+
+Every successful response contains exactly these 7 fields:
+1. `trace_id`: The original ID from upstream.
+2. `submission_id`: The deterministic submission hash.
+3. `evaluation_result`: "PASS" or "FAIL".
+4. `failure_type`: Valid enum or `null`.
+5. `selected_task_id`: The next task ID from the DB.
+6. `selection_reason`: Traceable string explaining the route.
+7. `source`: Always "task_graph".
+
+---
+
+## 6. Storage Layer
+
+- **Bucket Logs**: Every evaluation is logged to `storage/bucket_logs/evaluations_{date}.jsonl`.
+- **Format**: JSONL (JSON lines) for high-performance append-only auditing.
+- **Searchable Index**: `evaluation_index.jsonl` maintained for rapid trace-id lookups.

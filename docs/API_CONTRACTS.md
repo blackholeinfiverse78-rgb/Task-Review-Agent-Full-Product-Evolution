@@ -1,213 +1,83 @@
-# 📡 API Contracts Reference (v5.1)
+# 📡 API Contracts Reference (v6.0)
 
 > Base URL: `http://localhost:8000/api/v1`  
 > Interactive Docs: `http://localhost:8000/docs`
 
 ---
 
-## Task Lifecycle Endpoints
+## 1. Production (Niyantran) Endpoint
+
+### `POST /production/niyantran/submit`
+
+Primary deterministic entry point for task evaluation and selection.
+
+**Request** — `application/json`
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `trace_id` | string | ✅ | Minimum 8 characters. Must come from Niyantran. |
+| `task_id` | string | ✅ | Current task ID from the database. |
+| `task_title` | string | ✅ | Title of the submitted task. |
+| `task_description`| string | ✅ | Full description for evaluation. |
+| `submitted_by` | string | ✅ | Candidate identifier. |
+| `repository_url` | string | ✅ | GitHub repository URL. |
+
+**Response** `200 OK` (Strict 7-field Contract)
+
+```json
+{
+  "trace_id":          "trace-a3f2c1d48b9e4f2a",
+  "submission_id":     "sub-eb2e07e7c652-d42768ed",
+  "evaluation_result": "PASS",
+  "failure_type":      null,
+  "selected_task_id":  "T-GOV-002",
+  "selection_reason":  "PASS -> next_tasks[0] = T-GOV-002",
+  "source":            "task_graph"
+}
+```
+
+**Constraints**:
+- **Deterministic**: Same input + `trace_id` → Same output.
+- **Contract Enforcement**: Extra fields are stripped; missing fields trigger `CONTRACT_VIOLATION`.
+
+---
+
+## 2. Status & Health
+
+### `GET /production/niyantran/health`
+Returns system health and bucket statistics.
+
+### `GET /production/bucket/logs`
+Returns the 100 most recent evaluation logs from the deterministic bucket.
+
+---
+
+## 3. Lifecycle (SPA Support)
 
 ### `POST /lifecycle/submit`
+Legacy/SPA support for multipart submissions. Internally routes to the same deterministic pipeline.
 
-Submit a task for evaluation.
+### `GET /lifecycle/review/{id}`
+Retrieves review details. Note: Numeric scores are no longer generated; this returns the PASS/FAIL result and failure type.
 
-**Request** — `multipart/form-data`
+---
 
-| Field | Type | Required | Validation |
-|-------|------|----------|------------|
-| `task_title` | string | ✅ | 5–100 chars |
-| `task_description` | string | ✅ | 10–100,000 chars |
-| `submitted_by` | string | ✅ | 2–50 chars |
-| `github_repo_link` | string | ✅ | Valid GitHub URL |
-| `pdf_file` | file | ❌ | `.pdf` only |
-| `previous_task_id` | string | ❌ | Previous submission ID |
+## 4. Error Responses
 
-**Response** `200 OK`
+The system uses standard HTTP status codes combined with deterministic error types.
 
+| Status | Error Context | Cause |
+|--------|---------------|-------|
+| `400`  | `NIYANTRAN_HARD_REJECT` | Missing or invalid `trace_id`. |
+| `404`  | `GRAPH_HARD_REJECT` | `task_id` not found in database. |
+| `500`  | `CONTRACT_VIOLATION` | System output failed 7-field validation. |
+| `500`  | `MANDALA_HARD_REJECT` | Task selection logic failed internal mapping. |
+
+**Error JSON Format**:
 ```json
 {
-  "submission_id": "sub-a1b2c3d4e5f6",
-  "review_summary": {
-    "score": 72,
-    "status": "borderline",
-    "readiness_percent": 72
-  },
-  "next_task_summary": {
-    "task_id": "next-a1b2c3d4e5f6",
-    "task_type": "advancement",
-    "title": "Add Redis Caching Layer",
-    "difficulty": "intermediate"
-  }
+  "detail": "Error code: MESSAGE"
 }
 ```
-
----
-
-### `GET /lifecycle/review/{submission_id}`
-
-Retrieve the full review for a submission.
-
-**Response** `200 OK`
-
-```json
-{
-  "review_id": "rev-...",
-  "submission_id": "sub-...",
-  "score": 72,
-  "readiness_percent": 72,
-  "status": "borderline",
-  "failure_reasons": ["Missing: authentication module", "Missing: test coverage"],
-  "improvement_hints": ["Improve: authentication module", "Enhance architectural modularity"],
-  "analysis": {
-    "technical_quality": 75,
-    "clarity": 80,
-    "discipline_signals": 60
-  },
-  "reviewed_at": "2026-03-09T14:30:00",
-  "feature_coverage": 0.65,
-  "architecture_score": 14.0,
-  "code_quality_score": 6.5,
-  "completeness_score": 16.0,
-  "missing_features": ["authentication", "test coverage", "caching"],
-  "requirement_match": 0.65,
-  "evaluation_summary": "Evaluation complete. Score: 72. Implemented 4/7 expected features. Requirement alignment is MODERATE. Implementation follows requirements but has some missing features or architectural gaps.",
-  "documentation_score": 0.0,
-  "documentation_alignment": "moderate",
-  "analysis_pdf": null
-}
-```
-
-**Scoring field reference:**
-
-| Field | Range | Description |
-|-------|-------|-------------|
-| `score` | 0–100 | Total weighted score |
-| `requirement_match` | 0.0–1.0 | Ratio of requirements satisfied |
-| `architecture_score` | 0–20 | Architecture quality contribution |
-| `completeness_score` | 0–20 | File completeness contribution |
-| `code_quality_score` | 0–10 | README/doc density contribution |
-| `documentation_score` | 0–10 | PDF documentation contribution |
-| `documentation_alignment` | `high`/`moderate`/`low` | Alignment label based on req_match_ratio |
-
----
-
-### `GET /lifecycle/next/{submission_id}`
-
-Get the next recommended task after a review.
-
-**Response** `200 OK`
-
-```json
-{
-  "next_task_id": "next-...",
-  "review_id": "rev-...",
-  "task_type": "advancement",
-  "title": "Add Rate Limiting and API Security",
-  "objective": "Implement rate limiting middleware and JWT validation",
-  "focus_area": "Security",
-  "difficulty": "intermediate",
-  "reason": "Strong score in architecture (72). Next step: harden security layer.",
-  "assigned_at": "2026-03-09T14:30:05"
-}
-```
-
----
-
-### `GET /lifecycle/history`
-
-Get all submissions for the current session, sorted oldest-first.
-
-**Response** `200 OK`
-
-```json
-[
-  {
-    "submission_id": "sub-...",
-    "task_title": "Build FastAPI Review System",
-    "submitted_by": "Developer",
-    "submitted_at": "2026-03-09T14:00:00",
-    "score": 72,
-    "status": "borderline",
-    "has_pdf": false
-  }
-]
-```
-
----
-
-## TTS Endpoints
-
-### `GET /tts/speak`
-
-Generate speech audio from text using Vaani TTS.
-
-**Query Parameters:**
-
-| Param | Default | Description |
-|-------|---------|-------------|
-| `text` | required | Text to speak (URL-encoded) |
-| `lang` | `en` | Language code (`en`, `ar`, `fr`, `hi`, etc.) |
-| `tone` | `neutral` | Tone (`neutral`, `educational`, `excited`) |
-| `translate` | `true` | Translate text to target language (requires `GROQ_API_KEY`) |
-
-**Response** `200 OK`  
-`Content-Type: audio/mpeg` (MP3 from gTTS) or `audio/wav` (pyttsx3 fallback)
-
-**Example:**
-
-```
-GET /api/v1/tts/speak?text=Score+is+72+out+of+100&lang=en&tone=neutral
-```
-
----
-
-### `GET /tts/prosody`
-
-Get prosody hints for a given language and tone (for Vaani RL-TTS integration).
-
-**Query Parameters:** `text`, `lang`, `tone`
-
-**Response** `200 OK`
-
-```json
-{
-  "pitch": 0.6,
-  "speed": 1.0,
-  "emphasis": 0.4,
-  "pause_duration": 0.2,
-  "prosody_hint": "educational",
-  "language": "ar",
-  "tone": "educational",
-  "rtl": true,
-  "text_length": 5,
-  "word_count": 5
-}
-```
-
----
-
-## Error Responses
-
-All errors return JSON in this format:
-
-```json
-{ "detail": "Error message here" }
-```
-
-| Status | Cause |
-|--------|-------|
-| `400` | Invalid PDF file type |
-| `404` | Submission / review / next task not found |
-| `422` | Pydantic validation failure (field too short, etc.) |
-| `500` | Internal evaluation error or TTS failure |
-
-**Validation errors** also return the legacy schema for backward compatibility:
-
-```json
-{
-  "score": 0,
-  "status": "fail",
-  "failure_reasons": ["Validation Failure", "task_title: ensure this value has at least 5 characters"],
-  "improvement_hints": ["Ensure all fields meet length requirements (Title: 5-100, Desc: 10-2000, Name: 2-50)."]
-}
-```
+Example:
+`{ "detail": "GRAPH_HARD_REJECT: task_id 'INVALID' not in task DB." }`
