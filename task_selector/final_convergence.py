@@ -42,9 +42,7 @@ class FinalConvergenceOrchestrator:
             failure_type=failure_type
         )
 
-        # Step 5: Decision engine (narrative only)
-        # Decision engine needs minimal context now
-        decision = "APPROVED" if eval_res == "PASS" else "REJECTED"
+        decision = "APPROVED" if evaluation_result == "PASS" else "REJECTED"
 
         # Step 7: Build strict output contract
         output = {
@@ -68,9 +66,18 @@ class FinalConvergenceOrchestrator:
                 "failure_type": failure_type
             }
             bucket_integration.log_evaluation(
-                mock_eval, {}, decision,
+                mock_eval, 
+                {"domain": "universal", "repository_available": False}, 
+                {"decision": decision},
                 {"next_task_id": graph_result["selected_task_id"], **graph_result},
-                {"task_id": task_id, "trace_id": trace_id, "submission_id": submission_id}
+                {
+                    "task_id": task_id, 
+                    "trace_id": trace_id, 
+                    "submission_id": submission_id,
+                    "submitted_by": "system_convergence", # Enforce field existence
+                    "task_title": "Niyantran Task Processing"
+                },
+                trace_id=trace_id
             )
         except Exception as e:
             logger.error(f"[CONVERGENCE] Bucket logging failed (non-fatal): {e}")

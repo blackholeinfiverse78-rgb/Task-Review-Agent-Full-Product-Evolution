@@ -18,9 +18,9 @@ logger = logging.getLogger("task_graph_engine")
 _DB_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "db", "niyantran_tasks.json")
 
 REQUIRED_TASK_FIELDS = {
-    "task_id", "dharma", "completion_signals",
-    "failure_type", "prerequisites", "next_tasks", "failure_tasks", "constraints",
-    "mandala_mapping"
+    "task_id", "product", "layer", "subsystem", "capability",
+    "dharma", "completion_signals", "prerequisites", 
+    "next_tasks", "failure_tasks", "constraints"
 }
 
 VALID_FAILURE_TYPES = {"schema_violation", "incomplete", "incorrect_logic", "integration_fail"}

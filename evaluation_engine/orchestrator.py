@@ -4,7 +4,6 @@ import logging
 from evaluation_engine.review_packet_parser import review_packet_parser
 from evaluation_engine.validator import validator as registry_validator, ValidationStatus
 from evaluation_engine.signal_engine import signal_engine as signal_collector
-from evaluation_engine.domain_router import domain_router
 from evaluation_engine.assignment_engine import assignment_engine
 
 logger = logging.getLogger("evaluation_orchestrator")
@@ -38,13 +37,10 @@ class EvaluationOrchestrator:
             pdf_text=pdf_text
         )
 
-        # Step 2.5: Domain routing
-        try:
-            supporting_signals = domain_router.enrich_signals(
-                supporting_signals, task_title, task_description
-            )
-        except ValueError as e:
-            return {"evaluation_result": "FAIL", "failure_type": "schema_violation", "reason": str(e)}
+        # Step 2.5: Domain context (static)
+        supporting_signals["domain"] = "universal"
+        supporting_signals["domain_expected_features"] = []
+        supporting_signals["domain_min_files"] = 3
 
         # Step 3: Rule Engine evaluation
         evaluation = assignment_engine.evaluate_and_assign(

@@ -36,9 +36,6 @@ Submission Input (MUST include trace_id)
 [Step 2] Signal Collection
     |  File: evaluation_engine/signal_engine.py
     v
-[Step 2.5] Domain Routing
-    |  File: evaluation_engine/domain_router.py
-    v
 [Step 3] Rule Engine — SINGLE EVALUATION AUTHORITY
     |  File: evaluation_engine/rule_engine.py (via assignment_engine)
     |  Output: { evaluation_result: PASS|FAIL, failure_type: <type>|null }
@@ -50,23 +47,22 @@ Submission Input (MUST include trace_id)
     |  Input MUST be: { evaluation_result, failure_type, trace_id }
     |  Parikshak does NOT evaluate. It ONLY maps, resolves, and selects.
     v
-[Step 5] Mandala Hard Alignment
-    |  File: task_selector/mandala_mapper.py
-    |  DB-driven ONLY. No keyword guessing.
-    |  Failure to map -> HARD REJECT
-    v
-[Step 6] Graph Traversal — DETERMINISTIC
+[Step 5] Graph Traversal — DETERMINISTIC
     |  File: engine/task_graph_engine.py
     |  PASS  -> task.next_tasks[0]
     |  FAIL  -> task.failure_tasks[failure_type][0]
     |  No fallback. Missing mapping -> HARD REJECT
     v
-[Step 7] Output Contract Enforcement
+[Step 6] Output Contract Enforcement
     |  File: task_selector/final_convergence.py (_enforce_output_contract)
     |  Enforces exactly 7 fields. Extra or missing -> CONTRACT_VIOLATION
     v
 Final JSON Response — exact 7-field contract
 ```
+
+## LIVE FLOW
+
+The system exposes a primary HTTP endpoint for Niyantran integration. Every request must be a POST with a valid JSON body containing a trace_id. The endpoint submit_task_from_niyantran receives the submission, invokes the evaluation pipeline, and returns a deterministic next task. The response is a strict 7-field JSON contract.
 
 **WHAT WAS BUILT**:
 

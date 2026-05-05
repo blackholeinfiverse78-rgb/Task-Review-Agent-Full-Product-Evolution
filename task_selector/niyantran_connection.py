@@ -72,7 +72,7 @@ class NiyantranConnectionService:
             f"{niyantran_task.task_title}{niyantran_task.task_description}".encode(), usedforsecurity=False
         ).hexdigest()[:12]
         attempt_hash = hashlib.md5(
-            f"{niyantran_task.task_title}{niyantran_task.task_description}{time.time()}".encode(), usedforsecurity=False
+            f"{niyantran_task.task_title}{niyantran_task.task_description}{trace_id}".encode(), usedforsecurity=False
         ).hexdigest()[:8]
         submission_id = f"sub-{content_hash}-{attempt_hash}"
 
@@ -91,7 +91,7 @@ class NiyantranConnectionService:
 
         # Run Parikshak pipeline — trace_id passed unchanged
         convergence_result = final_convergence.process_with_convergence(
-            evaluation_result=evaluation_result,
+            evaluation_result=eval_res,
             failure_type=failure_type,
             submission_id=submission_id,
             trace_id=trace_id,
@@ -106,29 +106,15 @@ class NiyantranConnectionService:
             f"selected={convergence_result['selected_task_id']}"
         )
 
+        # EXACTLY 7 fields as per Section 6
         return {
-            "task_id":    niyantran_task.task_id,
-            "trace_id":   trace_id,
-            "review": {
-                "evaluation_result": convergence_result["evaluation_result"],
-                "failure_type":      convergence_result["failure_type"],
-                "decision":          "APPROVED" if convergence_result["evaluation_result"] == "PASS" else "REJECTED",
-                "selected_task_id":  convergence_result["selected_task_id"],
-                "selection_reason":  convergence_result["selection_reason"],
-                "source":            convergence_result["source"],
-            },
-            "next_task": {
-                "task_id":          convergence_result["selected_task_id"],
-                "selection_reason": convergence_result["selection_reason"],
-                "source":           convergence_result["source"],
-            },
-            "processing_metadata": {
-                "processing_time_ms": processing_time,
-                "timestamp":          datetime.now().isoformat(),
-                "status":             "completed",
-                "trace_id_source":    "niyantran_upstream",
-                "trace_id_overridden": False
-            }
+            "trace_id":          convergence_result["trace_id"],
+            "submission_id":     convergence_result["submission_id"],
+            "evaluation_result": convergence_result["evaluation_result"],
+            "failure_type":      convergence_result["failure_type"],
+            "selected_task_id":  convergence_result["selected_task_id"],
+            "selection_reason":  convergence_result["selection_reason"],
+            "source":            convergence_result["source"]
         }
 
     def health_check(self) -> Dict[str, Any]:

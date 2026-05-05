@@ -113,6 +113,7 @@ class SignalEngine:
                 "domain_relevance": title_signals.get('metrics', {}).get('domain_relevance', 0.5)
             },
             "description_signals": {
+                "word_count": desc_signals.get('metrics', {}).get('word_count', 0),
                 "technical_density": desc_signals.get('metrics', {}).get('technical_term_ratio', 0),
                 "content_depth": desc_signals.get('metrics', {}).get('content_depth', 0),
                 "structure_quality": desc_signals.get('metrics', {}).get('structure_score', 0),

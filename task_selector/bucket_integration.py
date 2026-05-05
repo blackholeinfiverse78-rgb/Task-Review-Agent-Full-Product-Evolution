@@ -49,7 +49,7 @@ class BucketIntegrationService:
         Returns trace_id.
         """
         if not trace_id:
-            trace_id = str(uuid.uuid4())
+            raise ValueError("trace_id is required and must come from upstream")
 
         entry = self._build_entry(
             evaluation_result, supporting_signals,

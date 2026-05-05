@@ -2410,5 +2410,25 @@
     "layer": "Security",
     "subsystem": "UI",
     "capability": "Auto Vaani_TTS Security"
+  },
+  {
+    "task_id": "COMPLETED",
+    "product": "System",
+    "layer": "Final",
+    "subsystem": "Terminal",
+    "capability": "Lifecycle Completion",
+    "dharma": "Signal end of task lifecycle.",
+    "completion_signals": [
+      "all_tasks_done"
+    ],
+    "prerequisites": [],
+    "next_tasks": [],
+    "failure_tasks": {
+      "schema_violation": [],
+      "incomplete": [],
+      "incorrect_logic": [],
+      "integration_fail": []
+    },
+    "constraints": []
   }
 ]
