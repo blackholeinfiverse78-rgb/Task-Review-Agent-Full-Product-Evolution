@@ -24,9 +24,9 @@ logging.basicConfig(
 logger = logging.getLogger("task_review_system")
 
 app = FastAPI(
-    title="Task Review AI - Production Demo",
-    description="Deterministic Engineering Task Analysis System (Locked)",
-    version="1.1.0"
+    title="Task Review AI - Production v1.0",
+    description="Deterministic Engineering Task Analysis System — [DFA VERIFIED | CORE LOCKED]",
+    version="1.0.0"
 )
 
 # Security: CORS Middleware

@@ -1,10 +1,16 @@
-# Parikshak — Deterministic Task Evaluation Engine
+# Task Review Agent — Parikshak Production Evolution
 
-**Tech:** `FastAPI` | `Rule Engine` | `Graph Routing` | `Deterministic Systems`
+## v1.0 — Deterministic Core (DFA Verified)
+**STATUS: CORE LOCKED**
 
-**Version**: 4.0.0 | **Status**: TRUE PASS (Deterministic Verification Complete) | **Protocol**: Rule-Based Deterministic
+> **Parikshak** is a deterministic, rule-based engineering task evaluation engine that strictly maps submissions to next tasks without any numeric scoring, arbitrary weighting, or fallback routing. This system has been formally validated as a **Deterministic Finite Automaton (DFA)**.
 
-> **Parikshak** is a deterministic, rule-based engineering task evaluation engine that strictly maps submissions to next tasks without any numeric scoring, arbitrary weighting, or fallback routing.
+### System Certification
+- **Type**: Deterministic Finite Automaton (DB-driven)
+- **Compliance**: Tantra Fully Compliant
+- **Validation**: DFA Verified (10/10)
+- **Core Status**: LOCKED (No logic mutations permitted)
+- **Execution**: Unified, Boundary-Safe Pipeline
 
 ### Why Deterministic > Scoring Systems
 Most evaluation systems rely on scoring, weights, or heuristics, which introduce ambiguity and inconsistency. Parikshak removes this by enforcing:

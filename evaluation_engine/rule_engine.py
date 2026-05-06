@@ -28,17 +28,25 @@ class RuleEngine:
     Same input always produces same output.
     """
 
-    def evaluate(self, signals: Dict[str, Any]) -> Dict[str, Any]:
+    def evaluate(self, signals: Dict[str, Any], rules: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         """
         Run all checks in order. Return PASS or FAIL with failure_type.
 
         Args:
             signals: supporting_signals dict from signal_engine
+            rules: optional task-specific rules from DB
 
         Returns:
             { "evaluation_result": "PASS"|"FAIL", "failure_type": str|None }
         """
         logger.info("[RULE ENGINE] Starting deterministic evaluation")
+        
+        # Use provided rules or fallback to defaults
+        active_rules = rules or {
+            "schema": {"min_word_count": 50, "require_repo": False},
+            "completeness": {"min_files": 3, "require_proof": True, "require_arch": True},
+            "logic": {"min_delivery_ratio": 0.6, "max_missing_features": 3, "min_word_count_for_effort": 80}
+        }
 
         for check_fn in (
             self._check_schema,
@@ -46,7 +54,8 @@ class RuleEngine:
             self._check_logic,
             self._check_integration,
         ):
-            failure_type = check_fn(signals)
+            # Pass rules to each check
+            failure_type = check_fn(signals, active_rules)
             if failure_type is not None:
                 logger.info(f"[RULE ENGINE] FAIL — {failure_type}")
                 return {"evaluation_result": "FAIL", "failure_type": failure_type}
@@ -56,32 +65,44 @@ class RuleEngine:
 
     # ── Check 1: Schema ───────────────────────────────────────────────────
 
-    def _check_schema(self, signals: Dict[str, Any]) -> Optional[str]:
+    def _check_schema(self, signals: Dict[str, Any], rules: Dict[str, Any]) -> Optional[str]:
         """
         FAIL if:
-        - no repository provided AND word_count < 50
-        - module_id or schema_version missing from signals
+        - no repository provided AND word_count < rules['schema']['min_word_count']
         """
+        schema_rules   = rules.get("schema", {})
+        min_words      = schema_rules.get("min_word_count", 50)
+        require_repo   = schema_rules.get("require_repo", False)
+        
         repo_available = signals.get("repository_available", False)
         desc           = signals.get("description_signals") or {}
         word_count     = desc.get("word_count", 0) if isinstance(desc, dict) else 0
 
-        if not repo_available and word_count < 50:
-            logger.info("[RULE ENGINE] schema_violation: no repo + description < 50 words")
+        if require_repo and not repo_available:
+            logger.info("[RULE ENGINE] schema_violation: repository required but missing")
+            return "schema_violation"
+
+        if not repo_available and word_count < min_words:
+            logger.info(f"[RULE ENGINE] schema_violation: no repo + description < {min_words} words")
             return "schema_violation"
 
         return None
 
     # ── Check 2: Completeness ─────────────────────────────────────────────
 
-    def _check_completeness(self, signals: Dict[str, Any]) -> Optional[str]:
+    def _check_completeness(self, signals: Dict[str, Any], rules: Dict[str, Any]) -> Optional[str]:
         """
         FAIL if:
         - code not present (no repo or 0 files)
         - proof not present (no README, no tests, no docs)
         - architecture not present (no layers, no arch keywords)
-        - file count < 3
+        - file count < rules['completeness']['min_files']
         """
+        comp_rules     = rules.get("completeness", {})
+        min_files      = comp_rules.get("min_files", 3)
+        require_proof  = comp_rules.get("require_proof", True)
+        require_arch   = comp_rules.get("require_arch", True)
+
         repo_signals   = signals.get("repository_signals") or {}
         repo_available = signals.get("repository_available", False)
         structure      = repo_signals.get("structure", {})
@@ -109,26 +130,31 @@ class RuleEngine:
         if not code_present:
             logger.info("[RULE ENGINE] incomplete: no code present")
             return "incomplete"
-        if not proof_present:
+        if require_proof and not proof_present:
             logger.info("[RULE ENGINE] incomplete: no proof present")
             return "incomplete"
-        if not arch_present:
+        if require_arch and not arch_present:
             logger.info("[RULE ENGINE] incomplete: no architecture present")
             return "incomplete"
-        if file_count < 3:
-            logger.info("[RULE ENGINE] incomplete: file_count < 3")
+        if file_count < min_files:
+            logger.info(f"[RULE ENGINE] incomplete: file_count < {min_files}")
             return "incomplete"
 
         return None
 
     # ── Check 3: Logic ────────────────────────────────────────────────────
 
-    def _check_logic(self, signals: Dict[str, Any]) -> Optional[str]:
+    def _check_logic(self, signals: Dict[str, Any], rules: Dict[str, Any]) -> Optional[str]:
         """
         FAIL if:
-        - delivery_ratio < 0.6 OR missing_features > 3
-        - word_count < 80 AND readme_val < 1
+        - delivery_ratio < min_delivery_ratio OR missing_features > max_missing_features
+        - word_count < min_word_count_for_effort AND readme_val < 1
         """
+        logic_rules    = rules.get("logic", {})
+        min_ratio      = logic_rules.get("min_delivery_ratio", 0.6)
+        max_missing    = logic_rules.get("max_missing_features", 3)
+        min_effort_w   = logic_rules.get("min_word_count_for_effort", 80)
+
         evd            = signals.get("expected_vs_delivered_evidence", {})
         delivery_ratio = evd.get("delivery_ratio", 0.0)
         missing        = signals.get("missing_features", [])
@@ -138,8 +164,8 @@ class RuleEngine:
         quality        = repo_signals.get("quality", {})
         readme_val     = quality.get("readme_val", 0)
 
-        alignment = delivery_ratio >= 0.6 and len(missing) <= 3
-        effort    = word_count >= 80 or readme_val >= 1
+        alignment = delivery_ratio >= min_ratio and len(missing) <= max_missing
+        effort    = word_count >= min_effort_w or readme_val >= 1
 
         if not alignment:
             logger.info(
@@ -157,7 +183,7 @@ class RuleEngine:
 
     # ── Check 4: Integration ──────────────────────────────────────────────
 
-    def _check_integration(self, signals: Dict[str, Any]) -> Optional[str]:
+    def _check_integration(self, signals: Dict[str, Any], rules: Dict[str, Any]) -> Optional[str]:
         """
         FAIL if:
         - repository_signals has error field (not network_failure)

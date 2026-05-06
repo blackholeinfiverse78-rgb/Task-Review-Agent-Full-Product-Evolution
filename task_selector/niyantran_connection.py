@@ -58,64 +58,31 @@ class NiyantranConnectionService:
 
     def process_niyantran_task(self, task_data: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Accept task from Niyantran, run through Parikshak pipeline.
+        Accept task from Niyantran, run through hardened ExecutionPipeline.
         trace_id must be present in task_data — never generated here.
         """
-        start_time = datetime.now()
-        logger.info(f"[NIYANTRAN] Received: {task_data.get('task_title', '')[:50]}")
+        from engine.execution_pipeline import execution_pipeline
+        
+        logger.info(f"[NIYANTRAN] Received task for processing: {task_data.get('task_title', '')[:50]}")
 
-        # Enforce trace_id from upstream
-        niyantran_task = NiyantranTask.from_dict(task_data)
-        trace_id = niyantran_task.trace_id
+        # Enforce trace_id from upstream (validated inside pipeline, but we can pre-check for early rejection)
+        trace_id = task_data.get("trace_id")
+        if not trace_id or len(str(trace_id)) < 8:
+             raise ValueError("NIYANTRAN_HARD_REJECT: trace_id missing or too short from upstream.")
 
-        content_hash = hashlib.md5(
-            f"{niyantran_task.task_title}{niyantran_task.task_description}".encode(), usedforsecurity=False
-        ).hexdigest()[:12]
-        attempt_hash = hashlib.md5(
-            f"{niyantran_task.task_title}{niyantran_task.task_description}{trace_id}".encode(), usedforsecurity=False
-        ).hexdigest()[:8]
-        submission_id = f"sub-{content_hash}-{attempt_hash}"
-
-        # Sri Satya Evaluation
-        eval_output = evaluation_orchestrator.evaluate_submission(
-            task_title=niyantran_task.task_title,
-            task_description=niyantran_task.task_description,
-            repository_url=niyantran_task.repository_url,
-            module_id=niyantran_task.module_id,
-            schema_version=niyantran_task.schema_version,
-            pdf_text=niyantran_task.pdf_text
+        # Run through unified pipeline
+        result = execution_pipeline.execute(
+            task_data=task_data,
+            previous_task_id=task_data.get("current_task_id")
         )
-
-        eval_res = eval_output["evaluation_result"]
-        failure_type = eval_output["failure_type"]
-
-        # Run Parikshak pipeline — trace_id passed unchanged
-        convergence_result = final_convergence.process_with_convergence(
-            evaluation_result=eval_res,
-            failure_type=failure_type,
-            submission_id=submission_id,
-            trace_id=trace_id,
-            current_task_id=niyantran_task.current_task_id
-        )
-
-        processing_time = int((datetime.now() - start_time).total_seconds() * 1000)
 
         logger.info(
-            f"[NIYANTRAN] Done: trace_id={trace_id} "
-            f"result={convergence_result['evaluation_result']} "
-            f"selected={convergence_result['selected_task_id']}"
+            f"[NIYANTRAN] Execution complete: trace_id={trace_id} "
+            f"result={result['evaluation_result']} "
+            f"selected={result['selected_task_id']}"
         )
 
-        # EXACTLY 7 fields as per Section 6
-        return {
-            "trace_id":          convergence_result["trace_id"],
-            "submission_id":     convergence_result["submission_id"],
-            "evaluation_result": convergence_result["evaluation_result"],
-            "failure_type":      convergence_result["failure_type"],
-            "selected_task_id":  convergence_result["selected_task_id"],
-            "selection_reason":  convergence_result["selection_reason"],
-            "source":            convergence_result["source"]
-        }
+        return result
 
     def health_check(self) -> Dict[str, Any]:
         bucket_stats = bucket_integration.get_bucket_stats()

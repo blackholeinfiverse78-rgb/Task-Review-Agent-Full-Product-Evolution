@@ -16,7 +16,8 @@ class EvaluationOrchestrator:
         repository_url: Optional[str] = None,
         module_id: str = "task-review-agent",
         schema_version: str = "v1.0",
-        pdf_text: str = ""
+        pdf_text: str = "",
+        task_id: Optional[str] = None
     ) -> Dict[str, Any]:
         
         # Step 0: REVIEW_PACKET hard gate
@@ -46,7 +47,8 @@ class EvaluationOrchestrator:
         evaluation = assignment_engine.evaluate_and_assign(
             task_title=task_title,
             task_description=task_description,
-            supporting_signals=supporting_signals
+            supporting_signals=supporting_signals,
+            task_id=task_id
         )
 
         return {

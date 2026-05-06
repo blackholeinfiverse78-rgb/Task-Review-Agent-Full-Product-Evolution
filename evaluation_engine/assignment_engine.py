@@ -20,11 +20,24 @@ class AssignmentEngine:
         self,
         task_title: str,
         task_description: str,
-        supporting_signals: Dict[str, Any]
+        supporting_signals: Dict[str, Any],
+        task_id: Optional[str] = None
     ) -> Dict[str, Any]:
         logger.info(f"[ASSIGNMENT ENGINE] Evaluating: {task_title[:60]}")
 
-        result = rule_engine.evaluate(supporting_signals)
+        # Phase 2: DB as SINGLE SOURCE OF TRUTH
+        rules = None
+        if task_id:
+            try:
+                from engine.task_graph_engine import task_graph_engine
+                task_data = task_graph_engine.get_task(task_id)
+                if task_data:
+                    rules = task_data.get("evaluation_rules")
+                    logger.info(f"[ASSIGNMENT ENGINE] Loaded rules from DB for {task_id}")
+            except Exception as e:
+                logger.error(f"[ASSIGNMENT ENGINE] Error loading rules for {task_id}: {e}")
+
+        result = rule_engine.evaluate(supporting_signals, rules=rules)
         result["canonical_authority"] = True
         result["evaluation_basis"]    = "parikshak_rule_engine"
 

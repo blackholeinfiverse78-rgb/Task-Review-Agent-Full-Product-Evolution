@@ -34,7 +34,38 @@
     "product": "Niyantran",
     "layer": "Governance",
     "subsystem": "Task Review Engine",
-    "capability": "Submission Evaluation"
+    "capability": "Submission Evaluation",
+    "evaluation_inputs": [
+      "repository_available",
+      "word_count",
+      "file_count",
+      "readme_val",
+      "delivery_ratio",
+      "missing_features",
+      "layer_count"
+    ],
+    "evaluation_rules": {
+      "schema": {
+        "min_word_count": 50,
+        "require_repo": false
+      },
+      "completeness": {
+        "min_files": 3,
+        "require_proof": true,
+        "require_arch": true
+      },
+      "logic": {
+        "min_delivery_ratio": 0.6,
+        "max_missing_features": 3,
+        "min_word_count_for_effort": 80
+      }
+    },
+    "failure_semantics": {
+      "schema_violation": "Input schema validation failed (trace_id or description length)",
+      "incomplete": "Submission missing mandatory components (code, proof, or architecture)",
+      "incorrect_logic": "Implementation does not match requirements or lacks sufficient effort",
+      "integration_fail": "System failure during evaluation or data persistence"
+    }
   },
   {
     "task_id": "T-GOV-002",
@@ -73,7 +104,38 @@
     "product": "Niyantran",
     "layer": "Governance",
     "subsystem": "Task Review Engine",
-    "capability": "Task Enforcement"
+    "capability": "Task Enforcement",
+    "evaluation_inputs": [
+      "repository_available",
+      "word_count",
+      "file_count",
+      "readme_val",
+      "delivery_ratio",
+      "missing_features",
+      "layer_count"
+    ],
+    "evaluation_rules": {
+      "schema": {
+        "min_word_count": 50,
+        "require_repo": false
+      },
+      "completeness": {
+        "min_files": 3,
+        "require_proof": true,
+        "require_arch": true
+      },
+      "logic": {
+        "min_delivery_ratio": 0.6,
+        "max_missing_features": 3,
+        "min_word_count_for_effort": 80
+      }
+    },
+    "failure_semantics": {
+      "schema_violation": "Input schema validation failed (trace_id or description length)",
+      "incomplete": "Submission missing mandatory components (code, proof, or architecture)",
+      "incorrect_logic": "Implementation does not match requirements or lacks sufficient effort",
+      "integration_fail": "System failure during evaluation or data persistence"
+    }
   },
   {
     "task_id": "T-COR-001",
@@ -111,7 +173,38 @@
     "product": "Niyantran",
     "layer": "Core",
     "subsystem": "Database",
-    "capability": "Relational Storage"
+    "capability": "Relational Storage",
+    "evaluation_inputs": [
+      "repository_available",
+      "word_count",
+      "file_count",
+      "readme_val",
+      "delivery_ratio",
+      "missing_features",
+      "layer_count"
+    ],
+    "evaluation_rules": {
+      "schema": {
+        "min_word_count": 50,
+        "require_repo": false
+      },
+      "completeness": {
+        "min_files": 3,
+        "require_proof": true,
+        "require_arch": true
+      },
+      "logic": {
+        "min_delivery_ratio": 0.6,
+        "max_missing_features": 3,
+        "min_word_count_for_effort": 80
+      }
+    },
+    "failure_semantics": {
+      "schema_violation": "Input schema validation failed (trace_id or description length)",
+      "incomplete": "Submission missing mandatory components (code, proof, or architecture)",
+      "incorrect_logic": "Implementation does not match requirements or lacks sufficient effort",
+      "integration_fail": "System failure during evaluation or data persistence"
+    }
   },
   {
     "task_id": "T-COR-002",
@@ -149,7 +242,38 @@
     "product": "Niyantran",
     "layer": "Core",
     "subsystem": "Registry",
-    "capability": "Module Validation"
+    "capability": "Module Validation",
+    "evaluation_inputs": [
+      "repository_available",
+      "word_count",
+      "file_count",
+      "readme_val",
+      "delivery_ratio",
+      "missing_features",
+      "layer_count"
+    ],
+    "evaluation_rules": {
+      "schema": {
+        "min_word_count": 50,
+        "require_repo": false
+      },
+      "completeness": {
+        "min_files": 3,
+        "require_proof": true,
+        "require_arch": true
+      },
+      "logic": {
+        "min_delivery_ratio": 0.6,
+        "max_missing_features": 3,
+        "min_word_count_for_effort": 80
+      }
+    },
+    "failure_semantics": {
+      "schema_violation": "Input schema validation failed (trace_id or description length)",
+      "incomplete": "Submission missing mandatory components (code, proof, or architecture)",
+      "incorrect_logic": "Implementation does not match requirements or lacks sufficient effort",
+      "integration_fail": "System failure during evaluation or data persistence"
+    }
   },
   {
     "task_id": "T-SEC-001",
@@ -187,7 +311,38 @@
     "product": "Parikshak",
     "layer": "Security",
     "subsystem": "Middleware",
-    "capability": "CORS and Auth"
+    "capability": "CORS and Auth",
+    "evaluation_inputs": [
+      "repository_available",
+      "word_count",
+      "file_count",
+      "readme_val",
+      "delivery_ratio",
+      "missing_features",
+      "layer_count"
+    ],
+    "evaluation_rules": {
+      "schema": {
+        "min_word_count": 50,
+        "require_repo": false
+      },
+      "completeness": {
+        "min_files": 3,
+        "require_proof": true,
+        "require_arch": true
+      },
+      "logic": {
+        "min_delivery_ratio": 0.6,
+        "max_missing_features": 3,
+        "min_word_count_for_effort": 80
+      }
+    },
+    "failure_semantics": {
+      "schema_violation": "Input schema validation failed (trace_id or description length)",
+      "incomplete": "Submission missing mandatory components (code, proof, or architecture)",
+      "incorrect_logic": "Implementation does not match requirements or lacks sufficient effort",
+      "integration_fail": "System failure during evaluation or data persistence"
+    }
   },
   {
     "task_id": "T-SIG-001",
@@ -226,7 +381,38 @@
     "product": "Parikshak",
     "layer": "Governance",
     "subsystem": "Signal Engine",
-    "capability": "Repository Analysis"
+    "capability": "Repository Analysis",
+    "evaluation_inputs": [
+      "repository_available",
+      "word_count",
+      "file_count",
+      "readme_val",
+      "delivery_ratio",
+      "missing_features",
+      "layer_count"
+    ],
+    "evaluation_rules": {
+      "schema": {
+        "min_word_count": 50,
+        "require_repo": false
+      },
+      "completeness": {
+        "min_files": 3,
+        "require_proof": true,
+        "require_arch": true
+      },
+      "logic": {
+        "min_delivery_ratio": 0.6,
+        "max_missing_features": 3,
+        "min_word_count_for_effort": 80
+      }
+    },
+    "failure_semantics": {
+      "schema_violation": "Input schema validation failed (trace_id or description length)",
+      "incomplete": "Submission missing mandatory components (code, proof, or architecture)",
+      "incorrect_logic": "Implementation does not match requirements or lacks sufficient effort",
+      "integration_fail": "System failure during evaluation or data persistence"
+    }
   },
   {
     "task_id": "T-SIG-002",
@@ -265,7 +451,38 @@
     "product": "Parikshak",
     "layer": "Governance",
     "subsystem": "Signal Engine",
-    "capability": "Feature Matching"
+    "capability": "Feature Matching",
+    "evaluation_inputs": [
+      "repository_available",
+      "word_count",
+      "file_count",
+      "readme_val",
+      "delivery_ratio",
+      "missing_features",
+      "layer_count"
+    ],
+    "evaluation_rules": {
+      "schema": {
+        "min_word_count": 50,
+        "require_repo": false
+      },
+      "completeness": {
+        "min_files": 3,
+        "require_proof": true,
+        "require_arch": true
+      },
+      "logic": {
+        "min_delivery_ratio": 0.6,
+        "max_missing_features": 3,
+        "min_word_count_for_effort": 80
+      }
+    },
+    "failure_semantics": {
+      "schema_violation": "Input schema validation failed (trace_id or description length)",
+      "incomplete": "Submission missing mandatory components (code, proof, or architecture)",
+      "incorrect_logic": "Implementation does not match requirements or lacks sufficient effort",
+      "integration_fail": "System failure during evaluation or data persistence"
+    }
   },
   {
     "task_id": "T-ASN-001",
@@ -305,7 +522,38 @@
     "product": "Parikshak",
     "layer": "Governance",
     "subsystem": "Rule Engine",
-    "capability": "Binary PAC Detection"
+    "capability": "Binary PAC Detection",
+    "evaluation_inputs": [
+      "repository_available",
+      "word_count",
+      "file_count",
+      "readme_val",
+      "delivery_ratio",
+      "missing_features",
+      "layer_count"
+    ],
+    "evaluation_rules": {
+      "schema": {
+        "min_word_count": 50,
+        "require_repo": false
+      },
+      "completeness": {
+        "min_files": 3,
+        "require_proof": true,
+        "require_arch": true
+      },
+      "logic": {
+        "min_delivery_ratio": 0.6,
+        "max_missing_features": 3,
+        "min_word_count_for_effort": 80
+      }
+    },
+    "failure_semantics": {
+      "schema_violation": "Input schema validation failed (trace_id or description length)",
+      "incomplete": "Submission missing mandatory components (code, proof, or architecture)",
+      "incorrect_logic": "Implementation does not match requirements or lacks sufficient effort",
+      "integration_fail": "System failure during evaluation or data persistence"
+    }
   },
   {
     "task_id": "T-ASN-002",
@@ -344,7 +592,38 @@
     "product": "Parikshak",
     "layer": "Governance",
     "subsystem": "Rule Engine",
-    "capability": "PASS/FAIL Determination"
+    "capability": "PASS/FAIL Determination",
+    "evaluation_inputs": [
+      "repository_available",
+      "word_count",
+      "file_count",
+      "readme_val",
+      "delivery_ratio",
+      "missing_features",
+      "layer_count"
+    ],
+    "evaluation_rules": {
+      "schema": {
+        "min_word_count": 50,
+        "require_repo": false
+      },
+      "completeness": {
+        "min_files": 3,
+        "require_proof": true,
+        "require_arch": true
+      },
+      "logic": {
+        "min_delivery_ratio": 0.6,
+        "max_missing_features": 3,
+        "min_word_count_for_effort": 80
+      }
+    },
+    "failure_semantics": {
+      "schema_violation": "Input schema validation failed (trace_id or description length)",
+      "incomplete": "Submission missing mandatory components (code, proof, or architecture)",
+      "incorrect_logic": "Implementation does not match requirements or lacks sufficient effort",
+      "integration_fail": "System failure during evaluation or data persistence"
+    }
   },
   {
     "task_id": "T-DEC-001",
@@ -382,7 +661,38 @@
     "product": "Parikshak",
     "layer": "Governance",
     "subsystem": "Decision Engine",
-    "capability": "APPROVED/REJECTED Decision"
+    "capability": "APPROVED/REJECTED Decision",
+    "evaluation_inputs": [
+      "repository_available",
+      "word_count",
+      "file_count",
+      "readme_val",
+      "delivery_ratio",
+      "missing_features",
+      "layer_count"
+    ],
+    "evaluation_rules": {
+      "schema": {
+        "min_word_count": 50,
+        "require_repo": false
+      },
+      "completeness": {
+        "min_files": 3,
+        "require_proof": true,
+        "require_arch": true
+      },
+      "logic": {
+        "min_delivery_ratio": 0.6,
+        "max_missing_features": 3,
+        "min_word_count_for_effort": 80
+      }
+    },
+    "failure_semantics": {
+      "schema_violation": "Input schema validation failed (trace_id or description length)",
+      "incomplete": "Submission missing mandatory components (code, proof, or architecture)",
+      "incorrect_logic": "Implementation does not match requirements or lacks sufficient effort",
+      "integration_fail": "System failure during evaluation or data persistence"
+    }
   },
   {
     "task_id": "T-HIL-001",
@@ -420,7 +730,38 @@
     "product": "Parikshak",
     "layer": "Governance",
     "subsystem": "Human-in-Loop",
-    "capability": "Escalation"
+    "capability": "Escalation",
+    "evaluation_inputs": [
+      "repository_available",
+      "word_count",
+      "file_count",
+      "readme_val",
+      "delivery_ratio",
+      "missing_features",
+      "layer_count"
+    ],
+    "evaluation_rules": {
+      "schema": {
+        "min_word_count": 50,
+        "require_repo": false
+      },
+      "completeness": {
+        "min_files": 3,
+        "require_proof": true,
+        "require_arch": true
+      },
+      "logic": {
+        "min_delivery_ratio": 0.6,
+        "max_missing_features": 3,
+        "min_word_count_for_effort": 80
+      }
+    },
+    "failure_semantics": {
+      "schema_violation": "Input schema validation failed (trace_id or description length)",
+      "incomplete": "Submission missing mandatory components (code, proof, or architecture)",
+      "incorrect_logic": "Implementation does not match requirements or lacks sufficient effort",
+      "integration_fail": "System failure during evaluation or data persistence"
+    }
   },
   {
     "task_id": "T-TST-001",
@@ -460,7 +801,38 @@
     "product": "Niyantran",
     "layer": "Testing",
     "subsystem": "QA Automation",
-    "capability": "Determinism Proof"
+    "capability": "Determinism Proof",
+    "evaluation_inputs": [
+      "repository_available",
+      "word_count",
+      "file_count",
+      "readme_val",
+      "delivery_ratio",
+      "missing_features",
+      "layer_count"
+    ],
+    "evaluation_rules": {
+      "schema": {
+        "min_word_count": 50,
+        "require_repo": false
+      },
+      "completeness": {
+        "min_files": 3,
+        "require_proof": true,
+        "require_arch": true
+      },
+      "logic": {
+        "min_delivery_ratio": 0.6,
+        "max_missing_features": 3,
+        "min_word_count_for_effort": 80
+      }
+    },
+    "failure_semantics": {
+      "schema_violation": "Input schema validation failed (trace_id or description length)",
+      "incomplete": "Submission missing mandatory components (code, proof, or architecture)",
+      "incorrect_logic": "Implementation does not match requirements or lacks sufficient effort",
+      "integration_fail": "System failure during evaluation or data persistence"
+    }
   },
   {
     "task_id": "T-VAA-001",
@@ -499,7 +871,38 @@
     "product": "Vaani_TTS",
     "layer": "API",
     "subsystem": "Gateway",
-    "capability": "Audio Streaming"
+    "capability": "Audio Streaming",
+    "evaluation_inputs": [
+      "repository_available",
+      "word_count",
+      "file_count",
+      "readme_val",
+      "delivery_ratio",
+      "missing_features",
+      "layer_count"
+    ],
+    "evaluation_rules": {
+      "schema": {
+        "min_word_count": 50,
+        "require_repo": false
+      },
+      "completeness": {
+        "min_files": 3,
+        "require_proof": true,
+        "require_arch": true
+      },
+      "logic": {
+        "min_delivery_ratio": 0.6,
+        "max_missing_features": 3,
+        "min_word_count_for_effort": 80
+      }
+    },
+    "failure_semantics": {
+      "schema_violation": "Input schema validation failed (trace_id or description length)",
+      "incomplete": "Submission missing mandatory components (code, proof, or architecture)",
+      "incorrect_logic": "Implementation does not match requirements or lacks sufficient effort",
+      "integration_fail": "System failure during evaluation or data persistence"
+    }
   },
   {
     "task_id": "T-GOV-F01",
@@ -534,7 +937,38 @@
     "product": "Niyantran",
     "layer": "Governance",
     "subsystem": "Task Review Engine",
-    "capability": "Schema Correction"
+    "capability": "Schema Correction",
+    "evaluation_inputs": [
+      "repository_available",
+      "word_count",
+      "file_count",
+      "readme_val",
+      "delivery_ratio",
+      "missing_features",
+      "layer_count"
+    ],
+    "evaluation_rules": {
+      "schema": {
+        "min_word_count": 50,
+        "require_repo": false
+      },
+      "completeness": {
+        "min_files": 3,
+        "require_proof": true,
+        "require_arch": true
+      },
+      "logic": {
+        "min_delivery_ratio": 0.6,
+        "max_missing_features": 3,
+        "min_word_count_for_effort": 80
+      }
+    },
+    "failure_semantics": {
+      "schema_violation": "Input schema validation failed (trace_id or description length)",
+      "incomplete": "Submission missing mandatory components (code, proof, or architecture)",
+      "incorrect_logic": "Implementation does not match requirements or lacks sufficient effort",
+      "integration_fail": "System failure during evaluation or data persistence"
+    }
   },
   {
     "task_id": "T-GOV-F02",
@@ -569,7 +1003,38 @@
     "product": "Niyantran",
     "layer": "Governance",
     "subsystem": "Task Review Engine",
-    "capability": "Logic Correction"
+    "capability": "Logic Correction",
+    "evaluation_inputs": [
+      "repository_available",
+      "word_count",
+      "file_count",
+      "readme_val",
+      "delivery_ratio",
+      "missing_features",
+      "layer_count"
+    ],
+    "evaluation_rules": {
+      "schema": {
+        "min_word_count": 50,
+        "require_repo": false
+      },
+      "completeness": {
+        "min_files": 3,
+        "require_proof": true,
+        "require_arch": true
+      },
+      "logic": {
+        "min_delivery_ratio": 0.6,
+        "max_missing_features": 3,
+        "min_word_count_for_effort": 80
+      }
+    },
+    "failure_semantics": {
+      "schema_violation": "Input schema validation failed (trace_id or description length)",
+      "incomplete": "Submission missing mandatory components (code, proof, or architecture)",
+      "incorrect_logic": "Implementation does not match requirements or lacks sufficient effort",
+      "integration_fail": "System failure during evaluation or data persistence"
+    }
   },
   {
     "task_id": "T-COR-F01",
@@ -604,7 +1069,38 @@
     "product": "Niyantran",
     "layer": "Core",
     "subsystem": "Database",
-    "capability": "Storage Correction"
+    "capability": "Storage Correction",
+    "evaluation_inputs": [
+      "repository_available",
+      "word_count",
+      "file_count",
+      "readme_val",
+      "delivery_ratio",
+      "missing_features",
+      "layer_count"
+    ],
+    "evaluation_rules": {
+      "schema": {
+        "min_word_count": 50,
+        "require_repo": false
+      },
+      "completeness": {
+        "min_files": 3,
+        "require_proof": true,
+        "require_arch": true
+      },
+      "logic": {
+        "min_delivery_ratio": 0.6,
+        "max_missing_features": 3,
+        "min_word_count_for_effort": 80
+      }
+    },
+    "failure_semantics": {
+      "schema_violation": "Input schema validation failed (trace_id or description length)",
+      "incomplete": "Submission missing mandatory components (code, proof, or architecture)",
+      "incorrect_logic": "Implementation does not match requirements or lacks sufficient effort",
+      "integration_fail": "System failure during evaluation or data persistence"
+    }
   },
   {
     "task_id": "T-COR-F02",
@@ -639,7 +1135,38 @@
     "product": "Niyantran",
     "layer": "Core",
     "subsystem": "Registry",
-    "capability": "Registry Correction"
+    "capability": "Registry Correction",
+    "evaluation_inputs": [
+      "repository_available",
+      "word_count",
+      "file_count",
+      "readme_val",
+      "delivery_ratio",
+      "missing_features",
+      "layer_count"
+    ],
+    "evaluation_rules": {
+      "schema": {
+        "min_word_count": 50,
+        "require_repo": false
+      },
+      "completeness": {
+        "min_files": 3,
+        "require_proof": true,
+        "require_arch": true
+      },
+      "logic": {
+        "min_delivery_ratio": 0.6,
+        "max_missing_features": 3,
+        "min_word_count_for_effort": 80
+      }
+    },
+    "failure_semantics": {
+      "schema_violation": "Input schema validation failed (trace_id or description length)",
+      "incomplete": "Submission missing mandatory components (code, proof, or architecture)",
+      "incorrect_logic": "Implementation does not match requirements or lacks sufficient effort",
+      "integration_fail": "System failure during evaluation or data persistence"
+    }
   },
   {
     "task_id": "T-TST-F01",
@@ -674,7 +1201,38 @@
     "product": "Niyantran",
     "layer": "Testing",
     "subsystem": "QA Automation",
-    "capability": "Test Correction"
+    "capability": "Test Correction",
+    "evaluation_inputs": [
+      "repository_available",
+      "word_count",
+      "file_count",
+      "readme_val",
+      "delivery_ratio",
+      "missing_features",
+      "layer_count"
+    ],
+    "evaluation_rules": {
+      "schema": {
+        "min_word_count": 50,
+        "require_repo": false
+      },
+      "completeness": {
+        "min_files": 3,
+        "require_proof": true,
+        "require_arch": true
+      },
+      "logic": {
+        "min_delivery_ratio": 0.6,
+        "max_missing_features": 3,
+        "min_word_count_for_effort": 80
+      }
+    },
+    "failure_semantics": {
+      "schema_violation": "Input schema validation failed (trace_id or description length)",
+      "incomplete": "Submission missing mandatory components (code, proof, or architecture)",
+      "incorrect_logic": "Implementation does not match requirements or lacks sufficient effort",
+      "integration_fail": "System failure during evaluation or data persistence"
+    }
   },
   {
     "task_id": "T-VAA-F01",
@@ -709,7 +1267,38 @@
     "product": "Vaani_TTS",
     "layer": "API",
     "subsystem": "Gateway",
-    "capability": "TTS Correction"
+    "capability": "TTS Correction",
+    "evaluation_inputs": [
+      "repository_available",
+      "word_count",
+      "file_count",
+      "readme_val",
+      "delivery_ratio",
+      "missing_features",
+      "layer_count"
+    ],
+    "evaluation_rules": {
+      "schema": {
+        "min_word_count": 50,
+        "require_repo": false
+      },
+      "completeness": {
+        "min_files": 3,
+        "require_proof": true,
+        "require_arch": true
+      },
+      "logic": {
+        "min_delivery_ratio": 0.6,
+        "max_missing_features": 3,
+        "min_word_count_for_effort": 80
+      }
+    },
+    "failure_semantics": {
+      "schema_violation": "Input schema validation failed (trace_id or description length)",
+      "incomplete": "Submission missing mandatory components (code, proof, or architecture)",
+      "incorrect_logic": "Implementation does not match requirements or lacks sufficient effort",
+      "integration_fail": "System failure during evaluation or data persistence"
+    }
   },
   {
     "task_id": "T-SYS-F00",
@@ -744,1672 +1333,38 @@
     "product": "Parikshak",
     "layer": "Governance",
     "subsystem": "Task Selection",
-    "capability": "Catastrophic Recovery"
-  },
-  {
-    "task_id": "T-GEN-100",
-    "dharma": "Auto generated dharma.",
-    "completion_signals": [
-      "evaluation_api_returns_200",
-      "decision_field_present",
-      "trace_id_written_to_bucket"
+    "capability": "Catastrophic Recovery",
+    "evaluation_inputs": [
+      "repository_available",
+      "word_count",
+      "file_count",
+      "readme_val",
+      "delivery_ratio",
+      "missing_features",
+      "layer_count"
     ],
-    "failure_type": null,
-    "prerequisites": [],
-    "next_tasks": [
-      "T-GEN-101"
-    ],
-    "failure_tasks": {
-      "schema_violation": [
-        "T-SYS-F00"
-      ],
-      "incomplete": [
-        "T-SYS-F00"
-      ],
-      "incorrect_logic": [
-        "T-SYS-F00"
-      ],
-      "integration_fail": [
-        "T-SYS-F00"
-      ]
+    "evaluation_rules": {
+      "schema": {
+        "min_word_count": 50,
+        "require_repo": false
+      },
+      "completeness": {
+        "min_files": 3,
+        "require_proof": true,
+        "require_arch": true
+      },
+      "logic": {
+        "min_delivery_ratio": 0.6,
+        "max_missing_features": 3,
+        "min_word_count_for_effort": 80
+      }
     },
-    "constraints": [
-      "trace_id_must_come_from_niyantran",
-      "no_numeric_evaluating",
-      "no_fallback_routing"
-    ],
-    "product": "Niyantran",
-    "layer": "Frontend",
-    "subsystem": "API",
-    "capability": "Auto Niyantran Frontend"
-  },
-  {
-    "task_id": "T-GEN-101",
-    "dharma": "Auto generated dharma.",
-    "completion_signals": [
-      "evaluation_api_returns_200",
-      "decision_field_present",
-      "trace_id_written_to_bucket"
-    ],
-    "failure_type": null,
-    "prerequisites": [],
-    "next_tasks": [
-      "T-GEN-102"
-    ],
-    "failure_tasks": {
-      "schema_violation": [
-        "T-SYS-F00"
-      ],
-      "incomplete": [
-        "T-SYS-F00"
-      ],
-      "incorrect_logic": [
-        "T-SYS-F00"
-      ],
-      "integration_fail": [
-        "T-SYS-F00"
-      ]
-    },
-    "constraints": [
-      "trace_id_must_come_from_niyantran",
-      "no_numeric_evaluating",
-      "no_fallback_routing"
-    ],
-    "product": "Niyantran",
-    "layer": "Frontend",
-    "subsystem": "Storage",
-    "capability": "Auto Niyantran Frontend"
-  },
-  {
-    "task_id": "T-GEN-102",
-    "dharma": "Auto generated dharma.",
-    "completion_signals": [
-      "evaluation_api_returns_200",
-      "decision_field_present",
-      "trace_id_written_to_bucket"
-    ],
-    "failure_type": null,
-    "prerequisites": [],
-    "next_tasks": [
-      "T-GEN-103"
-    ],
-    "failure_tasks": {
-      "schema_violation": [
-        "T-SYS-F00"
-      ],
-      "incomplete": [
-        "T-SYS-F00"
-      ],
-      "incorrect_logic": [
-        "T-SYS-F00"
-      ],
-      "integration_fail": [
-        "T-SYS-F00"
-      ]
-    },
-    "constraints": [
-      "trace_id_must_come_from_niyantran",
-      "no_numeric_evaluating",
-      "no_fallback_routing"
-    ],
-    "product": "Niyantran",
-    "layer": "Frontend",
-    "subsystem": "Auth",
-    "capability": "Auto Niyantran Frontend"
-  },
-  {
-    "task_id": "T-GEN-103",
-    "dharma": "Auto generated dharma.",
-    "completion_signals": [
-      "evaluation_api_returns_200",
-      "decision_field_present",
-      "trace_id_written_to_bucket"
-    ],
-    "failure_type": null,
-    "prerequisites": [],
-    "next_tasks": [
-      "T-GEN-104"
-    ],
-    "failure_tasks": {
-      "schema_violation": [
-        "T-SYS-F00"
-      ],
-      "incomplete": [
-        "T-SYS-F00"
-      ],
-      "incorrect_logic": [
-        "T-SYS-F00"
-      ],
-      "integration_fail": [
-        "T-SYS-F00"
-      ]
-    },
-    "constraints": [
-      "trace_id_must_come_from_niyantran",
-      "no_numeric_evaluating",
-      "no_fallback_routing"
-    ],
-    "product": "Niyantran",
-    "layer": "Frontend",
-    "subsystem": "Compute",
-    "capability": "Auto Niyantran Frontend"
-  },
-  {
-    "task_id": "T-GEN-104",
-    "dharma": "Auto generated dharma.",
-    "completion_signals": [
-      "evaluation_api_returns_200",
-      "decision_field_present",
-      "trace_id_written_to_bucket"
-    ],
-    "failure_type": null,
-    "prerequisites": [],
-    "next_tasks": [
-      "T-GEN-105"
-    ],
-    "failure_tasks": {
-      "schema_violation": [
-        "T-SYS-F00"
-      ],
-      "incomplete": [
-        "T-SYS-F00"
-      ],
-      "incorrect_logic": [
-        "T-SYS-F00"
-      ],
-      "integration_fail": [
-        "T-SYS-F00"
-      ]
-    },
-    "constraints": [
-      "trace_id_must_come_from_niyantran",
-      "no_numeric_evaluating",
-      "no_fallback_routing"
-    ],
-    "product": "Niyantran",
-    "layer": "Frontend",
-    "subsystem": "UI",
-    "capability": "Auto Niyantran Frontend"
-  },
-  {
-    "task_id": "T-GEN-105",
-    "dharma": "Auto generated dharma.",
-    "completion_signals": [
-      "evaluation_api_returns_200",
-      "decision_field_present",
-      "trace_id_written_to_bucket"
-    ],
-    "failure_type": null,
-    "prerequisites": [],
-    "next_tasks": [
-      "T-GEN-106"
-    ],
-    "failure_tasks": {
-      "schema_violation": [
-        "T-SYS-F00"
-      ],
-      "incomplete": [
-        "T-SYS-F00"
-      ],
-      "incorrect_logic": [
-        "T-SYS-F00"
-      ],
-      "integration_fail": [
-        "T-SYS-F00"
-      ]
-    },
-    "constraints": [
-      "trace_id_must_come_from_niyantran",
-      "no_numeric_evaluating",
-      "no_fallback_routing"
-    ],
-    "product": "Niyantran",
-    "layer": "Backend",
-    "subsystem": "API",
-    "capability": "Auto Niyantran Backend"
-  },
-  {
-    "task_id": "T-GEN-106",
-    "dharma": "Auto generated dharma.",
-    "completion_signals": [
-      "evaluation_api_returns_200",
-      "decision_field_present",
-      "trace_id_written_to_bucket"
-    ],
-    "failure_type": null,
-    "prerequisites": [],
-    "next_tasks": [
-      "T-GEN-107"
-    ],
-    "failure_tasks": {
-      "schema_violation": [
-        "T-SYS-F00"
-      ],
-      "incomplete": [
-        "T-SYS-F00"
-      ],
-      "incorrect_logic": [
-        "T-SYS-F00"
-      ],
-      "integration_fail": [
-        "T-SYS-F00"
-      ]
-    },
-    "constraints": [
-      "trace_id_must_come_from_niyantran",
-      "no_numeric_evaluating",
-      "no_fallback_routing"
-    ],
-    "product": "Niyantran",
-    "layer": "Backend",
-    "subsystem": "Storage",
-    "capability": "Auto Niyantran Backend"
-  },
-  {
-    "task_id": "T-GEN-107",
-    "dharma": "Auto generated dharma.",
-    "completion_signals": [
-      "evaluation_api_returns_200",
-      "decision_field_present",
-      "trace_id_written_to_bucket"
-    ],
-    "failure_type": null,
-    "prerequisites": [],
-    "next_tasks": [
-      "T-GEN-108"
-    ],
-    "failure_tasks": {
-      "schema_violation": [
-        "T-SYS-F00"
-      ],
-      "incomplete": [
-        "T-SYS-F00"
-      ],
-      "incorrect_logic": [
-        "T-SYS-F00"
-      ],
-      "integration_fail": [
-        "T-SYS-F00"
-      ]
-    },
-    "constraints": [
-      "trace_id_must_come_from_niyantran",
-      "no_numeric_evaluating",
-      "no_fallback_routing"
-    ],
-    "product": "Niyantran",
-    "layer": "Backend",
-    "subsystem": "Auth",
-    "capability": "Auto Niyantran Backend"
-  },
-  {
-    "task_id": "T-GEN-108",
-    "dharma": "Auto generated dharma.",
-    "completion_signals": [
-      "evaluation_api_returns_200",
-      "decision_field_present",
-      "trace_id_written_to_bucket"
-    ],
-    "failure_type": null,
-    "prerequisites": [],
-    "next_tasks": [
-      "T-GEN-109"
-    ],
-    "failure_tasks": {
-      "schema_violation": [
-        "T-SYS-F00"
-      ],
-      "incomplete": [
-        "T-SYS-F00"
-      ],
-      "incorrect_logic": [
-        "T-SYS-F00"
-      ],
-      "integration_fail": [
-        "T-SYS-F00"
-      ]
-    },
-    "constraints": [
-      "trace_id_must_come_from_niyantran",
-      "no_numeric_evaluating",
-      "no_fallback_routing"
-    ],
-    "product": "Niyantran",
-    "layer": "Backend",
-    "subsystem": "Compute",
-    "capability": "Auto Niyantran Backend"
-  },
-  {
-    "task_id": "T-GEN-109",
-    "dharma": "Auto generated dharma.",
-    "completion_signals": [
-      "evaluation_api_returns_200",
-      "decision_field_present",
-      "trace_id_written_to_bucket"
-    ],
-    "failure_type": null,
-    "prerequisites": [],
-    "next_tasks": [
-      "T-GEN-110"
-    ],
-    "failure_tasks": {
-      "schema_violation": [
-        "T-SYS-F00"
-      ],
-      "incomplete": [
-        "T-SYS-F00"
-      ],
-      "incorrect_logic": [
-        "T-SYS-F00"
-      ],
-      "integration_fail": [
-        "T-SYS-F00"
-      ]
-    },
-    "constraints": [
-      "trace_id_must_come_from_niyantran",
-      "no_numeric_evaluating",
-      "no_fallback_routing"
-    ],
-    "product": "Niyantran",
-    "layer": "Backend",
-    "subsystem": "UI",
-    "capability": "Auto Niyantran Backend"
-  },
-  {
-    "task_id": "T-GEN-110",
-    "dharma": "Auto generated dharma.",
-    "completion_signals": [
-      "evaluation_api_returns_200",
-      "decision_field_present",
-      "trace_id_written_to_bucket"
-    ],
-    "failure_type": null,
-    "prerequisites": [],
-    "next_tasks": [
-      "T-GEN-111"
-    ],
-    "failure_tasks": {
-      "schema_violation": [
-        "T-SYS-F00"
-      ],
-      "incomplete": [
-        "T-SYS-F00"
-      ],
-      "incorrect_logic": [
-        "T-SYS-F00"
-      ],
-      "integration_fail": [
-        "T-SYS-F00"
-      ]
-    },
-    "constraints": [
-      "trace_id_must_come_from_niyantran",
-      "no_numeric_evaluating",
-      "no_fallback_routing"
-    ],
-    "product": "Niyantran",
-    "layer": "Database",
-    "subsystem": "API",
-    "capability": "Auto Niyantran Database"
-  },
-  {
-    "task_id": "T-GEN-111",
-    "dharma": "Auto generated dharma.",
-    "completion_signals": [
-      "evaluation_api_returns_200",
-      "decision_field_present",
-      "trace_id_written_to_bucket"
-    ],
-    "failure_type": null,
-    "prerequisites": [],
-    "next_tasks": [
-      "T-GEN-112"
-    ],
-    "failure_tasks": {
-      "schema_violation": [
-        "T-SYS-F00"
-      ],
-      "incomplete": [
-        "T-SYS-F00"
-      ],
-      "incorrect_logic": [
-        "T-SYS-F00"
-      ],
-      "integration_fail": [
-        "T-SYS-F00"
-      ]
-    },
-    "constraints": [
-      "trace_id_must_come_from_niyantran",
-      "no_numeric_evaluating",
-      "no_fallback_routing"
-    ],
-    "product": "Niyantran",
-    "layer": "Database",
-    "subsystem": "Storage",
-    "capability": "Auto Niyantran Database"
-  },
-  {
-    "task_id": "T-GEN-112",
-    "dharma": "Auto generated dharma.",
-    "completion_signals": [
-      "evaluation_api_returns_200",
-      "decision_field_present",
-      "trace_id_written_to_bucket"
-    ],
-    "failure_type": null,
-    "prerequisites": [],
-    "next_tasks": [
-      "T-GEN-113"
-    ],
-    "failure_tasks": {
-      "schema_violation": [
-        "T-SYS-F00"
-      ],
-      "incomplete": [
-        "T-SYS-F00"
-      ],
-      "incorrect_logic": [
-        "T-SYS-F00"
-      ],
-      "integration_fail": [
-        "T-SYS-F00"
-      ]
-    },
-    "constraints": [
-      "trace_id_must_come_from_niyantran",
-      "no_numeric_evaluating",
-      "no_fallback_routing"
-    ],
-    "product": "Niyantran",
-    "layer": "Database",
-    "subsystem": "Auth",
-    "capability": "Auto Niyantran Database"
-  },
-  {
-    "task_id": "T-GEN-113",
-    "dharma": "Auto generated dharma.",
-    "completion_signals": [
-      "evaluation_api_returns_200",
-      "decision_field_present",
-      "trace_id_written_to_bucket"
-    ],
-    "failure_type": null,
-    "prerequisites": [],
-    "next_tasks": [
-      "T-GEN-114"
-    ],
-    "failure_tasks": {
-      "schema_violation": [
-        "T-SYS-F00"
-      ],
-      "incomplete": [
-        "T-SYS-F00"
-      ],
-      "incorrect_logic": [
-        "T-SYS-F00"
-      ],
-      "integration_fail": [
-        "T-SYS-F00"
-      ]
-    },
-    "constraints": [
-      "trace_id_must_come_from_niyantran",
-      "no_numeric_evaluating",
-      "no_fallback_routing"
-    ],
-    "product": "Niyantran",
-    "layer": "Database",
-    "subsystem": "Compute",
-    "capability": "Auto Niyantran Database"
-  },
-  {
-    "task_id": "T-GEN-114",
-    "dharma": "Auto generated dharma.",
-    "completion_signals": [
-      "evaluation_api_returns_200",
-      "decision_field_present",
-      "trace_id_written_to_bucket"
-    ],
-    "failure_type": null,
-    "prerequisites": [],
-    "next_tasks": [
-      "T-GEN-115"
-    ],
-    "failure_tasks": {
-      "schema_violation": [
-        "T-SYS-F00"
-      ],
-      "incomplete": [
-        "T-SYS-F00"
-      ],
-      "incorrect_logic": [
-        "T-SYS-F00"
-      ],
-      "integration_fail": [
-        "T-SYS-F00"
-      ]
-    },
-    "constraints": [
-      "trace_id_must_come_from_niyantran",
-      "no_numeric_evaluating",
-      "no_fallback_routing"
-    ],
-    "product": "Niyantran",
-    "layer": "Database",
-    "subsystem": "UI",
-    "capability": "Auto Niyantran Database"
-  },
-  {
-    "task_id": "T-GEN-115",
-    "dharma": "Auto generated dharma.",
-    "completion_signals": [
-      "evaluation_api_returns_200",
-      "decision_field_present",
-      "trace_id_written_to_bucket"
-    ],
-    "failure_type": null,
-    "prerequisites": [],
-    "next_tasks": [
-      "T-GEN-116"
-    ],
-    "failure_tasks": {
-      "schema_violation": [
-        "T-SYS-F00"
-      ],
-      "incomplete": [
-        "T-SYS-F00"
-      ],
-      "incorrect_logic": [
-        "T-SYS-F00"
-      ],
-      "integration_fail": [
-        "T-SYS-F00"
-      ]
-    },
-    "constraints": [
-      "trace_id_must_come_from_niyantran",
-      "no_numeric_evaluating",
-      "no_fallback_routing"
-    ],
-    "product": "Niyantran",
-    "layer": "Security",
-    "subsystem": "API",
-    "capability": "Auto Niyantran Security"
-  },
-  {
-    "task_id": "T-GEN-116",
-    "dharma": "Auto generated dharma.",
-    "completion_signals": [
-      "evaluation_api_returns_200",
-      "decision_field_present",
-      "trace_id_written_to_bucket"
-    ],
-    "failure_type": null,
-    "prerequisites": [],
-    "next_tasks": [
-      "T-GEN-117"
-    ],
-    "failure_tasks": {
-      "schema_violation": [
-        "T-SYS-F00"
-      ],
-      "incomplete": [
-        "T-SYS-F00"
-      ],
-      "incorrect_logic": [
-        "T-SYS-F00"
-      ],
-      "integration_fail": [
-        "T-SYS-F00"
-      ]
-    },
-    "constraints": [
-      "trace_id_must_come_from_niyantran",
-      "no_numeric_evaluating",
-      "no_fallback_routing"
-    ],
-    "product": "Niyantran",
-    "layer": "Security",
-    "subsystem": "Storage",
-    "capability": "Auto Niyantran Security"
-  },
-  {
-    "task_id": "T-GEN-117",
-    "dharma": "Auto generated dharma.",
-    "completion_signals": [
-      "evaluation_api_returns_200",
-      "decision_field_present",
-      "trace_id_written_to_bucket"
-    ],
-    "failure_type": null,
-    "prerequisites": [],
-    "next_tasks": [
-      "T-GEN-118"
-    ],
-    "failure_tasks": {
-      "schema_violation": [
-        "T-SYS-F00"
-      ],
-      "incomplete": [
-        "T-SYS-F00"
-      ],
-      "incorrect_logic": [
-        "T-SYS-F00"
-      ],
-      "integration_fail": [
-        "T-SYS-F00"
-      ]
-    },
-    "constraints": [
-      "trace_id_must_come_from_niyantran",
-      "no_numeric_evaluating",
-      "no_fallback_routing"
-    ],
-    "product": "Niyantran",
-    "layer": "Security",
-    "subsystem": "Auth",
-    "capability": "Auto Niyantran Security"
-  },
-  {
-    "task_id": "T-GEN-118",
-    "dharma": "Auto generated dharma.",
-    "completion_signals": [
-      "evaluation_api_returns_200",
-      "decision_field_present",
-      "trace_id_written_to_bucket"
-    ],
-    "failure_type": null,
-    "prerequisites": [],
-    "next_tasks": [
-      "T-GEN-119"
-    ],
-    "failure_tasks": {
-      "schema_violation": [
-        "T-SYS-F00"
-      ],
-      "incomplete": [
-        "T-SYS-F00"
-      ],
-      "incorrect_logic": [
-        "T-SYS-F00"
-      ],
-      "integration_fail": [
-        "T-SYS-F00"
-      ]
-    },
-    "constraints": [
-      "trace_id_must_come_from_niyantran",
-      "no_numeric_evaluating",
-      "no_fallback_routing"
-    ],
-    "product": "Niyantran",
-    "layer": "Security",
-    "subsystem": "Compute",
-    "capability": "Auto Niyantran Security"
-  },
-  {
-    "task_id": "T-GEN-119",
-    "dharma": "Auto generated dharma.",
-    "completion_signals": [
-      "evaluation_api_returns_200",
-      "decision_field_present",
-      "trace_id_written_to_bucket"
-    ],
-    "failure_type": null,
-    "prerequisites": [],
-    "next_tasks": [
-      "T-GEN-120"
-    ],
-    "failure_tasks": {
-      "schema_violation": [
-        "T-SYS-F00"
-      ],
-      "incomplete": [
-        "T-SYS-F00"
-      ],
-      "incorrect_logic": [
-        "T-SYS-F00"
-      ],
-      "integration_fail": [
-        "T-SYS-F00"
-      ]
-    },
-    "constraints": [
-      "trace_id_must_come_from_niyantran",
-      "no_numeric_evaluating",
-      "no_fallback_routing"
-    ],
-    "product": "Niyantran",
-    "layer": "Security",
-    "subsystem": "UI",
-    "capability": "Auto Niyantran Security"
-  },
-  {
-    "task_id": "T-GEN-120",
-    "dharma": "Auto generated dharma.",
-    "completion_signals": [
-      "evaluation_api_returns_200",
-      "decision_field_present",
-      "trace_id_written_to_bucket"
-    ],
-    "failure_type": null,
-    "prerequisites": [],
-    "next_tasks": [
-      "T-GEN-121"
-    ],
-    "failure_tasks": {
-      "schema_violation": [
-        "T-SYS-F00"
-      ],
-      "incomplete": [
-        "T-SYS-F00"
-      ],
-      "incorrect_logic": [
-        "T-SYS-F00"
-      ],
-      "integration_fail": [
-        "T-SYS-F00"
-      ]
-    },
-    "constraints": [
-      "trace_id_must_come_from_niyantran",
-      "no_numeric_evaluating",
-      "no_fallback_routing"
-    ],
-    "product": "Niyantran",
-    "layer": "Infrastructure",
-    "subsystem": "API",
-    "capability": "Auto Niyantran Infrastructure"
-  },
-  {
-    "task_id": "T-GEN-121",
-    "dharma": "Auto generated dharma.",
-    "completion_signals": [
-      "evaluation_api_returns_200",
-      "decision_field_present",
-      "trace_id_written_to_bucket"
-    ],
-    "failure_type": null,
-    "prerequisites": [],
-    "next_tasks": [
-      "T-GEN-122"
-    ],
-    "failure_tasks": {
-      "schema_violation": [
-        "T-SYS-F00"
-      ],
-      "incomplete": [
-        "T-SYS-F00"
-      ],
-      "incorrect_logic": [
-        "T-SYS-F00"
-      ],
-      "integration_fail": [
-        "T-SYS-F00"
-      ]
-    },
-    "constraints": [
-      "trace_id_must_come_from_niyantran",
-      "no_numeric_evaluating",
-      "no_fallback_routing"
-    ],
-    "product": "Niyantran",
-    "layer": "Infrastructure",
-    "subsystem": "Storage",
-    "capability": "Auto Niyantran Infrastructure"
-  },
-  {
-    "task_id": "T-GEN-122",
-    "dharma": "Auto generated dharma.",
-    "completion_signals": [
-      "evaluation_api_returns_200",
-      "decision_field_present",
-      "trace_id_written_to_bucket"
-    ],
-    "failure_type": null,
-    "prerequisites": [],
-    "next_tasks": [
-      "T-GEN-123"
-    ],
-    "failure_tasks": {
-      "schema_violation": [
-        "T-SYS-F00"
-      ],
-      "incomplete": [
-        "T-SYS-F00"
-      ],
-      "incorrect_logic": [
-        "T-SYS-F00"
-      ],
-      "integration_fail": [
-        "T-SYS-F00"
-      ]
-    },
-    "constraints": [
-      "trace_id_must_come_from_niyantran",
-      "no_numeric_evaluating",
-      "no_fallback_routing"
-    ],
-    "product": "Niyantran",
-    "layer": "Infrastructure",
-    "subsystem": "Auth",
-    "capability": "Auto Niyantran Infrastructure"
-  },
-  {
-    "task_id": "T-GEN-123",
-    "dharma": "Auto generated dharma.",
-    "completion_signals": [
-      "evaluation_api_returns_200",
-      "decision_field_present",
-      "trace_id_written_to_bucket"
-    ],
-    "failure_type": null,
-    "prerequisites": [],
-    "next_tasks": [
-      "T-GEN-124"
-    ],
-    "failure_tasks": {
-      "schema_violation": [
-        "T-SYS-F00"
-      ],
-      "incomplete": [
-        "T-SYS-F00"
-      ],
-      "incorrect_logic": [
-        "T-SYS-F00"
-      ],
-      "integration_fail": [
-        "T-SYS-F00"
-      ]
-    },
-    "constraints": [
-      "trace_id_must_come_from_niyantran",
-      "no_numeric_evaluating",
-      "no_fallback_routing"
-    ],
-    "product": "Niyantran",
-    "layer": "Infrastructure",
-    "subsystem": "Compute",
-    "capability": "Auto Niyantran Infrastructure"
-  },
-  {
-    "task_id": "T-GEN-124",
-    "dharma": "Auto generated dharma.",
-    "completion_signals": [
-      "evaluation_api_returns_200",
-      "decision_field_present",
-      "trace_id_written_to_bucket"
-    ],
-    "failure_type": null,
-    "prerequisites": [],
-    "next_tasks": [
-      "T-GEN-125"
-    ],
-    "failure_tasks": {
-      "schema_violation": [
-        "T-SYS-F00"
-      ],
-      "incomplete": [
-        "T-SYS-F00"
-      ],
-      "incorrect_logic": [
-        "T-SYS-F00"
-      ],
-      "integration_fail": [
-        "T-SYS-F00"
-      ]
-    },
-    "constraints": [
-      "trace_id_must_come_from_niyantran",
-      "no_numeric_evaluating",
-      "no_fallback_routing"
-    ],
-    "product": "Niyantran",
-    "layer": "Infrastructure",
-    "subsystem": "UI",
-    "capability": "Auto Niyantran Infrastructure"
-  },
-  {
-    "task_id": "T-GEN-125",
-    "dharma": "Auto generated dharma.",
-    "completion_signals": [
-      "evaluation_api_returns_200",
-      "decision_field_present",
-      "trace_id_written_to_bucket"
-    ],
-    "failure_type": null,
-    "prerequisites": [],
-    "next_tasks": [
-      "T-GEN-126"
-    ],
-    "failure_tasks": {
-      "schema_violation": [
-        "T-SYS-F00"
-      ],
-      "incomplete": [
-        "T-SYS-F00"
-      ],
-      "incorrect_logic": [
-        "T-SYS-F00"
-      ],
-      "integration_fail": [
-        "T-SYS-F00"
-      ]
-    },
-    "constraints": [
-      "trace_id_must_come_from_niyantran",
-      "no_numeric_evaluating",
-      "no_fallback_routing"
-    ],
-    "product": "Vaani_TTS",
-    "layer": "Frontend",
-    "subsystem": "API",
-    "capability": "Auto Vaani_TTS Frontend"
-  },
-  {
-    "task_id": "T-GEN-126",
-    "dharma": "Auto generated dharma.",
-    "completion_signals": [
-      "evaluation_api_returns_200",
-      "decision_field_present",
-      "trace_id_written_to_bucket"
-    ],
-    "failure_type": null,
-    "prerequisites": [],
-    "next_tasks": [
-      "T-GEN-127"
-    ],
-    "failure_tasks": {
-      "schema_violation": [
-        "T-SYS-F00"
-      ],
-      "incomplete": [
-        "T-SYS-F00"
-      ],
-      "incorrect_logic": [
-        "T-SYS-F00"
-      ],
-      "integration_fail": [
-        "T-SYS-F00"
-      ]
-    },
-    "constraints": [
-      "trace_id_must_come_from_niyantran",
-      "no_numeric_evaluating",
-      "no_fallback_routing"
-    ],
-    "product": "Vaani_TTS",
-    "layer": "Frontend",
-    "subsystem": "Storage",
-    "capability": "Auto Vaani_TTS Frontend"
-  },
-  {
-    "task_id": "T-GEN-127",
-    "dharma": "Auto generated dharma.",
-    "completion_signals": [
-      "evaluation_api_returns_200",
-      "decision_field_present",
-      "trace_id_written_to_bucket"
-    ],
-    "failure_type": null,
-    "prerequisites": [],
-    "next_tasks": [
-      "T-GEN-128"
-    ],
-    "failure_tasks": {
-      "schema_violation": [
-        "T-SYS-F00"
-      ],
-      "incomplete": [
-        "T-SYS-F00"
-      ],
-      "incorrect_logic": [
-        "T-SYS-F00"
-      ],
-      "integration_fail": [
-        "T-SYS-F00"
-      ]
-    },
-    "constraints": [
-      "trace_id_must_come_from_niyantran",
-      "no_numeric_evaluating",
-      "no_fallback_routing"
-    ],
-    "product": "Vaani_TTS",
-    "layer": "Frontend",
-    "subsystem": "Auth",
-    "capability": "Auto Vaani_TTS Frontend"
-  },
-  {
-    "task_id": "T-GEN-128",
-    "dharma": "Auto generated dharma.",
-    "completion_signals": [
-      "evaluation_api_returns_200",
-      "decision_field_present",
-      "trace_id_written_to_bucket"
-    ],
-    "failure_type": null,
-    "prerequisites": [],
-    "next_tasks": [
-      "T-GEN-129"
-    ],
-    "failure_tasks": {
-      "schema_violation": [
-        "T-SYS-F00"
-      ],
-      "incomplete": [
-        "T-SYS-F00"
-      ],
-      "incorrect_logic": [
-        "T-SYS-F00"
-      ],
-      "integration_fail": [
-        "T-SYS-F00"
-      ]
-    },
-    "constraints": [
-      "trace_id_must_come_from_niyantran",
-      "no_numeric_evaluating",
-      "no_fallback_routing"
-    ],
-    "product": "Vaani_TTS",
-    "layer": "Frontend",
-    "subsystem": "Compute",
-    "capability": "Auto Vaani_TTS Frontend"
-  },
-  {
-    "task_id": "T-GEN-129",
-    "dharma": "Auto generated dharma.",
-    "completion_signals": [
-      "evaluation_api_returns_200",
-      "decision_field_present",
-      "trace_id_written_to_bucket"
-    ],
-    "failure_type": null,
-    "prerequisites": [],
-    "next_tasks": [
-      "T-GEN-130"
-    ],
-    "failure_tasks": {
-      "schema_violation": [
-        "T-SYS-F00"
-      ],
-      "incomplete": [
-        "T-SYS-F00"
-      ],
-      "incorrect_logic": [
-        "T-SYS-F00"
-      ],
-      "integration_fail": [
-        "T-SYS-F00"
-      ]
-    },
-    "constraints": [
-      "trace_id_must_come_from_niyantran",
-      "no_numeric_evaluating",
-      "no_fallback_routing"
-    ],
-    "product": "Vaani_TTS",
-    "layer": "Frontend",
-    "subsystem": "UI",
-    "capability": "Auto Vaani_TTS Frontend"
-  },
-  {
-    "task_id": "T-GEN-130",
-    "dharma": "Auto generated dharma.",
-    "completion_signals": [
-      "evaluation_api_returns_200",
-      "decision_field_present",
-      "trace_id_written_to_bucket"
-    ],
-    "failure_type": null,
-    "prerequisites": [],
-    "next_tasks": [
-      "T-GEN-131"
-    ],
-    "failure_tasks": {
-      "schema_violation": [
-        "T-SYS-F00"
-      ],
-      "incomplete": [
-        "T-SYS-F00"
-      ],
-      "incorrect_logic": [
-        "T-SYS-F00"
-      ],
-      "integration_fail": [
-        "T-SYS-F00"
-      ]
-    },
-    "constraints": [
-      "trace_id_must_come_from_niyantran",
-      "no_numeric_evaluating",
-      "no_fallback_routing"
-    ],
-    "product": "Vaani_TTS",
-    "layer": "Backend",
-    "subsystem": "API",
-    "capability": "Auto Vaani_TTS Backend"
-  },
-  {
-    "task_id": "T-GEN-131",
-    "dharma": "Auto generated dharma.",
-    "completion_signals": [
-      "evaluation_api_returns_200",
-      "decision_field_present",
-      "trace_id_written_to_bucket"
-    ],
-    "failure_type": null,
-    "prerequisites": [],
-    "next_tasks": [
-      "T-GEN-132"
-    ],
-    "failure_tasks": {
-      "schema_violation": [
-        "T-SYS-F00"
-      ],
-      "incomplete": [
-        "T-SYS-F00"
-      ],
-      "incorrect_logic": [
-        "T-SYS-F00"
-      ],
-      "integration_fail": [
-        "T-SYS-F00"
-      ]
-    },
-    "constraints": [
-      "trace_id_must_come_from_niyantran",
-      "no_numeric_evaluating",
-      "no_fallback_routing"
-    ],
-    "product": "Vaani_TTS",
-    "layer": "Backend",
-    "subsystem": "Storage",
-    "capability": "Auto Vaani_TTS Backend"
-  },
-  {
-    "task_id": "T-GEN-132",
-    "dharma": "Auto generated dharma.",
-    "completion_signals": [
-      "evaluation_api_returns_200",
-      "decision_field_present",
-      "trace_id_written_to_bucket"
-    ],
-    "failure_type": null,
-    "prerequisites": [],
-    "next_tasks": [
-      "T-GEN-133"
-    ],
-    "failure_tasks": {
-      "schema_violation": [
-        "T-SYS-F00"
-      ],
-      "incomplete": [
-        "T-SYS-F00"
-      ],
-      "incorrect_logic": [
-        "T-SYS-F00"
-      ],
-      "integration_fail": [
-        "T-SYS-F00"
-      ]
-    },
-    "constraints": [
-      "trace_id_must_come_from_niyantran",
-      "no_numeric_evaluating",
-      "no_fallback_routing"
-    ],
-    "product": "Vaani_TTS",
-    "layer": "Backend",
-    "subsystem": "Auth",
-    "capability": "Auto Vaani_TTS Backend"
-  },
-  {
-    "task_id": "T-GEN-133",
-    "dharma": "Auto generated dharma.",
-    "completion_signals": [
-      "evaluation_api_returns_200",
-      "decision_field_present",
-      "trace_id_written_to_bucket"
-    ],
-    "failure_type": null,
-    "prerequisites": [],
-    "next_tasks": [
-      "T-GEN-134"
-    ],
-    "failure_tasks": {
-      "schema_violation": [
-        "T-SYS-F00"
-      ],
-      "incomplete": [
-        "T-SYS-F00"
-      ],
-      "incorrect_logic": [
-        "T-SYS-F00"
-      ],
-      "integration_fail": [
-        "T-SYS-F00"
-      ]
-    },
-    "constraints": [
-      "trace_id_must_come_from_niyantran",
-      "no_numeric_evaluating",
-      "no_fallback_routing"
-    ],
-    "product": "Vaani_TTS",
-    "layer": "Backend",
-    "subsystem": "Compute",
-    "capability": "Auto Vaani_TTS Backend"
-  },
-  {
-    "task_id": "T-GEN-134",
-    "dharma": "Auto generated dharma.",
-    "completion_signals": [
-      "evaluation_api_returns_200",
-      "decision_field_present",
-      "trace_id_written_to_bucket"
-    ],
-    "failure_type": null,
-    "prerequisites": [],
-    "next_tasks": [
-      "T-GEN-135"
-    ],
-    "failure_tasks": {
-      "schema_violation": [
-        "T-SYS-F00"
-      ],
-      "incomplete": [
-        "T-SYS-F00"
-      ],
-      "incorrect_logic": [
-        "T-SYS-F00"
-      ],
-      "integration_fail": [
-        "T-SYS-F00"
-      ]
-    },
-    "constraints": [
-      "trace_id_must_come_from_niyantran",
-      "no_numeric_evaluating",
-      "no_fallback_routing"
-    ],
-    "product": "Vaani_TTS",
-    "layer": "Backend",
-    "subsystem": "UI",
-    "capability": "Auto Vaani_TTS Backend"
-  },
-  {
-    "task_id": "T-GEN-135",
-    "dharma": "Auto generated dharma.",
-    "completion_signals": [
-      "evaluation_api_returns_200",
-      "decision_field_present",
-      "trace_id_written_to_bucket"
-    ],
-    "failure_type": null,
-    "prerequisites": [],
-    "next_tasks": [
-      "T-GEN-136"
-    ],
-    "failure_tasks": {
-      "schema_violation": [
-        "T-SYS-F00"
-      ],
-      "incomplete": [
-        "T-SYS-F00"
-      ],
-      "incorrect_logic": [
-        "T-SYS-F00"
-      ],
-      "integration_fail": [
-        "T-SYS-F00"
-      ]
-    },
-    "constraints": [
-      "trace_id_must_come_from_niyantran",
-      "no_numeric_evaluating",
-      "no_fallback_routing"
-    ],
-    "product": "Vaani_TTS",
-    "layer": "Database",
-    "subsystem": "API",
-    "capability": "Auto Vaani_TTS Database"
-  },
-  {
-    "task_id": "T-GEN-136",
-    "dharma": "Auto generated dharma.",
-    "completion_signals": [
-      "evaluation_api_returns_200",
-      "decision_field_present",
-      "trace_id_written_to_bucket"
-    ],
-    "failure_type": null,
-    "prerequisites": [],
-    "next_tasks": [
-      "T-GEN-137"
-    ],
-    "failure_tasks": {
-      "schema_violation": [
-        "T-SYS-F00"
-      ],
-      "incomplete": [
-        "T-SYS-F00"
-      ],
-      "incorrect_logic": [
-        "T-SYS-F00"
-      ],
-      "integration_fail": [
-        "T-SYS-F00"
-      ]
-    },
-    "constraints": [
-      "trace_id_must_come_from_niyantran",
-      "no_numeric_evaluating",
-      "no_fallback_routing"
-    ],
-    "product": "Vaani_TTS",
-    "layer": "Database",
-    "subsystem": "Storage",
-    "capability": "Auto Vaani_TTS Database"
-  },
-  {
-    "task_id": "T-GEN-137",
-    "dharma": "Auto generated dharma.",
-    "completion_signals": [
-      "evaluation_api_returns_200",
-      "decision_field_present",
-      "trace_id_written_to_bucket"
-    ],
-    "failure_type": null,
-    "prerequisites": [],
-    "next_tasks": [
-      "T-GEN-138"
-    ],
-    "failure_tasks": {
-      "schema_violation": [
-        "T-SYS-F00"
-      ],
-      "incomplete": [
-        "T-SYS-F00"
-      ],
-      "incorrect_logic": [
-        "T-SYS-F00"
-      ],
-      "integration_fail": [
-        "T-SYS-F00"
-      ]
-    },
-    "constraints": [
-      "trace_id_must_come_from_niyantran",
-      "no_numeric_evaluating",
-      "no_fallback_routing"
-    ],
-    "product": "Vaani_TTS",
-    "layer": "Database",
-    "subsystem": "Auth",
-    "capability": "Auto Vaani_TTS Database"
-  },
-  {
-    "task_id": "T-GEN-138",
-    "dharma": "Auto generated dharma.",
-    "completion_signals": [
-      "evaluation_api_returns_200",
-      "decision_field_present",
-      "trace_id_written_to_bucket"
-    ],
-    "failure_type": null,
-    "prerequisites": [],
-    "next_tasks": [
-      "T-GEN-139"
-    ],
-    "failure_tasks": {
-      "schema_violation": [
-        "T-SYS-F00"
-      ],
-      "incomplete": [
-        "T-SYS-F00"
-      ],
-      "incorrect_logic": [
-        "T-SYS-F00"
-      ],
-      "integration_fail": [
-        "T-SYS-F00"
-      ]
-    },
-    "constraints": [
-      "trace_id_must_come_from_niyantran",
-      "no_numeric_evaluating",
-      "no_fallback_routing"
-    ],
-    "product": "Vaani_TTS",
-    "layer": "Database",
-    "subsystem": "Compute",
-    "capability": "Auto Vaani_TTS Database"
-  },
-  {
-    "task_id": "T-GEN-139",
-    "dharma": "Auto generated dharma.",
-    "completion_signals": [
-      "evaluation_api_returns_200",
-      "decision_field_present",
-      "trace_id_written_to_bucket"
-    ],
-    "failure_type": null,
-    "prerequisites": [],
-    "next_tasks": [
-      "T-GEN-140"
-    ],
-    "failure_tasks": {
-      "schema_violation": [
-        "T-SYS-F00"
-      ],
-      "incomplete": [
-        "T-SYS-F00"
-      ],
-      "incorrect_logic": [
-        "T-SYS-F00"
-      ],
-      "integration_fail": [
-        "T-SYS-F00"
-      ]
-    },
-    "constraints": [
-      "trace_id_must_come_from_niyantran",
-      "no_numeric_evaluating",
-      "no_fallback_routing"
-    ],
-    "product": "Vaani_TTS",
-    "layer": "Database",
-    "subsystem": "UI",
-    "capability": "Auto Vaani_TTS Database"
-  },
-  {
-    "task_id": "T-GEN-140",
-    "dharma": "Auto generated dharma.",
-    "completion_signals": [
-      "evaluation_api_returns_200",
-      "decision_field_present",
-      "trace_id_written_to_bucket"
-    ],
-    "failure_type": null,
-    "prerequisites": [],
-    "next_tasks": [
-      "T-GEN-141"
-    ],
-    "failure_tasks": {
-      "schema_violation": [
-        "T-SYS-F00"
-      ],
-      "incomplete": [
-        "T-SYS-F00"
-      ],
-      "incorrect_logic": [
-        "T-SYS-F00"
-      ],
-      "integration_fail": [
-        "T-SYS-F00"
-      ]
-    },
-    "constraints": [
-      "trace_id_must_come_from_niyantran",
-      "no_numeric_evaluating",
-      "no_fallback_routing"
-    ],
-    "product": "Vaani_TTS",
-    "layer": "Security",
-    "subsystem": "API",
-    "capability": "Auto Vaani_TTS Security"
-  },
-  {
-    "task_id": "T-GEN-141",
-    "dharma": "Auto generated dharma.",
-    "completion_signals": [
-      "evaluation_api_returns_200",
-      "decision_field_present",
-      "trace_id_written_to_bucket"
-    ],
-    "failure_type": null,
-    "prerequisites": [],
-    "next_tasks": [
-      "T-GEN-142"
-    ],
-    "failure_tasks": {
-      "schema_violation": [
-        "T-SYS-F00"
-      ],
-      "incomplete": [
-        "T-SYS-F00"
-      ],
-      "incorrect_logic": [
-        "T-SYS-F00"
-      ],
-      "integration_fail": [
-        "T-SYS-F00"
-      ]
-    },
-    "constraints": [
-      "trace_id_must_come_from_niyantran",
-      "no_numeric_evaluating",
-      "no_fallback_routing"
-    ],
-    "product": "Vaani_TTS",
-    "layer": "Security",
-    "subsystem": "Storage",
-    "capability": "Auto Vaani_TTS Security"
-  },
-  {
-    "task_id": "T-GEN-142",
-    "dharma": "Auto generated dharma.",
-    "completion_signals": [
-      "evaluation_api_returns_200",
-      "decision_field_present",
-      "trace_id_written_to_bucket"
-    ],
-    "failure_type": null,
-    "prerequisites": [],
-    "next_tasks": [
-      "T-GEN-143"
-    ],
-    "failure_tasks": {
-      "schema_violation": [
-        "T-SYS-F00"
-      ],
-      "incomplete": [
-        "T-SYS-F00"
-      ],
-      "incorrect_logic": [
-        "T-SYS-F00"
-      ],
-      "integration_fail": [
-        "T-SYS-F00"
-      ]
-    },
-    "constraints": [
-      "trace_id_must_come_from_niyantran",
-      "no_numeric_evaluating",
-      "no_fallback_routing"
-    ],
-    "product": "Vaani_TTS",
-    "layer": "Security",
-    "subsystem": "Auth",
-    "capability": "Auto Vaani_TTS Security"
-  },
-  {
-    "task_id": "T-GEN-143",
-    "dharma": "Auto generated dharma.",
-    "completion_signals": [
-      "evaluation_api_returns_200",
-      "decision_field_present",
-      "trace_id_written_to_bucket"
-    ],
-    "failure_type": null,
-    "prerequisites": [],
-    "next_tasks": [
-      "T-GEN-144"
-    ],
-    "failure_tasks": {
-      "schema_violation": [
-        "T-SYS-F00"
-      ],
-      "incomplete": [
-        "T-SYS-F00"
-      ],
-      "incorrect_logic": [
-        "T-SYS-F00"
-      ],
-      "integration_fail": [
-        "T-SYS-F00"
-      ]
-    },
-    "constraints": [
-      "trace_id_must_come_from_niyantran",
-      "no_numeric_evaluating",
-      "no_fallback_routing"
-    ],
-    "product": "Vaani_TTS",
-    "layer": "Security",
-    "subsystem": "Compute",
-    "capability": "Auto Vaani_TTS Security"
-  },
-  {
-    "task_id": "T-GEN-144",
-    "dharma": "Auto generated dharma.",
-    "completion_signals": [
-      "evaluation_api_returns_200",
-      "decision_field_present",
-      "trace_id_written_to_bucket"
-    ],
-    "failure_type": null,
-    "prerequisites": [],
-    "next_tasks": [
-      "T-GOV-001"
-    ],
-    "failure_tasks": {
-      "schema_violation": [
-        "T-SYS-F00"
-      ],
-      "incomplete": [
-        "T-SYS-F00"
-      ],
-      "incorrect_logic": [
-        "T-SYS-F00"
-      ],
-      "integration_fail": [
-        "T-SYS-F00"
-      ]
-    },
-    "constraints": [
-      "trace_id_must_come_from_niyantran",
-      "no_numeric_evaluating",
-      "no_fallback_routing"
-    ],
-    "product": "Vaani_TTS",
-    "layer": "Security",
-    "subsystem": "UI",
-    "capability": "Auto Vaani_TTS Security"
+    "failure_semantics": {
+      "schema_violation": "Input schema validation failed (trace_id or description length)",
+      "incomplete": "Submission missing mandatory components (code, proof, or architecture)",
+      "incorrect_logic": "Implementation does not match requirements or lacks sufficient effort",
+      "integration_fail": "System failure during evaluation or data persistence"
+    }
   },
   {
     "task_id": "COMPLETED",
@@ -2429,6 +1384,37 @@
       "incorrect_logic": [],
       "integration_fail": []
     },
-    "constraints": []
+    "constraints": [],
+    "evaluation_inputs": [
+      "repository_available",
+      "word_count",
+      "file_count",
+      "readme_val",
+      "delivery_ratio",
+      "missing_features",
+      "layer_count"
+    ],
+    "evaluation_rules": {
+      "schema": {
+        "min_word_count": 50,
+        "require_repo": false
+      },
+      "completeness": {
+        "min_files": 3,
+        "require_proof": true,
+        "require_arch": true
+      },
+      "logic": {
+        "min_delivery_ratio": 0.6,
+        "max_missing_features": 3,
+        "min_word_count_for_effort": 80
+      }
+    },
+    "failure_semantics": {
+      "schema_violation": "Input schema validation failed (trace_id or description length)",
+      "incomplete": "Submission missing mandatory components (code, proof, or architecture)",
+      "incorrect_logic": "Implementation does not match requirements or lacks sufficient effort",
+      "integration_fail": "System failure during evaluation or data persistence"
+    }
   }
 ]

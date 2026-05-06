@@ -195,6 +195,16 @@ async def get_bucket_stats():
         logger.error(f"[PRODUCTION API] Failed to get bucket stats: {e}")
         raise HTTPException(status_code=500, detail=f"Failed to retrieve stats: {str(e)}")
 
+@router.get("/system/metrics")
+async def get_system_metrics():
+    """Get real-time observability metrics for the Deterministic Core"""
+    try:
+        from engine.observability import observer
+        return observer.get_stats()
+    except Exception as e:
+        logger.error(f"[PRODUCTION API] Failed to get system metrics: {e}")
+        raise HTTPException(status_code=500, detail=f"Metrics retrieval failed: {str(e)}")
+
 # System Monitoring Endpoints
 @router.get("/system/review-packet-status")
 async def check_review_packet_status():

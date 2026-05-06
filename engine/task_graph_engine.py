@@ -100,11 +100,12 @@ class TaskGraphEngine:
         if evaluation_result == "PASS":
             candidates = task.get("next_tasks", [])
             if not candidates:
-                selected = "TERMINAL_STATE"
-                reason = "PASS → next_tasks empty (TERMINAL_STATE)"
-            else:
-                selected = candidates[0]
-                reason = f"PASS → next_tasks[0] = {selected}"
+                raise ValueError(
+                    f"GRAPH_HARD_REJECT: task '{current_task_id}' has no next_tasks mapping. "
+                    f"No terminal state fallback permitted."
+                )
+            selected = candidates[0]
+            reason = f"PASS → next_tasks[0] = {selected}"
 
         else:  # FAIL
             if failure_type not in VALID_FAILURE_TYPES:
@@ -127,9 +128,10 @@ class TaskGraphEngine:
             selected = candidates[0]
             reason = f"FAIL({failure_type}) → failure_tasks['{failure_type}'][0] = {selected}"
 
-        if selected not in self._tasks and selected not in ("COMPLETED", "TERMINAL_STATE"):
+        if selected not in self._tasks:
             raise ValueError(
-                f"GRAPH_HARD_REJECT: selected task_id '{selected}' not in task DB."
+                f"GRAPH_HARD_REJECT: selected task_id '{selected}' not in task DB. "
+                "Every selected_task_id must exist as a canonical entry."
             )
 
         logger.info(f"[TASK GRAPH ENGINE] {current_task_id} → {selected} | {reason}")
