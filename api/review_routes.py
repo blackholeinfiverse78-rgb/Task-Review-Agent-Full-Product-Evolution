@@ -35,7 +35,9 @@ async def approve_submission(request: ReviewActionRequest):
     review = product_storage.get_review_by_submission(request.submission_id)
     if not review:
         raise HTTPException(status_code=404, detail="Review record not found")
-    
+    if review.review_state != ReviewState.PENDING_REVIEW:
+        raise HTTPException(status_code=409, detail=f"Submission already actioned: {review.review_state}")
+
     review.review_state = ReviewState.APPROVED
     product_storage._save()
     
@@ -67,7 +69,9 @@ async def reject_submission(request: ReviewActionRequest):
     review = product_storage.get_review_by_submission(request.submission_id)
     if not review:
         raise HTTPException(status_code=404, detail="Review record not found")
-    
+    if review.review_state != ReviewState.PENDING_REVIEW:
+        raise HTTPException(status_code=409, detail=f"Submission already actioned: {review.review_state}")
+
     review.review_state = ReviewState.REJECTED
     product_storage._save()
     
@@ -99,10 +103,12 @@ async def modify_submission(request: ReviewActionRequest):
     """
     if not request.override_task_id:
         raise HTTPException(status_code=400, detail="override_task_id is required for modify action")
-        
+
     review = product_storage.get_review_by_submission(request.submission_id)
     if not review:
         raise HTTPException(status_code=404, detail="Review record not found")
+    if review.review_state != ReviewState.PENDING_REVIEW:
+        raise HTTPException(status_code=409, detail=f"Submission already actioned: {review.review_state}")
     
     original_task = review.selected_task_id
     review.selected_task_id = request.override_task_id
