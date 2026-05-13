@@ -1,0 +1,73 @@
+{
+  "submissions": {
+    "sub-aeb3f363fdf5-race-001": {
+      "submission_id": "sub-aeb3f363fdf5-race-001",
+      "task_id": "T-GOV-001",
+      "task_title": "Governance Implementation Test",
+      "task_description": "Building a human approval layer for deterministic systems.",
+      "submitted_by": "Akash",
+      "submitted_at": "2026-05-07T17:01:17.152494",
+      "status": "submitted",
+      "previous_task_id": null,
+      "pdf_file_path": null,
+      "pdf_extracted_text": null,
+      "module_id": null,
+      "schema_version": null,
+      "registry_validation_status": null,
+      "registry_validation_reason": null
+    },
+    "sub-aeb3f363fdf5-race-002": {
+      "submission_id": "sub-aeb3f363fdf5-race-002",
+      "task_id": "T-GOV-001",
+      "task_title": "Governance Implementation Test",
+      "task_description": "Building a human approval layer for deterministic systems.",
+      "submitted_by": "Akash",
+      "submitted_at": "2026-05-07T17:01:17.173880",
+      "status": "submitted",
+      "previous_task_id": null,
+      "pdf_file_path": null,
+      "pdf_extracted_text": null,
+      "module_id": null,
+      "schema_version": null,
+      "registry_validation_status": null,
+      "registry_validation_reason": null
+    }
+  },
+  "reviews": {
+    "rev-sub-aeb3f363fdf5-race-001": {
+      "review_id": "rev-sub-aeb3f363fdf5-race-001",
+      "submission_id": "sub-aeb3f363fdf5-race-001",
+      "evaluation_result": "FAIL",
+      "failure_type": "schema_violation",
+      "decision": "REJECTED",
+      "failure_reasons": [],
+      "improvement_hints": [],
+      "analysis": {},
+      "reviewed_at": "2026-05-07T17:01:17.152534",
+      "evaluation_time_ms": 0,
+      "missing_features": [],
+      "evaluation_summary": "",
+      "selected_task_id": "T-GOV-F01",
+      "selection_reason": "FAIL(schema_violation) → failure_tasks['schema_violation'][0] = T-GOV-F01",
+      "review_state": "APPROVED"
+    },
+    "rev-sub-aeb3f363fdf5-race-002": {
+      "review_id": "rev-sub-aeb3f363fdf5-race-002",
+      "submission_id": "sub-aeb3f363fdf5-race-002",
+      "evaluation_result": "FAIL",
+      "failure_type": "schema_violation",
+      "decision": "REJECTED",
+      "failure_reasons": [],
+      "improvement_hints": [],
+      "analysis": {},
+      "reviewed_at": "2026-05-07T17:01:17.173935",
+      "evaluation_time_ms": 0,
+      "missing_features": [],
+      "evaluation_summary": "",
+      "selected_task_id": "T-GOV-OVERRIDE",
+      "selection_reason": "FAIL(schema_violation) → failure_tasks['schema_violation'][0] = T-GOV-F01",
+      "review_state": "MODIFIED"
+    }
+  },
+  "next_tasks": {}
+}

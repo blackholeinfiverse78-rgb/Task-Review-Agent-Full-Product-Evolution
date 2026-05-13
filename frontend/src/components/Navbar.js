@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, PlusCircle, History, Zap } from 'lucide-react';
+import { LayoutDashboard, PlusCircle, History, Zap, ShieldCheck } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 
 const Navbar = () => {
@@ -10,6 +10,7 @@ const Navbar = () => {
         { name: 'Dashboard', path: '/', icon: <LayoutDashboard size={20} /> },
         { name: 'Submit Task', path: '/submit', icon: <PlusCircle size={20} /> },
         { name: 'Task History', path: '/history', icon: <History size={20} /> },
+        { name: 'Review Queue', path: '/review-queue', icon: <ShieldCheck size={20} /> },
     ];
 
     const isActive = (path) => location.pathname === path;

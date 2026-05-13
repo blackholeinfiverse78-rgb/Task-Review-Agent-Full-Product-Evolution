@@ -52,12 +52,18 @@ async def submit_task_from_niyantran(request: NiyantranTaskRequest):
     logger.info(f"[PRODUCTION API] Niyantran task received: trace_id={request.trace_id}")
     
     try:
-        # Process through Niyantran connection service
+        # Process through Niyantran connection service (now recommendation only)
         result = niyantran_connection.process_niyantran_task(request.model_dump())
         
-        # Explicit No Mutation Proof log
-        logger.info(f"[PROVEN] NO MUTATION: input.trace_id({request.trace_id}) == selector.trace_id({result.get('trace_id')})")
-        return result
+        # Phase 5: Hard Rule Enforcement - Mandatory Approval Gate
+        logger.info(f"[GOVERNANCE] Task queued for review: trace_id={request.trace_id}")
+        return {
+            "trace_id": result["trace_id"],
+            "submission_id": result["submission_id"],
+            "review_state": "PENDING_REVIEW",
+            "status": "QUEUED",
+            "message": "Evaluation complete. Pending human approval for final assignment."
+        }
         
     except ValueError as ve:
         # HARD REJECT is not a 500 crash. It's a structured rejection.

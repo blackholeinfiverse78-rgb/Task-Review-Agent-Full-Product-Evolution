@@ -9,6 +9,7 @@ import SubmitTask from './pages/SubmitTask';
 import ReviewResult from './pages/ReviewResult';
 import NextTask from './pages/NextTask';
 import TaskHistory from './pages/TaskHistory';
+import ReviewDashboard from './pages/ReviewDashboard';
 import './index.css';
 
 const queryClient = new QueryClient({
@@ -36,6 +37,7 @@ function App() {
                                     <Route path="/review/:taskId" element={<ReviewResult />} />
                                     <Route path="/next/:taskId" element={<NextTask />} />
                                     <Route path="/history" element={<TaskHistory />} />
+                                    <Route path="/review-queue" element={<ReviewDashboard />} />
                                 </Routes>
                             </main>
                         </div>

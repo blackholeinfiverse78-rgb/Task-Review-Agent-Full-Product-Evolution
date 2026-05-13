@@ -9,6 +9,8 @@ from pydantic import BaseModel, Field
 from datetime import datetime
 from typing import Optional, Dict, Any
 from enum import Enum
+import os
+import json
 
 
 class TaskStatus(str, Enum):
@@ -16,6 +18,10 @@ class TaskStatus(str, Enum):
     ASSIGNED = "assigned"
     SUBMITTED = "submitted"
     REVIEWED = "reviewed"
+    PENDING_REVIEW = "pending_review"
+    APPROVED = "approved"
+    REJECTED = "rejected"
+    MODIFIED = "modified"
 
 
 class TaskType(str, Enum):
@@ -44,6 +50,7 @@ class TaskSubmission(BaseModel):
     schema_version: Optional[str] = Field(None)
     registry_validation_status: Optional[str] = Field(None)
     registry_validation_reason: Optional[str] = Field(None)
+    review_state: str = Field(default="PENDING_REVIEW")
     
     class Config:
         use_enum_values = True
@@ -52,6 +59,7 @@ class TaskSubmission(BaseModel):
 class ReviewRecord(BaseModel):
     review_id: str
     submission_id: str
+    trace_id: str = Field(default="")
     evaluation_result: str = Field(..., pattern="^(PASS|FAIL)$")
     failure_type: Optional[str] = Field(None)
     decision: str = Field(default="REJECTED")
@@ -64,6 +72,7 @@ class ReviewRecord(BaseModel):
     evaluation_summary: str = Field(default="")
     selected_task_id: str = Field(default="")
     selection_reason: str = Field(default="")
+    review_state: str = Field(default="PENDING_REVIEW")
 
     class Config:
         use_enum_values = True
@@ -95,22 +104,57 @@ class ProductStorage:
     Deterministic in-memory storage for product core.
     Explicit collections for each entity type.
     """
-    def __init__(self):
+    def __init__(self, persistence_file: str = "storage/product_state.json"):
         self.submissions: Dict[str, TaskSubmission] = {}
         self.reviews: Dict[str, ReviewRecord] = {}
         self.next_tasks: Dict[str, NextTaskRecord] = {}
+        self.persistence_file = persistence_file
+        os.makedirs(os.path.dirname(self.persistence_file), exist_ok=True)
+        self._load()
     
+    def _save(self) -> None:
+        """Persist storage to disk."""
+        try:
+            data = {
+                "submissions": {k: v.model_dump(mode='json') for k, v in self.submissions.items()},
+                "reviews": {k: v.model_dump(mode='json') for k, v in self.reviews.items()},
+                "next_tasks": {k: v.model_dump(mode='json') for k, v in self.next_tasks.items()}
+            }
+            with open(self.persistence_file, "w", encoding="utf-8") as f:
+                json.dump(data, f, ensure_ascii=False, indent=2)
+        except Exception as e:
+            print(f"Failed to save storage: {e}")
+
+    def _load(self) -> None:
+        """Load storage from disk."""
+        if not os.path.exists(self.persistence_file):
+            return
+        try:
+            with open(self.persistence_file, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                for k, v in data.get("submissions", {}).items():
+                    self.submissions[k] = TaskSubmission(**v)
+                for k, v in data.get("reviews", {}).items():
+                    self.reviews[k] = ReviewRecord(**v)
+                for k, v in data.get("next_tasks", {}).items():
+                    self.next_tasks[k] = NextTaskRecord(**v)
+        except Exception as e:
+            print(f"Failed to load storage: {e}")
+
     def store_submission(self, submission: TaskSubmission) -> None:
         """Store task submission"""
         self.submissions[submission.submission_id] = submission
+        self._save()
     
     def store_review(self, review: ReviewRecord) -> None:
         """Store review record"""
         self.reviews[review.review_id] = review
+        self._save()
     
     def store_next_task(self, next_task: NextTaskRecord) -> None:
         """Store next task record"""
         self.next_tasks[next_task.next_task_id] = next_task
+        self._save()
     
     def get_submission(self, submission_id: str) -> Optional[TaskSubmission]:
         """Retrieve submission by ID"""

@@ -7,6 +7,7 @@
 **Orchestrators**:
 - `evaluation_engine/orchestrator.py` (Sri Satya - Evaluation Engine)
 - `task_selector/final_convergence.py` (Parikshak - Task Selection Orchestrator)
+- `api/review_routes.py` (Human Governance - Approval Layer)
 
 **Critical Files**:
 - `engine/task_graph_engine.py`: Deterministic graph traversal
@@ -54,12 +55,17 @@ Submission Input (MUST include trace_id)
     |  File: task_selector/niyantran_connection.py
     |  Enforces exactly 7 fields. Extra or missing -> CONTRACT_VIOLATION
     v
-Final JSON Response — exact 7-field contract
+[Step 7] Human Governance Layer — MANDATORY GATE
+    |  File: api/review_routes.py
+    |  Action: PENDING_REVIEW -> [ APPROVE | REJECT | MODIFY ]
+    |  Audit: storage/audit_logs/
+    v
+Final JSON Response to Niyantran (ONLY after Human Approval)
 ```
 
 ## LIVE FLOW
 
-The system exposes a primary HTTP endpoint for Niyantran integration: `POST /api/v1/production/niyantran/submit`. Every request must be a POST with a valid JSON body containing a `trace_id`. The system receives the submission, invokes the evaluation pipeline, and returns a deterministic next task. The response is a strict 7-field JSON contract.
+The system exposes a primary HTTP endpoint for Niyantran integration: `POST /api/v1/production/niyantran/submit`. Every request must be a POST with a valid JSON body containing a `trace_id`. The system receives the submission, invokes the evaluation pipeline, and returns a **PENDING_REVIEW** status. Human approval via the Governance Dashboard is mandatory before final assignment occurs.
 
 **WHAT WAS BUILT**:
 
@@ -70,6 +76,8 @@ ADDED & RESTRUCTURED:
 - **Trace Discipline Fixed**: All internal `trace_id` generation logic removed. Strictly uses upstream IDs.
 - **DB & Graph Expanded**: `db/niyantran_tasks.json` expanded to **65 tasks**. All tasks contain deterministic pointers for all success and failure states.
 - **Deterministic Submission ID**: Generated using a pure hash of task metadata and `trace_id`.
+- **Human Governance Layer (Phase 8)**: Implemented mandatory approval gate. All deterministic recommendations are held in PENDING_REVIEW state until Akash manually approves, rejects, or modifies.
+- **Audit Logging**: All human actions are logged to `storage/audit_logs/` in a deterministic, append-only format.
 
 **FAILURE CASES**:
 

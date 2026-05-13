@@ -26,13 +26,13 @@ class ReviewOrchestrator:
         task: Task,
         previous_task_id: str = None,
         pdf_file_path: Optional[str] = None,
-        pdf_extracted_text: Optional[str] = None
+        pdf_extracted_text: Optional[str] = None,
+        trace_id: Optional[str] = None
     ) -> Dict[str, Any]:
 
         logger.info(f"[ORCHESTRATOR] Processing: {task.task_title[:50]}")
 
         # Phase 3: Trace Discipline Fix
-        trace_id = getattr(task, "trace_id", None)
         if not trace_id or len(trace_id) < 8:
             raise ValueError(
                 "HARD_REJECT: trace_id missing or invalid. "
@@ -63,7 +63,7 @@ class ReviewOrchestrator:
 
         # 2. Parikshak - Mapping & Graph Traversal
         convergence_result = final_convergence.process_with_convergence(
-            evaluation_result=evaluation_result,
+            evaluation_result=eval_res,
             failure_type=failure_type,
             submission_id=submission_id,
             trace_id=trace_id,
@@ -88,16 +88,17 @@ class ReviewOrchestrator:
             pdf_extracted_text=pdf_extracted_text,
             module_id=task.module_id,
             schema_version=task.schema_version,
-            registry_validation_status="VALID"
+            registry_validation_status="VALID",
+            review_state="PENDING_REVIEW"
         )
         product_storage.store_submission(submission)
 
-        # Store review record
-        review_id = f"rev-{uuid.uuid4().hex[:12]}"
+        # Store review record (Governance Layer)
+        review_id = f"rev-{submission_id}"
         review_record = ReviewRecord(
             review_id=review_id,
             submission_id=submission_id,
-            evaluation_result=evaluation_result,
+            evaluation_result=eval_res,
             failure_type=failure_type,
             decision=decision,
             failure_reasons=[failure_type] if failure_type else [],
@@ -106,50 +107,40 @@ class ReviewOrchestrator:
             reviewed_at=datetime.now(),
             evaluation_time_ms=0,
             missing_features=[],
-            evaluation_summary=f"Parikshak Evaluation: {evaluation_result}",
+            evaluation_summary=f"Parikshak Evaluation: {eval_res}",
             selected_task_id=selected_task_id,
-            selection_reason=selection_reason
+            selection_reason=selection_reason,
+            review_state="PENDING_REVIEW"
         )
         product_storage.store_review(review_record)
 
-        # Store next task record
-        next_task_record = NextTaskRecord(
-            next_task_id=selected_task_id,
-            review_id=review_id,
-            previous_submission_id=submission_id,
-            task_type="advancement" if eval_res == "PASS" else "correction",
-            title=selected_task_id,
-            objective=selection_reason,
-            focus_area="evaluation",
-            difficulty="beginner",
-            reason=selection_reason,
-            assigned_at=datetime.now()
-        )
-        product_storage.store_next_task(next_task_record)
+        # 3. NextTaskRecord is NOT stored automatically (Phase 5 Enforcement)
+        # Assignment happens ONLY after human approval.
 
-        # Update submission status
+        # Update submission status - PENDING_REVIEW (Hard Gate)
         product_storage.store_submission(
-            TaskSubmission(**{**submission.model_dump(), "status": TaskStatus.REVIEWED})
+            TaskSubmission(**{**submission.model_dump(), "review_state": "PENDING_REVIEW"})
         )
 
         return {
             "submission_id": submission_id,
             "review_id": review_id,
-            "next_task_id": selected_task_id,
+            "next_task_id": "PENDING_APPROVAL",
             "review": {
-                "evaluation_result": evaluation_result,
+                "evaluation_result": eval_res,
                 "failure_type": failure_type,
                 "decision": decision,
-                "evaluation_summary": f"Parikshak Evaluation: {evaluation_result}",
+                "evaluation_summary": f"Parikshak Evaluation: {eval_res}",
+                "review_state": "PENDING_REVIEW",
                 "failure_reasons": [failure_type] if failure_type else [],
                 "improvement_hints": [],
                 "missing_features": [],
             },
             "next_task": {
-                "task_id": selected_task_id,
+                "task_id": "PENDING_APPROVAL",
                 "task_type": "advancement" if eval_res == "PASS" else "correction",
-                "title": selected_task_id,
-                "difficulty": "beginner",
-                "selection_reason": selection_reason,
+                "title": "Awaiting Human Approval",
+                "difficulty": "pending",
+                "selection_reason": "Task selection is locked until human review.",
             }
         }

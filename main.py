@@ -8,7 +8,7 @@ import os
 from fastapi import FastAPI, Request, status
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
-from api import lifecycle, tts, production
+from api import lifecycle, tts, production, review_routes
 from fastapi.middleware.cors import CORSMiddleware
 import logging
 import json
@@ -79,6 +79,7 @@ async def global_exception_handler(request: Request, exc: Exception):
 app.include_router(lifecycle.router, prefix="/api/v1", tags=["Lifecycle"])
 app.include_router(tts.router, prefix="/api/v1", tags=["TTS"])
 app.include_router(production.router, prefix="/api/v1", tags=["Production"])
+app.include_router(review_routes.router)
 
 
 @app.get("/")
@@ -100,4 +101,4 @@ if __name__ == "__main__":
     import uvicorn
     host = os.getenv("BACKEND_HOST", "0.0.0.0")
     port = int(os.getenv("BACKEND_PORT", "8000"))
-    uvicorn.run(app, host=host, port=port)
+    uvicorn.run("main:app", host=host, port=port, reload=True)

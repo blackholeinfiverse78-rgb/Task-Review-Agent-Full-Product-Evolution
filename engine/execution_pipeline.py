@@ -6,6 +6,8 @@ import time
 from evaluation_engine.orchestrator import evaluation_orchestrator
 from engine.task_graph_engine import task_graph_engine
 from task_selector.bucket_integration import bucket_integration
+from models.persistent_storage import product_storage, TaskSubmission, ReviewRecord, TaskStatus
+from datetime import datetime
 
 logger = logging.getLogger("execution_pipeline")
 
@@ -157,11 +159,42 @@ class ExecutionPipeline:
 
     def _persist(self, output, task_data, eval_output, graph_result):
         decision = "APPROVED" if output["evaluation_result"] == "PASS" else "REJECTED"
+        # 8.2 In-memory persistence for Dashboard (Governance Layer)
+        try:
+            submission = TaskSubmission(
+                submission_id=output["submission_id"],
+                task_id=task_data.get("task_id", "unknown"),
+                task_title=task_data.get("task_title", "Unknown"),
+                task_description=task_data.get("task_description", ""),
+                submitted_by=task_data.get("submitted_by", "system"),
+                submitted_at=datetime.now(),
+                status=TaskStatus.SUBMITTED,
+                review_state="PENDING_REVIEW"
+            )
+            
+            review_record = ReviewRecord(
+                review_id=f"rev-{output['submission_id']}",
+                submission_id=output["submission_id"],
+                trace_id=output["trace_id"],
+                evaluation_result=output["evaluation_result"],
+                failure_type=output["failure_type"],
+                decision=decision,
+                reviewed_at=datetime.now(),
+                selected_task_id=output["selected_task_id"],
+                selection_reason=output["selection_reason"],
+                review_state="PENDING_REVIEW"
+            )
+            
+            product_storage.store_submission(submission)
+            product_storage.store_review(review_record)
+        except Exception as e:
+            logger.warning(f"In-memory storage failure: {e}")
+
         bucket_integration.log_evaluation(
             eval_output,
-            {"repository_available": bool(task_data.get("github_repo_link"))},
+            {"repository_available": bool(task_data.get("github_repo_link")), "domain": "engineering"}, # Added domain to signals
             {"decision": decision},
-            graph_result,
+            {**graph_result, "next_task_id": graph_result["selected_task_id"]},
             {
                 "task_id": task_data.get("task_id", "unknown"),
                 "trace_id": output["trace_id"],

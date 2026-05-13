@@ -8,6 +8,7 @@ from typing import List, Optional
 from datetime import datetime
 import re
 import logging
+import hashlib
 
 logger = logging.getLogger("lifecycle")
 
@@ -124,6 +125,9 @@ async def submit_task(
             pdf_text = pdf_result["extracted_text"]
 
         # 2. Create task object for evaluation
+        # UI submissions may lack trace_id; generate one to satisfy downstream requirements
+        trace_id = f"trace-ui-{datetime.now().strftime('%Y%m%d%H%M%S')}-{hashlib.md5(task_title.encode()).hexdigest()[:8]}"
+        
         task = Task(
             task_id=f"task-{datetime.now().timestamp()}",
             task_title=task_title,
@@ -135,13 +139,13 @@ async def submit_task(
             timestamp=datetime.now(),
             pdf_extracted_text=pdf_text
         )
-        
         # 3. Process submission via orchestrator
         result = orchestrator.process_submission(
             task, 
             previous_task_id,
             pdf_file_path=pdf_file_path,
-            pdf_extracted_text=pdf_text
+            pdf_extracted_text=pdf_text,
+            trace_id=trace_id
         )
         
         # Build response with traceability
