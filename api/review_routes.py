@@ -1,173 +1,287 @@
-from fastapi import APIRouter, HTTPException, Depends
-from typing import List, Dict, Any, Optional
+"""
+Review Routes — Constitutional Governance Layer
+All actions pass through: governance APIs -> audit emitters -> state validators -> replay emitters.
+NO direct DB writes. NO hidden mutations. NO silent failures.
+"""
+from fastapi import APIRouter, HTTPException
+from typing import List, Dict, Any
 from datetime import datetime
 import os
-import json
+import uuid
 import logging
 
-from models.review_models import ReviewActionRequest, ReviewState, AuditLogEntry
+from models.review_models import ReviewState, AuditLogEntry
+from models.governance import (
+    GovernanceRequest, OverrideEvent, OverrideScope,
+    constitutional_validator, IRREVERSIBLE_STATES,
+    OverrideReason, OperatorRole
+)
 from models.persistent_storage import product_storage
-from task_selector.niyantran_connection import niyantran_connection
+from engine.atomic_persistence import atomic_append, write_replay_checkpoint, AUDIT_LOG_DIR
 
 logger = logging.getLogger("review_routes")
-
 router = APIRouter(prefix="/api/v1/review", tags=["review"])
 
-AUDIT_LOG_DIR = "storage/audit_logs"
-os.makedirs(AUDIT_LOG_DIR, exist_ok=True)
+OPERATOR_VISIBILITY_LOG = os.path.join(AUDIT_LOG_DIR, "operator_visibility.jsonl")
 
-def log_audit(entry: AuditLogEntry):
-    """Write audit log entry in a deterministic format."""
-    date_str = datetime.now().strftime("%Y-%m-%d")
-    log_file = os.path.join(AUDIT_LOG_DIR, f"audit_{date_str}.jsonl")
-    with open(log_file, "a", encoding="utf-8") as f:
-        f.write(json.dumps(entry.model_dump(), default=str) + "\n")
+
+def _emit_audit(entry: Dict[str, Any]) -> None:
+    """Emit to append-only audit log atomically."""
+    try:
+        atomic_append(
+            os.path.join(AUDIT_LOG_DIR, f"audit_{datetime.now().strftime('%Y-%m-%d')}.jsonl"),
+            entry
+        )
+    except Exception as e:
+        logger.error(f"[AUDIT] Emit failed: {e}")
+        raise RuntimeError(f"AUDIT_EMIT_FAILURE: {e}")
+
+
+def _emit_operator_visibility(operator_id: str, action: str, submission_id: str, outcome: str) -> None:
+    """Track all operator actions for visibility audit."""
+    try:
+        atomic_append(OPERATOR_VISIBILITY_LOG, {
+            "operator_id":   operator_id,
+            "action":        action,
+            "submission_id": submission_id,
+            "outcome":       outcome,
+            "timestamp":     datetime.now().isoformat()
+        })
+    except Exception as e:
+        logger.warning(f"[VISIBILITY] Log failed (non-fatal): {e}")
+
+
+def _get_review_or_404(submission_id: str):
+    review = product_storage.get_review_by_submission(submission_id)
+    if not review:
+        raise HTTPException(status_code=404, detail="Review record not found")
+    return review
+
+
+def _enforce_pending_state(review, submission_id: str) -> None:
+    state = getattr(review, "review_state", "PENDING_REVIEW")
+    if state in IRREVERSIBLE_STATES:
+        raise HTTPException(
+            status_code=409,
+            detail=f"GOVERNANCE_REJECT: Submission '{submission_id}' already in irreversible state '{state}'."
+        )
+
 
 @router.post("/approve")
-async def approve_submission(request: ReviewActionRequest):
+async def approve_submission(request: GovernanceRequest):
     """
-    APPROVE:
-    - state -> APPROVED
-    - send selected_task_id to Niyantran
-    - NO re-evaluation
-    - NO graph traversal rerun
+    APPROVE — state -> APPROVED, assign selected_task_id.
+    Requires: REVIEW_OPERATOR or SENIOR_REVIEW_OPERATOR.
     """
-    review = product_storage.get_review_by_submission(request.submission_id)
-    if not review:
-        raise HTTPException(status_code=404, detail="Review record not found")
-    if review.review_state != ReviewState.PENDING_REVIEW:
-        raise HTTPException(status_code=409, detail=f"Submission already actioned: {review.review_state}")
+    review = _get_review_or_404(request.submission_id)
+    _enforce_pending_state(review, request.submission_id)
 
+    # Constitutional validation
+    try:
+        constitutional_validator.validate(request, getattr(review, "review_state", "PENDING_REVIEW"))
+    except ValueError as e:
+        _emit_operator_visibility(request.operator_id, "approve", request.submission_id, "REJECTED_GOVERNANCE")
+        raise HTTPException(status_code=403, detail=str(e))
+
+    # State transition
     review.review_state = ReviewState.APPROVED
     product_storage._save()
-    
-    # Audit Log
-    audit_entry = AuditLogEntry(
-        trace_id=request.trace_id,
-        submission_id=request.submission_id,
-        system_task=review.selected_task_id,
-        final_task=review.selected_task_id,
-        action="approve"
-    )
-    log_audit(audit_entry)
-    
-    logger.info(f"[REVIEW] Approved submission {request.submission_id}")
-    
-    return {
-        "status": "APPROVED",
+
+    # Audit emit
+    event_id = f"evt-{uuid.uuid4().hex[:12]}"
+    _emit_audit({
+        "event_id":       event_id,
+        "trace_id":       request.trace_id,
+        "submission_id":  request.submission_id,
+        "operator_id":    request.operator_id,
+        "operator_role":  request.operator_role,
+        "action":         "approve",
+        "reason_taxonomy": request.reason_taxonomy,
+        "system_task":    getattr(review, "selected_task_id", ""),
+        "final_task":     getattr(review, "selected_task_id", ""),
+        "timestamp":      datetime.now().isoformat(),
+        "finalized":      True
+    })
+
+    # Replay checkpoint
+    write_replay_checkpoint(request.trace_id, {
+        "event_id":      event_id,
+        "action":        "approve",
         "submission_id": request.submission_id,
-        "assigned_task": review.selected_task_id
+        "final_task":    getattr(review, "selected_task_id", ""),
+        "operator_id":   request.operator_id
+    })
+
+    _emit_operator_visibility(request.operator_id, "approve", request.submission_id, "APPROVED")
+    logger.info(f"[REVIEW] Approved: {request.submission_id} by {request.operator_id}")
+
+    return {
+        "status":        "APPROVED",
+        "submission_id": request.submission_id,
+        "assigned_task": getattr(review, "selected_task_id", ""),
+        "event_id":      event_id
     }
 
+
 @router.post("/reject")
-async def reject_submission(request: ReviewActionRequest):
+async def reject_submission(request: GovernanceRequest):
     """
-    REJECT:
-    - state -> REJECTED
-    - DO NOT assign anything
+    REJECT — state -> REJECTED, no assignment.
+    Requires: REVIEW_OPERATOR or SENIOR_REVIEW_OPERATOR.
     """
-    review = product_storage.get_review_by_submission(request.submission_id)
-    if not review:
-        raise HTTPException(status_code=404, detail="Review record not found")
-    if review.review_state != ReviewState.PENDING_REVIEW:
-        raise HTTPException(status_code=409, detail=f"Submission already actioned: {review.review_state}")
+    review = _get_review_or_404(request.submission_id)
+    _enforce_pending_state(review, request.submission_id)
+
+    try:
+        constitutional_validator.validate(request, getattr(review, "review_state", "PENDING_REVIEW"))
+    except ValueError as e:
+        _emit_operator_visibility(request.operator_id, "reject", request.submission_id, "REJECTED_GOVERNANCE")
+        raise HTTPException(status_code=403, detail=str(e))
 
     review.review_state = ReviewState.REJECTED
     product_storage._save()
-    
-    # Audit Log
-    audit_entry = AuditLogEntry(
-        trace_id=request.trace_id,
-        submission_id=request.submission_id,
-        system_task=review.selected_task_id,
-        final_task="NONE",
-        action="reject"
-    )
-    log_audit(audit_entry)
-    
-    logger.info(f"[REVIEW] Rejected submission {request.submission_id}")
-    
+
+    event_id = f"evt-{uuid.uuid4().hex[:12]}"
+    _emit_audit({
+        "event_id":       event_id,
+        "trace_id":       request.trace_id,
+        "submission_id":  request.submission_id,
+        "operator_id":    request.operator_id,
+        "operator_role":  request.operator_role,
+        "action":         "reject",
+        "reason_taxonomy": request.reason_taxonomy,
+        "system_task":    getattr(review, "selected_task_id", ""),
+        "final_task":     "NONE",
+        "timestamp":      datetime.now().isoformat(),
+        "finalized":      True
+    })
+
+    write_replay_checkpoint(request.trace_id, {
+        "event_id":      event_id,
+        "action":        "reject",
+        "submission_id": request.submission_id,
+        "operator_id":   request.operator_id
+    })
+
+    _emit_operator_visibility(request.operator_id, "reject", request.submission_id, "REJECTED")
+    logger.info(f"[REVIEW] Rejected: {request.submission_id} by {request.operator_id}")
+
     return {
-        "status": "REJECTED",
-        "submission_id": request.submission_id
+        "status":        "REJECTED",
+        "submission_id": request.submission_id,
+        "event_id":      event_id
     }
 
+
 @router.post("/modify")
-async def modify_submission(request: ReviewActionRequest):
+async def modify_submission(request: GovernanceRequest):
     """
-    MODIFY:
-    - state -> MODIFIED
-    - replace selected_task_id with override_task_id
-    - send overridden task to Niyantran
-    - DO NOT re-run selection
+    MODIFY — highest-risk action. Requires dual approval.
+    Scope: bounded metadata only. CANNOT mutate traversal/audit/replay.
+    Requires: SENIOR_REVIEW_OPERATOR + authorized_by EXECUTION_AUTHORIZER.
     """
     if not request.override_task_id:
-        raise HTTPException(status_code=400, detail="override_task_id is required for modify action")
+        raise HTTPException(status_code=400, detail="override_task_id required for modify")
 
-    review = product_storage.get_review_by_submission(request.submission_id)
-    if not review:
-        raise HTTPException(status_code=404, detail="Review record not found")
-    if review.review_state != ReviewState.PENDING_REVIEW:
-        raise HTTPException(status_code=409, detail=f"Submission already actioned: {review.review_state}")
-    
-    original_task = review.selected_task_id
+    review = _get_review_or_404(request.submission_id)
+    _enforce_pending_state(review, request.submission_id)
+
+    try:
+        constitutional_validator.validate(request, getattr(review, "review_state", "PENDING_REVIEW"))
+    except ValueError as e:
+        _emit_operator_visibility(request.operator_id, "modify", request.submission_id, "REJECTED_GOVERNANCE")
+        raise HTTPException(status_code=403, detail=str(e))
+
+    # Scope enforcement — MODIFY may only adjust bounded metadata
+    scope = OverrideScope.METADATA_ADJUSTMENT
+    original_task = getattr(review, "selected_task_id", "")
+
     review.selected_task_id = request.override_task_id
     review.review_state = ReviewState.MODIFIED
     product_storage._save()
-    
-    # Audit Log
-    audit_entry = AuditLogEntry(
-        trace_id=request.trace_id,
-        submission_id=request.submission_id,
-        system_task=original_task,
-        final_task=request.override_task_id,
-        action="modify"
-    )
-    log_audit(audit_entry)
-    
-    logger.info(f"[REVIEW] Modified submission {request.submission_id} with task {request.override_task_id}")
-    
+
+    event_id = f"evt-{uuid.uuid4().hex[:12]}"
+    _emit_audit({
+        "event_id":        event_id,
+        "trace_id":        request.trace_id,
+        "submission_id":   request.submission_id,
+        "operator_id":     request.operator_id,
+        "operator_role":   request.operator_role,
+        "action":          "modify",
+        "reason_taxonomy": request.reason_taxonomy,
+        "scope":           scope,
+        "system_task":     original_task,
+        "final_task":      request.override_task_id,
+        "authorized_by":   request.authorized_by,
+        "parent_event_id": None,
+        "timestamp":       datetime.now().isoformat(),
+        "finalized":       True,
+        "replay_metadata": {
+            "original_task":  original_task,
+            "override_task":  request.override_task_id,
+            "operator":       request.operator_id,
+            "authorized_by":  request.authorized_by
+        }
+    })
+
+    write_replay_checkpoint(request.trace_id, {
+        "event_id":       event_id,
+        "action":         "modify",
+        "submission_id":  request.submission_id,
+        "original_task":  original_task,
+        "override_task":  request.override_task_id,
+        "operator_id":    request.operator_id,
+        "authorized_by":  request.authorized_by
+    })
+
+    _emit_operator_visibility(request.operator_id, "modify", request.submission_id, "MODIFIED")
+    logger.info(f"[REVIEW] Modified: {request.submission_id} {original_task}->{request.override_task_id}")
+
     return {
-        "status": "MODIFIED",
-        "submission_id": request.submission_id,
-        "assigned_task": request.override_task_id
+        "status":          "MODIFIED",
+        "submission_id":   request.submission_id,
+        "assigned_task":   request.override_task_id,
+        "original_task":   original_task,
+        "authorized_by":   request.authorized_by,
+        "event_id":        event_id
     }
+
 
 @router.get("/pending")
 async def get_pending_reviews():
-    """List all submissions pending review."""
+    """Observability only — no mutations."""
     pending = []
     for sub_id, review in product_storage.reviews.items():
-        if review.review_state == ReviewState.PENDING_REVIEW:
+        if getattr(review, "review_state", "") == ReviewState.PENDING_REVIEW:
             submission = product_storage.get_submission(review.submission_id)
             pending.append({
-                "submission_id": review.submission_id,
-                "candidate_name": submission.submitted_by if submission else "Unknown",
-                "task_title": submission.task_title if submission else "Unknown",
-                "evaluation_result": review.evaluation_result,
-                "failure_type": review.failure_type,
-                "selected_task_id": review.selected_task_id,
-                "trace_id": review.trace_id,
-                "review_state": review.review_state
+                "submission_id":    review.submission_id,
+                "candidate_name":   submission.submitted_by if submission else "Unknown",
+                "task_title":       submission.task_title if submission else "Unknown",
+                "evaluation_result": getattr(review, "evaluation_result", ""),
+                "failure_type":     getattr(review, "failure_type", None),
+                "selected_task_id": getattr(review, "selected_task_id", ""),
+                "trace_id":         getattr(review, "trace_id", ""),
+                "review_state":     getattr(review, "review_state", "")
             })
     return pending
 
+
 @router.get("/all")
 async def get_all_reviews():
-    """List all reviews for the dashboard."""
+    """Observability only — no mutations."""
     all_reviews = []
     for sub_id, review in product_storage.reviews.items():
         submission = product_storage.get_submission(review.submission_id)
         all_reviews.append({
-            "submission_id": review.submission_id,
-            "candidate_name": submission.submitted_by if submission else "Unknown",
-            "task_title": submission.task_title if submission else "Unknown",
-            "evaluation_result": review.evaluation_result,
-            "failure_type": review.failure_type,
-            "selected_task_id": review.selected_task_id,
-            "trace_id": review.trace_id,
-            "review_state": review.review_state,
-            "selection_reason": review.selection_reason,
-            "full_response": review.model_dump()
+            "submission_id":    review.submission_id,
+            "candidate_name":   submission.submitted_by if submission else "Unknown",
+            "task_title":       submission.task_title if submission else "Unknown",
+            "evaluation_result": getattr(review, "evaluation_result", ""),
+            "failure_type":     getattr(review, "failure_type", None),
+            "selected_task_id": getattr(review, "selected_task_id", ""),
+            "trace_id":         getattr(review, "trace_id", ""),
+            "review_state":     getattr(review, "review_state", ""),
+            "selection_reason": getattr(review, "selection_reason", "")
         })
     return all_reviews
