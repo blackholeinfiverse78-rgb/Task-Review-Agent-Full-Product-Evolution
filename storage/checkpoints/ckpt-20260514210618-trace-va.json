@@ -1,0 +1,14 @@
+{
+  "checkpoint_id": "ckpt-20260514210618-trace-va",
+  "trace_id": "trace-val-001",
+  "timestamp": "2026-05-14T21:06:18.172784",
+  "state_hash": "ddf1e74bd56e7320",
+  "state": {
+    "event_id": "evt-4d9d80228aba",
+    "action": "approve",
+    "submission_id": "sub-164f41a6ea3c--val-001",
+    "final_task": "T-GOV-F01",
+    "operator_id": "admin-1"
+  },
+  "lineage_marker": true
+}

@@ -50,6 +50,23 @@
       "registry_validation_status": null,
       "registry_validation_reason": null,
       "review_state": "PENDING_REVIEW"
+    },
+    "sub-164f41a6ea3c--val-001": {
+      "submission_id": "sub-164f41a6ea3c--val-001",
+      "task_id": "T-GOV-001",
+      "task_title": "Test Title",
+      "task_description": "Test description is long enough",
+      "submitted_by": "dev",
+      "submitted_at": "2026-05-14T21:06:18.142264",
+      "status": "submitted",
+      "previous_task_id": null,
+      "pdf_file_path": null,
+      "pdf_extracted_text": null,
+      "module_id": null,
+      "schema_version": null,
+      "registry_validation_status": null,
+      "registry_validation_reason": null,
+      "review_state": "PENDING_REVIEW"
     }
   },
   "reviews": {
@@ -69,7 +86,8 @@
       "evaluation_summary": "",
       "selected_task_id": "T-GOV-F01",
       "selection_reason": "FAIL(schema_violation) → failure_tasks['schema_violation'][0] = T-GOV-F01",
-      "review_state": "APPROVED"
+      "review_state": "APPROVED",
+      "version": 1
     },
     "rev-sub-aeb3f363fdf5-race-002": {
       "review_id": "rev-sub-aeb3f363fdf5-race-002",
@@ -87,7 +105,8 @@
       "evaluation_summary": "",
       "selected_task_id": "T-GOV-OVERRIDE",
       "selection_reason": "FAIL(schema_violation) → failure_tasks['schema_violation'][0] = T-GOV-F01",
-      "review_state": "MODIFIED"
+      "review_state": "MODIFIED",
+      "version": 1
     },
     "rev-sub-32616cd5a6c8-cdef-001": {
       "review_id": "rev-sub-32616cd5a6c8-cdef-001",
@@ -105,7 +124,27 @@
       "evaluation_summary": "",
       "selected_task_id": "T-GOV-F01",
       "selection_reason": "FAIL(schema_violation) → failure_tasks['schema_violation'][0] = T-GOV-F01",
-      "review_state": "APPROVED"
+      "review_state": "APPROVED",
+      "version": 1
+    },
+    "rev-sub-164f41a6ea3c--val-001": {
+      "review_id": "rev-sub-164f41a6ea3c--val-001",
+      "submission_id": "sub-164f41a6ea3c--val-001",
+      "trace_id": "trace-val-001",
+      "evaluation_result": "FAIL",
+      "failure_type": "schema_violation",
+      "decision": "REJECTED",
+      "failure_reasons": [],
+      "improvement_hints": [],
+      "analysis": {},
+      "reviewed_at": "2026-05-14T21:06:18.142285",
+      "evaluation_time_ms": 0,
+      "missing_features": [],
+      "evaluation_summary": "",
+      "selected_task_id": "T-GOV-F01",
+      "selection_reason": "FAIL(schema_violation) → failure_tasks['schema_violation'][0] = T-GOV-F01",
+      "review_state": "APPROVED",
+      "version": 2
     }
   },
   "next_tasks": {}
