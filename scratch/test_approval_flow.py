@@ -7,7 +7,7 @@ from fastapi.testclient import TestClient
 sys.path.append(os.getcwd())
 
 from main import app
-from models.persistent_storage import product_storage
+from db.persistent_storage import product_storage
 
 client = TestClient(app)
 

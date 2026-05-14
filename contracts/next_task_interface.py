@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from ...models.schemas import ReviewOutput
+from ...contracts.schemas import ReviewOutput
 from ...models.orchestration import V2NextTask
 
 class NextTaskGeneratorInterface(ABC):

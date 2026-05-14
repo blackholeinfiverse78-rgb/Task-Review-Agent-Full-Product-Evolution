@@ -10,7 +10,7 @@ import logging
 from typing import Dict, Any, List, Optional
 from datetime import datetime
 
-from engine.atomic_persistence import (
+from replay_audit.atomic_persistence import (
     validate_log_segment, load_checkpoint, AUDIT_LOG_DIR, CHECKPOINT_DIR
 )
 

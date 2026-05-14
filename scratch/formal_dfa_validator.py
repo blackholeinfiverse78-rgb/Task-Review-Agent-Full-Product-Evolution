@@ -9,8 +9,8 @@ from typing import Dict, Any, List, Set
 # Setup path for imports
 sys.path.append(os.getcwd())
 
-from engine.execution_pipeline import execution_pipeline
-from engine.task_graph_engine import task_graph_engine
+from evaluation_engine.execution_pipeline import execution_pipeline
+from task_selector.task_graph_engine import task_graph_engine
 
 # Silence logging for clean report
 logging.basicConfig(level=logging.CRITICAL)

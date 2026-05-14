@@ -12,7 +12,7 @@ sys.path.insert(0, os.path.join(project_root, 'intelligence-integration-module-m
 
 from task_selector.final_convergence import final_convergence
 from evaluation_engine.validator import validator, ValidationStatus
-from models.schemas import Task
+from contracts.schemas import Task
 from task_selector.review_orchestrator import ReviewOrchestrator
 from datetime import datetime
 import logging

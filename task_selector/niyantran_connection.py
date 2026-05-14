@@ -61,7 +61,7 @@ class NiyantranConnectionService:
         Accept task from Niyantran, run through hardened ExecutionPipeline.
         trace_id must be present in task_data — never generated here.
         """
-        from engine.execution_pipeline import execution_pipeline
+        from evaluation_engine.execution_pipeline import execution_pipeline
         
         logger.info(f"[NIYANTRAN] Received task for processing: {task_data.get('task_title', '')[:50]}")
 

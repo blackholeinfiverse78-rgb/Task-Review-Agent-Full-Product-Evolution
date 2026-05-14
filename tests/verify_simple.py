@@ -120,7 +120,7 @@ def test_api_imports():
         print("PASS: AssignmentEngine imports successfully")
         
         # Test importing models
-        from models.schemas import Task
+        from contracts.schemas import Task
         print("PASS: Schemas import successfully")
         
     except ImportError as e:
@@ -133,7 +133,7 @@ def test_real_execution_simulation():
     
     try:
         from task_selector.review_orchestrator import ReviewOrchestrator
-        from models.schemas import Task
+        from contracts.schemas import Task
         from datetime import datetime
         
         # Create orchestrator

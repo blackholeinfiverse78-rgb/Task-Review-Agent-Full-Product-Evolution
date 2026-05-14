@@ -14,8 +14,8 @@ logger = logging.getLogger("lifecycle")
 
 from task_selector.review_orchestrator import ReviewOrchestrator
 from evaluation_engine.review_engine import ReviewEngine
-from models.schemas import Task
-from models.persistent_storage import product_storage
+from contracts.schemas import Task
+from db.persistent_storage import product_storage
 from evaluation_engine.pdf_analyzer import PDFAnalyzer
 
 router = APIRouter(prefix="/lifecycle", tags=["lifecycle"])

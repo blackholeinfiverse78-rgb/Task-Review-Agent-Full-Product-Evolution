@@ -8,7 +8,7 @@ import json
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
 from evaluation_engine.rule_engine import rule_engine
-from engine.task_graph_engine import task_graph_engine
+from task_selector.task_graph_engine import task_graph_engine
 
 PASS_LINE  = "PASS"
 FAIL_LINE  = "FAIL"

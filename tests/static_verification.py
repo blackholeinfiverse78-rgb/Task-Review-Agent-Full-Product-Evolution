@@ -5,10 +5,10 @@ Verifies all integration points without running the server.
 import sys
 sys.path.insert(0, '.')
 
-from models.review_models import ReviewActionRequest, ReviewState, AuditLogEntry
-from models.persistent_storage import product_storage, ReviewRecord, TaskSubmission, TaskStatus
+from contracts.review_models import ReviewActionRequest, ReviewState, AuditLogEntry
+from db.persistent_storage import product_storage, ReviewRecord, TaskSubmission, TaskStatus
 from api.review_routes import router, log_audit, approve_submission, reject_submission, modify_submission
-from engine.execution_pipeline import execution_pipeline
+from evaluation_engine.execution_pipeline import execution_pipeline
 from api.production import submit_task_from_niyantran
 import inspect
 import os

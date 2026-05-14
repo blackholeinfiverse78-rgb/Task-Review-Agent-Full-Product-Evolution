@@ -4,9 +4,9 @@ import hashlib
 import time
 
 from evaluation_engine.orchestrator import evaluation_orchestrator
-from engine.task_graph_engine import task_graph_engine
+from task_selector.task_graph_engine import task_graph_engine
 from task_selector.bucket_integration import bucket_integration
-from models.persistent_storage import product_storage, TaskSubmission, ReviewRecord, TaskStatus
+from db.persistent_storage import product_storage, TaskSubmission, ReviewRecord, TaskStatus
 from datetime import datetime
 
 logger = logging.getLogger("execution_pipeline")
@@ -108,7 +108,7 @@ class ExecutionPipeline:
 
             # 9. OBSERVABILITY (Success)
             try:
-                from engine.observability import observer
+                from observability.observability import observer
                 observer.log_execution(output)
             except Exception as e:
                 logger.warning(f"Observability error: {e}")
@@ -119,7 +119,7 @@ class ExecutionPipeline:
         except Exception as e:
             # Observability: Log Hard Reject
             try:
-                from engine.observability import observer
+                from observability.observability import observer
                 observer.log_execution({"trace_id": task_data.get("trace_id")}, is_hard_reject=True)
             except:
                 pass

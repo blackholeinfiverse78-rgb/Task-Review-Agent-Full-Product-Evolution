@@ -29,7 +29,7 @@ class AssignmentEngine:
         rules = None
         if task_id:
             try:
-                from engine.task_graph_engine import task_graph_engine
+                from task_selector.task_graph_engine import task_graph_engine
                 task_data = task_graph_engine.get_task(task_id)
                 if task_data:
                     rules = task_data.get("evaluation_rules")

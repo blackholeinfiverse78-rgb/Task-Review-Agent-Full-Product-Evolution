@@ -10,7 +10,7 @@ sys.path.append(r'g:\Live Task Review Agent - 2')
 logging.basicConfig(level=logging.ERROR)
 
 from task_selector.final_convergence import final_convergence
-from engine.task_graph_engine import task_graph_engine
+from task_selector.task_graph_engine import task_graph_engine
 
 def run_test(case_name, input_data):
     print(f"--- Running {case_name} ---")

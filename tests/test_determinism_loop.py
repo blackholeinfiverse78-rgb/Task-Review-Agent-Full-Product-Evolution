@@ -2,7 +2,7 @@ import unittest
 import hashlib
 import json
 from task_selector.review_orchestrator import ReviewOrchestrator
-from models.schemas import Task
+from contracts.schemas import Task
 from datetime import datetime
 
 class MockEngine:

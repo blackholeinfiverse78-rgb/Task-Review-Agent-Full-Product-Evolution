@@ -161,7 +161,7 @@ def test_input_size_limits():
     large_input = "A" * 1000000  # 1MB string
     try:
         # Test if large inputs are handled properly
-        from models.schemas import Task
+        from contracts.schemas import Task
         from pydantic import ValidationError
         
         try:
@@ -336,7 +336,7 @@ def test_data_integrity():
     print("="*60)
     
     # Test 1: Data validation
-    from models.schemas import Task
+    from contracts.schemas import Task
     from pydantic import ValidationError
     
     try:

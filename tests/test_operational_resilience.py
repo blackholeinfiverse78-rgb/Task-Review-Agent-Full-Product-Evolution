@@ -6,15 +6,15 @@ All 15 resilience scenarios validated.
 import sys, os, json, tempfile, hashlib
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
-from engine.atomic_persistence import (
+from replay_audit.atomic_persistence import (
     atomic_append, validate_log_segment,
     write_replay_checkpoint, load_checkpoint,
     recover_interrupted_write
 )
-from engine.replay_engine import replay_engine
-from engine.task_graph_engine import task_graph_engine
+from replay_audit.replay_engine import replay_engine
+from task_selector.task_graph_engine import task_graph_engine
 from evaluation_engine.rule_engine import rule_engine
-from models.governance import (
+from governance_layer.governance import (
     GovernanceRequest, OperatorRole, OverrideReason,
     constitutional_validator, IRREVERSIBLE_STATES
 )

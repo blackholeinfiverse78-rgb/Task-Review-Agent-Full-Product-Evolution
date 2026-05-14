@@ -110,10 +110,10 @@ def test_day_3_output_validation():
     print("=" * 80)
     
     try:
-        from models.schemas import ReviewOutput, Analysis, Meta
+        from contracts.schemas import ReviewOutput, Analysis, Meta
         from task_selector.review_orchestrator import ReviewOrchestrator
         from evaluation_engine.review_engine import ReviewEngine
-        from models.schemas import Task
+        from contracts.schemas import Task
         from datetime import datetime
         
         # Test contract validation
@@ -172,8 +172,8 @@ def test_hybrid_integration():
     try:
         from task_selector.review_orchestrator import ReviewOrchestrator
         from evaluation_engine.review_engine import ReviewEngine
-        from models.schemas import Task
-        from models.persistent_storage import product_storage
+        from contracts.schemas import Task
+        from db.persistent_storage import product_storage
         from datetime import datetime
         
         # Clear storage
@@ -300,8 +300,8 @@ def test_determinism():
     try:
         from task_selector.review_orchestrator import ReviewOrchestrator
         from evaluation_engine.review_engine import ReviewEngine
-        from models.schemas import Task
-        from models.persistent_storage import product_storage
+        from contracts.schemas import Task
+        from db.persistent_storage import product_storage
         from datetime import datetime
         
         orchestrator = ReviewOrchestrator(ReviewEngine())
@@ -344,7 +344,7 @@ def test_api_stability():
     
     try:
         from api.lifecycle import router
-        from models.persistent_storage import product_storage
+        from db.persistent_storage import product_storage
         
         # Check critical endpoints exist
         endpoints = []

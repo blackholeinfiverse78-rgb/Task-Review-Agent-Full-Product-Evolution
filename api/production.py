@@ -205,7 +205,7 @@ async def get_bucket_stats():
 async def get_system_metrics():
     """Get real-time observability metrics for the Deterministic Core"""
     try:
-        from engine.observability import observer
+        from observability.observability import observer
         return observer.get_stats()
     except Exception as e:
         logger.error(f"[PRODUCTION API] Failed to get system metrics: {e}")

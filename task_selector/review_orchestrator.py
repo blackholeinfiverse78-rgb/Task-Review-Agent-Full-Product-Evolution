@@ -5,8 +5,8 @@ import hashlib
 import logging
 import time
 
-from models.schemas import Task
-from models.persistent_storage import (
+from contracts.schemas import Task
+from db.persistent_storage import (
     TaskSubmission, ReviewRecord, NextTaskRecord,
     TaskStatus, product_storage
 )

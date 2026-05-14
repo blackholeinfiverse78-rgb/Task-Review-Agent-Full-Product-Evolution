@@ -8,6 +8,9 @@ class ReviewState(str, Enum):
     APPROVED = "APPROVED"
     REJECTED = "REJECTED"
     MODIFIED = "MODIFIED"
+    FINAL_APPROVED = "FINAL_APPROVED"
+    AUDIT_LOCKED = "AUDIT_LOCKED"
+    REPLAY_SEALED = "REPLAY_SEALED"
 
 class ReviewActionRequest(BaseModel):
     trace_id: str

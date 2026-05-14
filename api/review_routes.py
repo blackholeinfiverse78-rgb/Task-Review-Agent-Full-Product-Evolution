@@ -10,14 +10,14 @@ import os
 import uuid
 import logging
 
-from models.review_models import ReviewState, AuditLogEntry
-from models.governance import (
+from contracts.review_models import ReviewState, AuditLogEntry
+from governance_layer.governance import (
     GovernanceRequest, OverrideEvent, OverrideScope,
     constitutional_validator, IRREVERSIBLE_STATES,
     OverrideReason, OperatorRole
 )
-from models.persistent_storage import product_storage
-from engine.atomic_persistence import atomic_append, write_replay_checkpoint, AUDIT_LOG_DIR
+from db.persistent_storage import product_storage
+from replay_audit.atomic_persistence import atomic_append, write_replay_checkpoint, AUDIT_LOG_DIR
 
 logger = logging.getLogger("review_routes")
 router = APIRouter(prefix="/api/v1/review", tags=["review"])
@@ -66,6 +66,14 @@ def _enforce_pending_state(review, submission_id: str) -> None:
             detail=f"GOVERNANCE_REJECT: Submission '{submission_id}' already in irreversible state '{state}'."
         )
 
+def _enforce_occ_lock(review, expected_version: int) -> None:
+    current_version = getattr(review, "version", 1)
+    if current_version != expected_version:
+        raise HTTPException(
+            status_code=409,
+            detail=f"GOVERNANCE_LOCK_REJECT: Concurrent modification detected. Expected version {expected_version}, got {current_version}."
+        )
+
 
 @router.post("/approve")
 async def approve_submission(request: GovernanceRequest):
@@ -83,8 +91,11 @@ async def approve_submission(request: GovernanceRequest):
         _emit_operator_visibility(request.operator_id, "approve", request.submission_id, "REJECTED_GOVERNANCE")
         raise HTTPException(status_code=403, detail=str(e))
 
+    _enforce_occ_lock(review, request.expected_version)
+
     # State transition
     review.review_state = ReviewState.APPROVED
+    review.version += 1
     product_storage._save()
 
     # Audit emit
@@ -138,7 +149,10 @@ async def reject_submission(request: GovernanceRequest):
         _emit_operator_visibility(request.operator_id, "reject", request.submission_id, "REJECTED_GOVERNANCE")
         raise HTTPException(status_code=403, detail=str(e))
 
+    _enforce_occ_lock(review, request.expected_version)
+
     review.review_state = ReviewState.REJECTED
+    review.version += 1
     product_storage._save()
 
     event_id = f"evt-{uuid.uuid4().hex[:12]}"
@@ -192,12 +206,15 @@ async def modify_submission(request: GovernanceRequest):
         _emit_operator_visibility(request.operator_id, "modify", request.submission_id, "REJECTED_GOVERNANCE")
         raise HTTPException(status_code=403, detail=str(e))
 
+    _enforce_occ_lock(review, request.expected_version)
+
     # Scope enforcement — MODIFY may only adjust bounded metadata
     scope = OverrideScope.METADATA_ADJUSTMENT
     original_task = getattr(review, "selected_task_id", "")
 
     review.selected_task_id = request.override_task_id
     review.review_state = ReviewState.MODIFIED
+    review.version += 1
     product_storage._save()
 
     event_id = f"evt-{uuid.uuid4().hex[:12]}"

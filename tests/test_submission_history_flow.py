@@ -10,8 +10,8 @@ sys.path.insert(0, current_dir)
 
 from task_selector.review_orchestrator import ReviewOrchestrator
 from evaluation_engine.review_engine import ReviewEngine
-from models.schemas import Task
-from models.persistent_storage import product_storage
+from contracts.schemas import Task
+from db.persistent_storage import product_storage
 from datetime import datetime
 
 def test_submission_to_history_flow():

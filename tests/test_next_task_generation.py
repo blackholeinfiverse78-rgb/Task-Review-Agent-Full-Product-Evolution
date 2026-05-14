@@ -12,8 +12,8 @@ sys.path.insert(0, os.path.join(project_root, 'intelligence-integration-module-m
 
 from task_selector.final_convergence import final_convergence
 from task_selector.review_orchestrator import ReviewOrchestrator
-from models.schemas import Task
-from models.persistent_storage import product_storage
+from contracts.schemas import Task
+from db.persistent_storage import product_storage
 from datetime import datetime
 import json
 

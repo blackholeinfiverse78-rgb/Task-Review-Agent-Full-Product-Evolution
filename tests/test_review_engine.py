@@ -1,5 +1,5 @@
 from evaluation_engine.review_engine import ReviewEngine
-from models.schemas import Task
+from contracts.schemas import Task
 from datetime import datetime
 
 def test_deterministic_scoring():

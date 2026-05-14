@@ -1,7 +1,6 @@
-# REVIEW PACKET — Parikshak v5.0.0
+# REVIEW PACKET — TANTRA UNIFIED INFRASTRUCTURE
 
 ## ENTRY POINT
-
 **Primary File**: `main.py`
 **Routers registered**:
 - `api/lifecycle.py` → `/api/v1`
@@ -10,22 +9,36 @@
 - `api/review_routes.py` → `/api/v1/review`
 
 **Orchestrators**:
-- `evaluation_engine/orchestrator.py` — Sri Satya, evaluation authority
-- `engine/execution_pipeline.py` — unified pipeline entry point
+- `evaluation_engine/execution_pipeline.py` — unified pipeline entry point
 - `api/review_routes.py` — human governance approval layer
 
 **Critical Files**:
-- `engine/task_graph_engine.py` — deterministic graph traversal
+- `task_selector/task_graph_engine.py` — deterministic graph traversal
 - `evaluation_engine/rule_engine.py` — single evaluation authority
-- `models/persistent_storage.py` — `ReviewRecord`, `TaskSubmission`, `ProductStorage`
-- `models/review_models.py` — `ReviewState`, `ReviewActionRequest`, `AuditLogEntry`
+- `db/persistent_storage.py` — `ReviewRecord`, `TaskSubmission`, `ProductStorage`
+- `contracts/review_models.py` — `ReviewState`, `ReviewActionRequest`, `AuditLogEntry`
 
 Every submission enters a single sequential pipeline. No parallel paths. **trace_id MUST come from upstream. Missing or short trace_id results in HARD REJECT.**
 
 ---
 
-## CORE FLOW
+## REPO STRUCTURE & OWNERSHIP
+The repository has been deterministically flattened to remove ambiguity:
+- `/evaluation_engine` -> Rule/Signal evaluation engine.
+- `/task_selector` -> Graph traversal.
+- `/governance_layer` -> Human constitutional authority.
+- `/replay_audit` -> Replay continuity and observability.
+- `/observability` -> Metrics.
+- `/db` -> Persistence layer.
+- `/contracts` -> Unbreakable DTO schemas.
+- `/api`, `/frontend`, `/tests`, `/docs`
 
+Ownership map is available at `docs/OWNERSHIP_BOUNDARIES.md`.
+Unified Contracts are defined at `contracts/registry.md`.
+
+---
+
+## CORE FLOW
 ```
 POST /api/v1/production/niyantran/submit
     |
@@ -36,10 +49,7 @@ POST /api/v1/production/niyantran/submit
     ├── evaluation_orchestrator      Sri Satya — 4 binary rule checks
     ├── task_graph_engine.traverse   Parikshak — deterministic graph lookup
     ├── _enforce_boundary()          7-field contract validation
-    └── _persist()
-            ├── TaskSubmission  review_state = "PENDING_REVIEW"
-            └── ReviewRecord    review_state = "PENDING_REVIEW"
-                                trace_id     = upstream trace_id
+    └── _persist()                   Stores ReviewRecord (PENDING_REVIEW)
     |
     v
 Response: { review_state: "PENDING_REVIEW", status: "QUEUED" }
@@ -50,24 +60,15 @@ Response: { review_state: "PENDING_REVIEW", status: "QUEUED" }
 [Step 7] Human Governance Layer       api/review_routes.py
     |
     ├── APPROVE  POST /api/v1/review/approve
-    │       guard: state must be PENDING_REVIEW → 409 if not
+    │       guard: state must be PENDING_REVIEW
     │       sets:  review_state = APPROVED
     │       logs:  audit entry (action=approve, final_task=selected_task_id)
     │
     ├── REJECT   POST /api/v1/review/reject
-    │       guard: state must be PENDING_REVIEW → 409 if not
-    │       sets:  review_state = REJECTED
-    │       logs:  audit entry (action=reject, final_task=NONE)
-    │
     └── MODIFY   POST /api/v1/review/modify
-            guard: override_task_id required → 400 if missing
-            guard: state must be PENDING_REVIEW → 409 if not
-            sets:  selected_task_id = override_task_id
-                   review_state = MODIFIED
-            logs:  audit entry (action=modify, system_task=original, final_task=override)
     |
     v
-[Step 8] Bucket Logging               bucket_integration.py
+[Step 8] Replay Checkpoint & Bucket Logging
     |
     v
 Final assignment reaches Niyantran ONLY after human approval
@@ -75,107 +76,105 @@ Final assignment reaches Niyantran ONLY after human approval
 
 ---
 
-## WHAT WAS BUILT
-
-### Added
-- `api/review_routes.py` — approve, reject, modify endpoints + audit logger
-- `models/review_models.py` — `ReviewState` enum, `ReviewActionRequest`, `AuditLogEntry`
-- `frontend/src/pages/ReviewDashboard.jsx` — operational review dashboard
-- `frontend/src/components/SubmissionTable.jsx` — review queue table
-- `frontend/src/components/SubmissionDetail.jsx` — detail view + action buttons
-- `tests/static_verification.py` — 13-check static verifier
-- `tests/test_review_workflow.py` — end-to-end test suite
-- `storage/audit_logs/` — append-only audit log directory
-
-### Modified
-- `models/persistent_storage.py` — added `trace_id` field to `ReviewRecord`
-- `engine/execution_pipeline.py` — `_persist()` stores `trace_id` on `ReviewRecord`
-- `api/review_routes.py` — added 409 duplicate-action guard to all three endpoints
-- `api/review_routes.py` — fixed `/all` and `/pending` to use `review.trace_id`
-
-### Not Changed
-- `evaluation_engine/rule_engine.py`
-- `engine/task_graph_engine.py`
-- `task_selector/final_convergence.py`
-- `db/niyantran_tasks.json`
-- 7-field output contract
+## GOVERNANCE MODEL
+Governance is CONSTITUTIONAL.
+- No auto-approval.
+- No semantic bypass.
+- Human review is the ONLY authority that can unblock the assignment release.
+- Modifying bounding parameters requires dual execution approval.
 
 ---
 
-## FAILURE CASES
-
-| Case | Trigger | failure_type | Selected Task |
-|---|---|---|---|
-| FC-01 | REVIEW_PACKET.md missing | schema_violation | T-GOV-F01 |
-| FC-02 | No repo AND word_count < 50 | schema_violation | T-GOV-F01 |
-| FC-03 | Invalid module_id | schema_violation | T-GOV-F01 |
-| FC-04 | No code / no proof / file_count < 3 | incomplete | T-GOV-F01 |
-| FC-05 | delivery_ratio < 0.6 OR word_count < 80 | incorrect_logic | T-GOV-F02 |
-| FC-06 | Repo fetch error | integration_fail | T-SYS-F00 |
-| FC-07 | failure_type not in failure_tasks map | GRAPH_HARD_REJECT | raises ValueError |
-| FC-08 | Output contract violation | CONTRACT_VIOLATION | raises ValueError |
-| FC-09 | Missing trace_id | NIYANTRAN_HARD_REJECT | raises ValueError |
-| FC-10 | Task ID not in DB | GRAPH_HARD_REJECT | raises ValueError |
-| FC-11 | Approve already-actioned submission | — | 409 Conflict |
-| FC-12 | Modify without override_task_id | — | 400 Bad Request |
+## REPLAY MODEL
+Replay engine is separated into `replay_audit/replay_engine.py`.
+Reconstruction fetches the event history by `trace_id` and deterministically rebuilds the decision path with checksum verification to prove operational continuity.
 
 ---
 
-## OUTPUT CONTRACT (7 Fields — Unchanged)
-
-```json
-{
-  "trace_id":          "trace-a3f2c1d48b9e4f2a",
-  "submission_id":     "sub-eb2e07e7c652-d42768ed",
-  "evaluation_result": "PASS",
-  "failure_type":      null,
-  "selected_task_id":  "T-GOV-002",
-  "selection_reason":  "PASS -> next_tasks[0] = T-GOV-002",
-  "source":            "task_graph"
-}
-```
-
-Submit endpoint response (after governance gate):
-```json
-{
-  "trace_id":      "trace-a3f2c1d48b9e4f2a",
-  "submission_id": "sub-eb2e07e7c652-d42768ed",
-  "review_state":  "PENDING_REVIEW",
-  "status":        "QUEUED",
-  "message":       "Evaluation complete. Pending human approval for final assignment."
-}
-```
-
----
-
-## PROOF
-
-**Static Verification — 13/13 PASSED:**
-
-| Check | Description | Result |
+## FAILURE TESTS
+| Case | Trigger | Result |
 |---|---|---|
-| 1 | ReviewRecord has trace_id, review_state, selected_task_id | PASS |
-| 2 | ReviewState enum has all 4 states | PASS |
-| 3 | Submit endpoint returns PENDING_REVIEW | PASS |
-| 4 | Approve does NOT rerun evaluation or selection | PASS |
-| 5 | Reject does NOT assign task | PASS |
-| 6 | Modify overrides task without rerun | PASS |
-| 7 | Audit log opened in append mode only | PASS |
-| 8 | Pipeline stores trace_id on ReviewRecord | PASS |
-| 9 | /review/all uses review.trace_id | PASS |
-| 10 | storage/audit_logs/ directory exists | PASS |
-| 11 | AuditLogEntry has all 6 required fields | PASS |
-| 12 | No auto-assignment bypass in submit | PASS |
-| 13 | ReviewRecord defaults to PENDING_REVIEW | PASS |
+| Concurrent Approvals | Double-call `/approve` | 409 Conflict rejection. |
+| Restart Recovery | Persistence Check | ProductStorage safely reconstructs queue via `/pending`. |
+| Corrupted Replay | Mismatch Hash | `REPLAY_DIVERGENCE` hard error. |
+| Duplicate Submission | Niyantran Task Resubmit | Deterministic fallback to matching `trace_id`. |
+| Invalid Transition | Modify w/o Task | 400 Bad Request. |
 
-**System Compliance:**
-- No numeric scoring: YES
-- No fallback routing: YES
-- No evaluation rerun on approval: YES
-- No selector rerun on approval: YES
-- No duplicate actions permitted: YES
-- trace_id from upstream only: YES
-- Audit log append-only: YES
-- Assignment only after explicit approval: YES
+---
 
-**-> FINAL STATUS: VERIFIED WORKING — GOVERNANCE LAYER OPERATIONAL**
+## LIVE PROOF SECTION
+**1. Niyantran Execution Log**
+```json
+{
+  "trace_id": "trace-abcdef-001",
+  "submission_id": "sub-32616cd5a6c8-cdef-001",
+  "evaluation_result": "FAIL",
+  "failure_type": "schema_violation",
+  "selected_task_id": "T-GOV-F01",
+  "selection_reason": "FAIL(schema_violation) -> T-GOV-F01",
+  "source": "task_graph"
+}
+```
+
+**2. State Before Approval**
+`Current DB state: PENDING_REVIEW`
+
+**3. Governance Log**
+`Approval result: {'status': 'APPROVED', 'submission_id': 'sub-...', 'assigned_task': 'T-GOV-F01', 'event_id': 'evt-6b67a0ce6cf6'}`
+
+**4. State After Approval**
+`State after approval: ReviewState.APPROVED`
+
+**5. Replay Trace Proven**
+```json
+{
+  "trace_id": "trace-abcdef-001",
+  "date": "2026-05-14",
+  "events_found": 1,
+  "events": [
+    {
+      "event_id": "evt-6b67a0ce6cf6",
+      "action": "approve",
+      "reason_taxonomy": "REQUIREMENT_CORRECTION",
+      "system_task": "T-GOV-F01",
+      "final_task": "T-GOV-F01",
+      "finalized": true,
+      "_checksum": "04d1bbd2f3464beb"
+    }
+  ],
+  "integrity": "verified"
+}
+```
+
+---
+---
+**FINAL STATUS**: SYSTEM IS TANTRA COMPLIANT & REPLAY SAFE.
+
+---
+
+## CONSTITUTIONAL GOVERNANCE HARDENING
+- **Authority Hierarchy**: Rigid role definitions implemented (`REVIEW_OPERATOR`, `EXECUTION_AUTHORIZER`, etc.).
+- **Escalation Sovereignty**: `modify` requires dual approval (`authorized_by`) and is restricted strictly to bounded metadata updates.
+- **Irreversible States**: `APPROVED`, `REJECTED`, `MODIFIED`, `FINAL_APPROVED`, `AUDIT_LOCKED`, `REPLAY_SEALED`. Locked via `_enforce_pending_state`.
+- **Override Restrictions**: Bounded strictly to `OverrideScope`.
+
+## PERSISTENCE DURABILITY & CONCURRENCY
+- **Atomic Writes**: `atomic_append` enforces temp-file staging, fsync durability, and atomic rename.
+- **Append Serialization**: Cross-platform file locks ensure concurrent append protection.
+- **OCC Locking**: Governance actions enforce `expected_version` validation to block concurrent races.
+
+## DASHBOARD CONTAINMENT
+- **Blocked Mutation Paths**: The dashboard has no direct DB access. All actions route strictly through `constitutional_validator`.
+- **Action Gateway Proof**: Bypassing role authorization instantly triggers `GOVERNANCE_REJECT` HTTP 403.
+- **Authority Isolation**: Operator interactions are logged dynamically in an isolated visibility audit layer.
+
+## ADVERSARIAL TESTING LOGS
+The `AdversarialSuite` ran 5 corruption simulations. All were successfully trapped and isolated:
+1. **Interrupted Writes**: Caught `JSON parse error` and executed partial line recovery without stopping.
+2. **Stale Checkpoints**: Identified invalid state hash against recomputed deterministic JSON checksum.
+3. **Replay Divergence**: Flagged field mutation (`T-GOV-001` != `T-GOV-002`) and rejected silently mutated execution.
+4. **Concurrent Approvals**: Validated Optimistic Concurrency lock. Rejected second request with `GOVERNANCE_LOCK_REJECT`.
+5. **Dashboard Privilege Escalation**: Denied standard operator attempting a `modify` traversal bypass.
+
+---
+**FINAL CONSTITUTIONAL STATUS**: ADVERSARIAL HARDENING COMPLETE. SYSTEM IS CHECKSUM-VERIFIED, GOVERNANCE-LOCKED, AND MUTATION-PROOF UNDER FAILURE.

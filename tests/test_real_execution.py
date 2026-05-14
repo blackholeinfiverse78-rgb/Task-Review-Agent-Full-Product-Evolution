@@ -20,7 +20,7 @@ def test_direct_execution():
     try:
         from task_selector.review_orchestrator import ReviewOrchestrator
         from evaluation_engine.review_engine import ReviewEngine
-        from models.schemas import Task
+        from contracts.schemas import Task
         
         # Create real components
         review_engine = ReviewEngine()

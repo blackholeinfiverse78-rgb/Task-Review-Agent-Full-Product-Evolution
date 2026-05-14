@@ -1,7 +1,7 @@
 from task_selector.review_orchestrator import ReviewOrchestrator
 from evaluation_engine.review_engine import ReviewEngine
-from models.schemas import Task
-from models.persistent_storage import product_storage
+from contracts.schemas import Task
+from db.persistent_storage import product_storage
 from datetime import datetime
 
 product_storage.clear_all()

@@ -3,8 +3,8 @@ Task Review Engine - Final Convergence Adapter
 Bridges the final convergence system with the ReviewOutput schema.
 """
 from typing import Optional
-from models.schemas import Task, ReviewOutput, Analysis, Meta
-from core.interfaces.review_engine_interface import ReviewEngineInterface
+from contracts.schemas import Task, ReviewOutput, Analysis, Meta
+from contracts.review_engine_interface import ReviewEngineInterface
 from task_selector.final_convergence import final_convergence
 import logging
 import time

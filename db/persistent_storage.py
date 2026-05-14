@@ -73,6 +73,7 @@ class ReviewRecord(BaseModel):
     selected_task_id: str = Field(default="")
     selection_reason: str = Field(default="")
     review_state: str = Field(default="PENDING_REVIEW")
+    version: int = Field(default=1)
 
     class Config:
         use_enum_values = True

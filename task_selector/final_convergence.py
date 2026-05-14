@@ -2,7 +2,7 @@ from typing import Dict, Any, Optional
 import logging
 from datetime import datetime
 
-from engine.task_graph_engine import task_graph_engine
+from task_selector.task_graph_engine import task_graph_engine
 from task_selector.production_decision_engine import production_decision_engine
 from task_selector.human_in_loop import human_in_loop
 from task_selector.bucket_integration import bucket_integration

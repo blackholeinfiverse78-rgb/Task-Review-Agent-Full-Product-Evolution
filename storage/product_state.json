@@ -14,7 +14,8 @@
       "module_id": null,
       "schema_version": null,
       "registry_validation_status": null,
-      "registry_validation_reason": null
+      "registry_validation_reason": null,
+      "review_state": "PENDING_REVIEW"
     },
     "sub-aeb3f363fdf5-race-002": {
       "submission_id": "sub-aeb3f363fdf5-race-002",
@@ -30,13 +31,32 @@
       "module_id": null,
       "schema_version": null,
       "registry_validation_status": null,
-      "registry_validation_reason": null
+      "registry_validation_reason": null,
+      "review_state": "PENDING_REVIEW"
+    },
+    "sub-32616cd5a6c8-cdef-001": {
+      "submission_id": "sub-32616cd5a6c8-cdef-001",
+      "task_id": "T-GOV-001",
+      "task_title": "Fix the sorting bug in the dashboard",
+      "task_description": "The dashboard table is sorting the dates alphabetically instead of chronologically. Please fix it.",
+      "submitted_by": "developer1",
+      "submitted_at": "2026-05-14T20:55:47.364352",
+      "status": "submitted",
+      "previous_task_id": null,
+      "pdf_file_path": null,
+      "pdf_extracted_text": null,
+      "module_id": null,
+      "schema_version": null,
+      "registry_validation_status": null,
+      "registry_validation_reason": null,
+      "review_state": "PENDING_REVIEW"
     }
   },
   "reviews": {
     "rev-sub-aeb3f363fdf5-race-001": {
       "review_id": "rev-sub-aeb3f363fdf5-race-001",
       "submission_id": "sub-aeb3f363fdf5-race-001",
+      "trace_id": "",
       "evaluation_result": "FAIL",
       "failure_type": "schema_violation",
       "decision": "REJECTED",
@@ -54,6 +74,7 @@
     "rev-sub-aeb3f363fdf5-race-002": {
       "review_id": "rev-sub-aeb3f363fdf5-race-002",
       "submission_id": "sub-aeb3f363fdf5-race-002",
+      "trace_id": "",
       "evaluation_result": "FAIL",
       "failure_type": "schema_violation",
       "decision": "REJECTED",
@@ -67,6 +88,24 @@
       "selected_task_id": "T-GOV-OVERRIDE",
       "selection_reason": "FAIL(schema_violation) → failure_tasks['schema_violation'][0] = T-GOV-F01",
       "review_state": "MODIFIED"
+    },
+    "rev-sub-32616cd5a6c8-cdef-001": {
+      "review_id": "rev-sub-32616cd5a6c8-cdef-001",
+      "submission_id": "sub-32616cd5a6c8-cdef-001",
+      "trace_id": "trace-abcdef-001",
+      "evaluation_result": "FAIL",
+      "failure_type": "schema_violation",
+      "decision": "REJECTED",
+      "failure_reasons": [],
+      "improvement_hints": [],
+      "analysis": {},
+      "reviewed_at": "2026-05-14T20:55:47.364406",
+      "evaluation_time_ms": 0,
+      "missing_features": [],
+      "evaluation_summary": "",
+      "selected_task_id": "T-GOV-F01",
+      "selection_reason": "FAIL(schema_violation) → failure_tasks['schema_violation'][0] = T-GOV-F01",
+      "review_state": "APPROVED"
     }
   },
   "next_tasks": {}

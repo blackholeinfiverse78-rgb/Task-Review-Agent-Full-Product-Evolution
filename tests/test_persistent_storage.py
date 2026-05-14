@@ -4,7 +4,7 @@ Tests for deterministic storage models and operations.
 """
 import pytest
 from datetime import datetime
-from models.persistent_storage import (
+from db.persistent_storage import (
     TaskSubmission,
     ReviewRecord,
     NextTaskRecord,

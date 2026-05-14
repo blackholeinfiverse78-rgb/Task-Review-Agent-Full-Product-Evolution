@@ -58,7 +58,7 @@ ROLE_PERMISSIONS: Dict[OperatorRole, List[str]] = {
 HIGH_RISK_ACTIONS = {"modify"}
 
 # Actions that are irreversible once finalized
-IRREVERSIBLE_STATES = {"APPROVED", "REJECTED", "MODIFIED"}
+IRREVERSIBLE_STATES = {"APPROVED", "REJECTED", "MODIFIED", "FINAL_APPROVED", "AUDIT_LOCKED", "REPLAY_SEALED"}
 
 
 def check_permission(role: OperatorRole, action: str) -> bool:
@@ -131,6 +131,7 @@ class GovernanceRequest(BaseModel):
     reason_taxonomy: OverrideReason
     override_task_id: Optional[str] = None
     authorized_by:   Optional[str] = None  # required for high-risk actions
+    expected_version: int = Field(default=1)
 
 
 # ── Constitutional Validator ──────────────────────────────────────────────
