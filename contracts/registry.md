@@ -24,6 +24,7 @@ This registry defines the unbreakable deterministic interfaces between TANTRA in
 ```
 
 ## 3. Internal Deterministic Output Contract (Eval -> Traversal)
+**Canonical 8-field Evaluation Contract**
 ```json
 {
   "trace_id": "string",
@@ -32,7 +33,8 @@ This registry defines the unbreakable deterministic interfaces between TANTRA in
   "failure_type": "string | null",
   "selected_task_id": "string",
   "selection_reason": "string",
-  "source": "task_graph"
+  "source": "task_graph",
+  "schema_version": "string"
 }
 ```
 
@@ -49,9 +51,16 @@ This registry defines the unbreakable deterministic interfaces between TANTRA in
 ```
 
 ## 5. Audit Log Contract (System -> Replay)
+**Replay Metadata Ownership**: Owned by `replay_audit`. `evaluation_engine` does not inject these fields into evaluator output.
+**Immutable Lineage Fields**: `event_type`, `parent_event_hash`, `replay_checkpoint_id`, `expected_version`.
+**Replay-Safe Guarantees**: Append-only persistence, fsync durability, OCC locking.
 ```json
 {
   "event_id": "string",
+  "event_type": "string",
+  "parent_event_hash": "string | null",
+  "replay_checkpoint_id": "string",
+  "expected_version": "integer",
   "trace_id": "string",
   "submission_id": "string",
   "action": "string",

@@ -5,6 +5,7 @@ Replay engine acts as the operational truth reconstructor.
 - It parses append-only `storage/audit_logs/`.
 - Every transition event requires an explicit `trace_id`.
 - Every payload requires an integrated JSON-deterministic SHA-256 `_checksum`.
+- The following **Immutable Lineage Fields** are appended by `replay_audit`: `event_type`, `parent_event_hash`, `replay_checkpoint_id`, `expected_version`, `checksum`, `timestamp`.
 
 ## 2. FORENSIC VALIDATION
 - `verify_audit_log`: Reads the file, parses JSON, and re-computes `_checksum`. Reports corrupt line numbers explicitly without failing the entire valid log segment.
@@ -13,7 +14,7 @@ Replay engine acts as the operational truth reconstructor.
 ## 3. DIVERGENCE HANDLING
 - Compares original evaluated output against replayed output.
 - Target fields: `evaluation_result`, `failure_type`, `selected_task_id`, `source`.
-- Raises `REPLAY_DIVERGENCE` loudly if drift occurs, refusing to allow mutated execution.
+- Raises `REPLAY_DIVERGENCE` loudly if drift occurs, refusing to allow mutated execution. This is strict replay divergence detection.
 
 ## 4. CORRUPTION RECOVERY
 - Interrupted writes resulting in truncated JSON (`JSONDecodeError`) are isolated.

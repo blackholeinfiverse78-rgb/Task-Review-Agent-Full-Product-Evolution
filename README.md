@@ -58,7 +58,7 @@ POST /api/v1/production/niyantran/submit
     |  No fallback. Missing mapping → HARD REJECT
     v
 [Step 5] Output Contract Enforcement    engine/execution_pipeline.py
-    |  Exactly 7 fields. Extra or missing → CONTRACT_VIOLATION
+    |  Exactly 8 fields. Extra or missing → CONTRACT_VIOLATION
     v
 [Step 6] Persist to storage             models/persistent_storage.py
     |  review_state = PENDING_REVIEW
@@ -88,8 +88,14 @@ POST /api/v1/production/niyantran/submit
 **Human Governance Layer:**
 - `api/review_routes.py` — approve / reject / modify endpoints
 - `models/review_models.py` — review state models
-- `storage/audit_logs/` — append-only audit trail
 
+**Nupur Replay Persistence:**
+- `replay_audit/atomic_persistence.py` — append-only atomic storage
+- `storage/audit_logs/` — append-only audit trail
+- `storage/checkpoints/` — deterministic replay reconstruction
+
+**Observability:**
+- `observability/observability.py` — structured operational visibility
 ---
 
 ## Review States
@@ -132,7 +138,7 @@ POST /api/v1/production/niyantran/submit
 
 ---
 
-## Output Contract (7 Fields — Internal)
+## Output Contract (8 Fields — Internal)
 
 ```json
 {
@@ -142,7 +148,8 @@ POST /api/v1/production/niyantran/submit
   "failure_type":      null,
   "selected_task_id":  "T-GOV-002",
   "selection_reason":  "PASS -> next_tasks[0] = T-GOV-002",
-  "source":            "task_graph"
+  "source":            "task_graph",
+  "schema_version":    "v1.0"
 }
 ```
 

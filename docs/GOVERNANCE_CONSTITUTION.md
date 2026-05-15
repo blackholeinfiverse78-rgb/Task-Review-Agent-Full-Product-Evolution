@@ -24,7 +24,7 @@ The following states are monotonically locked and cannot be reverted without a f
 - `AUDIT_LOCKED`
 - `REPLAY_SEALED`
 
-Once entering these states, any attempt to transition the state again will fail with `HTTP 409 Conflict`.
+Once entering these states, any attempt to transition the state again will fail with `HTTP 409 Conflict`. All transitions are protected by strict **Optimistic Concurrency Control (OCC) locking** utilizing the `expected_version` parameter to prevent concurrent race conditions.
 
 ## 4. DASHBOARD CONTAINMENT
 The operational dashboard is an observability surface ONLY.

@@ -13,7 +13,7 @@ logger = logging.getLogger("execution_pipeline")
 
 _REQUIRED_OUTPUT_FIELDS = {
     "trace_id", "submission_id", "evaluation_result",
-    "failure_type", "selected_task_id", "selection_reason", "source"
+    "failure_type", "selected_task_id", "selection_reason", "source", "schema_version"
 }
 
 class ExecutionPipeline:
@@ -94,7 +94,8 @@ class ExecutionPipeline:
                 "failure_type":      failure_type,
                 "selected_task_id":  graph_result["selected_task_id"],
                 "selection_reason":  graph_result["selection_reason"],
-                "source":            "task_graph"
+                "source":            "task_graph",
+                "schema_version":    str(task_data.get("schema_version", "v1.0"))
             }
 
             # 7. BOUNDARY ENFORCEMENT
@@ -126,7 +127,7 @@ class ExecutionPipeline:
             raise e
 
     def _enforce_boundary(self, output: Dict[str, Any]) -> None:
-        """Strict validation of the 7-field contract and domain rules"""
+        """Strict validation of the 8-field contract and domain rules"""
         missing = _REQUIRED_OUTPUT_FIELDS - set(output.keys())
         if missing:
             raise ValueError(f"HARD_REJECT: Missing output fields {missing}")
@@ -152,8 +153,8 @@ class ExecutionPipeline:
         if not output["selected_task_id"]:
             raise ValueError("HARD_REJECT: Missing task mapping. No alternative permitted.")
 
-        # 5. Output contract size (exactly 7 fields)
-        if len(output) != 7:
+        # 5. Output contract size (exactly 8 fields)
+        if len(output) != 8:
             extra = set(output.keys()) - _REQUIRED_OUTPUT_FIELDS
             raise ValueError(f"HARD_REJECT: Extra fields detected: {extra}")
 

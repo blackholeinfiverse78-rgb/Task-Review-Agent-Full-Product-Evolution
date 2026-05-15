@@ -15,7 +15,8 @@
 - Dashboard authority gateway gating.
 
 **Deterministic Guarantees:**
-- Identical `task_id` inputs ALWAYS route to the same destination output.
+- Evaluation Engine emits a strict, immutable 8-field internal contract (including `schema_version`).
+- Identical `task_id` inputs ALWAYS route to the same destination output via the Parikshak Traversal Engine.
 - Replay strictly matches original execution trace, else blocks automatically.
 - No auto-routing bypasses allowed.
 
@@ -40,8 +41,8 @@ All `modify` requests enforce dual `authorized_by` execution. Standard operators
 ---
 
 ## REPLAY
-**Integrity Model:**
-Replay logic runs entirely detached from operations. Every execution payload is locked via a JSON-deterministic SHA-256 hash inside `_checksum`.
+**Integrity Model & Metadata Ownership:**
+Replay logic runs entirely detached from operations. The `replay_audit` module exclusively owns replay metadata (`event_type`, `parent_event_hash`, `replay_checkpoint_id`, `expected_version`). These are NEVER injected into the evaluator's output. Every execution payload is locked via a JSON-deterministic SHA-256 hash inside `_checksum`.
 
 **Forensic Validation:**
 If replay detects unexpected behavior, it halts (`REPLAY_HARD_REJECT`) and issues a forensic divergence array mapping specific mutated attributes.
