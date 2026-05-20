@@ -10,7 +10,7 @@ import json
 from datetime import datetime
 
 # Add project root to path
-project_root = Path(__file__).parent
+project_root = Path(__file__).parent.parent
 sys.path.append(str(project_root))
 
 def test_direct_execution():
@@ -44,7 +44,7 @@ def test_direct_execution():
         print("\n=== REAL EXECUTION RESULT ===")
         print(f"Submission ID: {result['submission_id']}")
         print(f"Score: {result['review']['score']}")
-        print(f"Status: {result['review']['status']}")
+        print(f"Decision: {result['review']['decision']}")
         print(f"Next Task: {result['next_task']['title']}")
         
         # Format as API response (matching REVIEW_PACKET.md format)
@@ -52,8 +52,8 @@ def test_direct_execution():
             "submission_id": result["submission_id"],
             "review_summary": {
                 "score": result["review"]["score"],
-                "status": result["review"]["status"],
-                "readiness_percent": result["review"]["readiness_percent"]
+                "decision": result["review"]["decision"],
+                "review_state": result["review"]["review_state"]
             },
             "next_task_summary": {
                 "task_id": result["next_task"]["task_id"],

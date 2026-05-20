@@ -1,0 +1,13 @@
+{
+  "checkpoint_id": "ckpt-20260520121133-trace-te",
+  "trace_id": "trace-test-001-pass",
+  "timestamp": "2026-05-20T12:11:33.428413",
+  "state_hash": "99133543e0c995b5",
+  "state": {
+    "event_id": "evt-6921a6c416cd",
+    "action": "reject",
+    "submission_id": "sub-1c5021b1bef1-001-pass",
+    "operator_id": "op-reject-123"
+  },
+  "lineage_marker": true
+}

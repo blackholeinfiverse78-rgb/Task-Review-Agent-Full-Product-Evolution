@@ -15,7 +15,7 @@ import sys
 import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from app.services.graph_engine import graph_engine
+from task_selector.graph_engine import graph_engine
 from task_selector.task_selector import task_selector
 from task_selector.mandala_mapper import mandala_mapper
 

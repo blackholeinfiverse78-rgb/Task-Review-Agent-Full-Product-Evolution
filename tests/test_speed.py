@@ -10,11 +10,12 @@ valid_full = {
     "submitted_by": "Load Tester"
 }
 
-print("--- Testing Speed (127.0.0.1) ---")
-start = time.time()
-res_submit = requests.post(f"{BASE_URL}/submit", json=valid_full)
-tid = res_submit.json()["task_id"]
-res_review = requests.post(f"{BASE_URL}/review", json={"task_id": tid})
-duration = (time.time() - start) * 1000
-print(f"Status {res_review.status_code}, Overall Time {duration:.2f}ms")
-print(f"Engine Eval Time: {res_review.json()['meta']['evaluation_time_ms']}ms")
+if __name__ == "__main__":
+    print("--- Testing Speed (127.0.0.1) ---")
+    start = time.time()
+    res_submit = requests.post(f"{BASE_URL}/submit", json=valid_full)
+    tid = res_submit.json()["task_id"]
+    res_review = requests.post(f"{BASE_URL}/review", json={"task_id": tid})
+    duration = (time.time() - start) * 1000
+    print(f"Status {res_review.status_code}, Overall Time {duration:.2f}ms")
+    print(f"Engine Eval Time: {res_review.json()['meta']['evaluation_time_ms']}ms")

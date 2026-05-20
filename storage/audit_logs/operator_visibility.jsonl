@@ -3,3 +3,6 @@
 {"operator_id": "admin-1", "action": "approve", "submission_id": "sub-164f41a6ea3c--val-001", "outcome": "APPROVED", "timestamp": "2026-05-15T15:54:24.341717", "_checksum": "39bfb501963b08dd"}
 {"operator_id": "admin-1", "action": "approve", "submission_id": "sub-164f41a6ea3c--val-001", "outcome": "APPROVED", "timestamp": "2026-05-15T15:59:49.521835", "_checksum": "f30c3385666e3bcb"}
 {"operator_id": "admin-1", "action": "approve", "submission_id": "sub-164f41a6ea3c--val-001", "outcome": "APPROVED", "timestamp": "2026-05-15T16:08:55.194997", "_checksum": "5fab7d49a9e0c4ac"}
+{"operator_id": "op-approve-123", "action": "approve", "submission_id": "sub-730867379140-a11d8ffe", "outcome": "APPROVED", "timestamp": "2026-05-20T12:11:26.233574", "_checksum": "14492272d22e15f0"}
+{"operator_id": "op-reject-123", "action": "reject", "submission_id": "sub-1c5021b1bef1-001-pass", "outcome": "REJECTED", "timestamp": "2026-05-20T12:11:33.488229", "_checksum": "44768c860949e08d"}
+{"operator_id": "op-modify-123", "action": "modify", "submission_id": "sub-677601a3ee63-002-fail", "outcome": "MODIFIED", "timestamp": "2026-05-20T12:11:40.707115", "_checksum": "24a3300c7ad9a52b"}

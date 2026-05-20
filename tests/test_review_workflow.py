@@ -90,7 +90,11 @@ def test_3_approve():
         json={
             "trace_id": review["trace_id"],
             "submission_id": review["submission_id"],
-            "action": "approve"
+            "operator_id": "op-approve-123",
+            "operator_role": "REVIEW_OPERATOR",
+            "reason_taxonomy": "REQUIREMENT_CORRECTION",
+            "action": "approve",
+            "expected_version": 1
         }
     )
     
@@ -129,7 +133,11 @@ def test_4_reject():
         json={
             "trace_id": review["trace_id"],
             "submission_id": review["submission_id"],
-            "action": "reject"
+            "operator_id": "op-reject-123",
+            "operator_role": "REVIEW_OPERATOR",
+            "reason_taxonomy": "REQUIREMENT_CORRECTION",
+            "action": "reject",
+            "expected_version": 1
         }
     )
     
@@ -171,8 +179,13 @@ def test_5_modify():
         json={
             "trace_id": review["trace_id"],
             "submission_id": review["submission_id"],
+            "operator_id": "op-modify-123",
+            "operator_role": "SENIOR_REVIEW_OPERATOR",
+            "reason_taxonomy": "REQUIREMENT_CORRECTION",
             "action": "modify",
-            "override_task_id": override_task
+            "override_task_id": override_task,
+            "authorized_by": "exec-auth-456",
+            "expected_version": 1
         }
     )
     

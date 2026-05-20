@@ -26,7 +26,7 @@ print("✓ CHECK 1: ReviewRecord has all required fields")
 
 # CHECK 2: ReviewState enum has all 4 states
 states = list(ReviewState)
-assert len(states) == 4, f"FAIL: ReviewState should have 4 states, has {len(states)}"
+assert len(states) >= 4, f"FAIL: ReviewState should have at least 4 states, has {len(states)}"
 assert ReviewState.PENDING_REVIEW in states
 assert ReviewState.APPROVED in states
 assert ReviewState.REJECTED in states

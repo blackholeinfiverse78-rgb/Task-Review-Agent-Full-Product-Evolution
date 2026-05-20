@@ -19,16 +19,17 @@ def _patched_getaddrinfo(host, port, family=0, type=0, proto=0, flags=0):
     return _original_getaddrinfo(host, port, family, type, proto, flags)
 socket.getaddrinfo = _patched_getaddrinfo
 
-import requests, os
-from dotenv import load_dotenv
-load_dotenv()
-token = os.getenv('GITHUB_TOKEN')
-print('Token loaded:', bool(token))
-resp = requests.get(
-    'https://api.github.com/repos/octocat/Hello-World',
-    headers={'Authorization': f'token {token}', 'Accept': 'application/vnd.github.v3+json'},
-    timeout=15
-)
-print('Status:', resp.status_code)
-print('Repo:', resp.json().get('name'))
-print('Rate limit remaining:', resp.headers.get('X-RateLimit-Remaining'))
+if __name__ == "__main__":
+    import requests, os
+    from dotenv import load_dotenv
+    load_dotenv()
+    token = os.getenv('GITHUB_TOKEN')
+    print('Token loaded:', bool(token))
+    resp = requests.get(
+        'https://api.github.com/repos/octocat/Hello-World',
+        headers={'Authorization': f'token {token}', 'Accept': 'application/vnd.github.v3+json'},
+        timeout=15
+    )
+    print('Status:', resp.status_code)
+    print('Repo:', resp.json().get('name'))
+    print('Rate limit remaining:', resp.headers.get('X-RateLimit-Remaining'))

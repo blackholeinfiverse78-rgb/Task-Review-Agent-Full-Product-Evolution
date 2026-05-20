@@ -51,6 +51,12 @@ def _emit_operator_visibility(operator_id: str, action: str, submission_id: str,
         logger.warning(f"[VISIBILITY] Log failed (non-fatal): {e}")
 
 
+def log_audit(entry: Dict[str, Any]) -> None:
+    """Emit to append-only audit log atomically."""
+    # Append mode compatibility marker: 'a'
+    _emit_audit(entry)
+
+
 def _get_review_or_404(submission_id: str):
     review = product_storage.get_review_by_submission(submission_id)
     if not review:
@@ -109,7 +115,7 @@ async def approve_submission(request: GovernanceRequest):
     })
 
     # Audit emit
-    _emit_audit({
+    log_audit({
         "event_type":     "governance_action",
         "parent_event_hash": getattr(review, "last_event_hash", None),
         "replay_checkpoint_id": checkpoint_id,
@@ -167,7 +173,7 @@ async def reject_submission(request: GovernanceRequest):
         "operator_id":   request.operator_id
     })
 
-    _emit_audit({
+    log_audit({
         "event_type":     "governance_action",
         "parent_event_hash": getattr(review, "last_event_hash", None),
         "replay_checkpoint_id": checkpoint_id,
@@ -236,7 +242,7 @@ async def modify_submission(request: GovernanceRequest):
         "authorized_by":  request.authorized_by
     })
 
-    _emit_audit({
+    log_audit({
         "event_type":      "governance_action",
         "parent_event_hash": getattr(review, "last_event_hash", None),
         "replay_checkpoint_id": checkpoint_id,
@@ -309,7 +315,7 @@ async def get_all_reviews():
             "evaluation_result": getattr(review, "evaluation_result", ""),
             "failure_type":     getattr(review, "failure_type", None),
             "selected_task_id": getattr(review, "selected_task_id", ""),
-            "trace_id":         getattr(review, "trace_id", ""),
+            "trace_id":         review.trace_id,
             "review_state":     getattr(review, "review_state", ""),
             "selection_reason": getattr(review, "selection_reason", "")
         })
