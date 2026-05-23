@@ -23,7 +23,7 @@ const Navigation = () => {
         <nav className="navigation">
             <div className="nav-brand">
                 <Link to="/" className="brand-link">
-                    <h1>🛡️ Task Review AI</h1>
+                    <h1>🛡️ Parikshak</h1>
                     <span className="subtitle">Autonomous Lifecycle System</span>
                 </Link>
             </div>

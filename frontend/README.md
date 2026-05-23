@@ -1,6 +1,6 @@
-# React Frontend for Task Review AI
+# React Frontend for Parikshak
 
-This is a modern React-based frontend for the Task Review AI system.
+This is a modern React-based frontend for the Parikshak system.
 
 ## Local Development
 

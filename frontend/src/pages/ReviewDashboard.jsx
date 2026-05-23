@@ -8,10 +8,16 @@ const ReviewDashboard = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    const getBackendUrl = () => {
+        let backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000';
+        return backendUrl.replace(/\/+$/, '');
+    };
+
     const fetchSubmissions = async () => {
         try {
             setLoading(true);
-            const response = await fetch('/api/v1/review/all');
+            const backendUrl = getBackendUrl();
+            const response = await fetch(`${backendUrl}/api/v1/review/all`);
             if (!response.ok) throw new Error('Failed to fetch submissions');
             const data = await response.json();
             setSubmissions(data);
@@ -27,17 +33,25 @@ const ReviewDashboard = () => {
         fetchSubmissions();
     }, []);
 
-    const handleAction = async (action, submission, overrideTaskId = null) => {
+    const handleAction = async (action, submission, metadata) => {
         try {
-            const response = await fetch(`/api/v1/review/${action}`, {
+            const payload = {
+                trace_id: submission.trace_id || "",
+                submission_id: submission.submission_id || "",
+                action: action || "",
+                operator_id: metadata?.operator_id || "operator-1",
+                operator_role: metadata?.operator_role || "REVIEW_OPERATOR",
+                reason_taxonomy: metadata?.reason_taxonomy || "REQUIREMENT_CORRECTION",
+                expected_version: metadata?.expected_version ?? 1,
+                override_task_id: metadata?.override_task_id || null,
+                authorized_by: metadata?.authorized_by || null
+            };
+
+            const backendUrl = getBackendUrl();
+            const response = await fetch(`${backendUrl}/api/v1/review/${action}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    trace_id: submission.trace_id,
-                    submission_id: submission.submission_id,
-                    action: action,
-                    override_task_id: overrideTaskId
-                })
+                body: JSON.stringify(payload)
             });
 
             if (!response.ok) {

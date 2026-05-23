@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 
 const SubmissionDetail = ({ submission, onAction, onClose }) => {
+    const [operatorId, setOperatorId] = useState('operator-1');
+    const [operatorRole, setOperatorRole] = useState('REVIEW_OPERATOR');
+    const [reasonTaxonomy, setReasonTaxonomy] = useState('REQUIREMENT_CORRECTION');
+    const [authorizedBy, setAuthorizedBy] = useState('');
     const [overrideTaskId, setOverrideTaskId] = useState('');
 
     if (!submission) return null;
@@ -51,15 +55,78 @@ const SubmissionDetail = ({ submission, onAction, onClose }) => {
 
                     {submission.review_state === 'PENDING_REVIEW' && (
                         <div className="pt-4 border-t border-slate-200 dark:border-slate-700 space-y-4">
+                            <div className="grid grid-cols-2 gap-4 p-4 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700">
+                                <div className="col-span-2">
+                                    <h3 className="text-sm font-bold text-slate-700 dark:text-slate-300">Governance Credentials</h3>
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-semibold text-slate-500 mb-1">Operator ID</label>
+                                    <input 
+                                        type="text" 
+                                        value={operatorId}
+                                        onChange={(e) => setOperatorId(e.target.value)}
+                                        className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-sm outline-none focus:ring-2 focus:ring-indigo-500"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-semibold text-slate-500 mb-1">Operator Role</label>
+                                    <select 
+                                        value={operatorRole}
+                                        onChange={(e) => setOperatorRole(e.target.value)}
+                                        className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-sm outline-none focus:ring-2 focus:ring-indigo-500"
+                                    >
+                                        <option value="REVIEW_OPERATOR">REVIEW_OPERATOR</option>
+                                        <option value="SENIOR_REVIEW_OPERATOR">SENIOR_REVIEW_OPERATOR</option>
+                                        <option value="EXECUTION_AUTHORIZER">EXECUTION_AUTHORIZER</option>
+                                        <option value="SYSTEM_AUDITOR">SYSTEM_AUDITOR</option>
+                                        <option value="REPLAY_AUDITOR">REPLAY_AUDITOR</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-semibold text-slate-500 mb-1">Reason Taxonomy</label>
+                                    <select 
+                                        value={reasonTaxonomy}
+                                        onChange={(e) => setReasonTaxonomy(e.target.value)}
+                                        className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-sm outline-none focus:ring-2 focus:ring-indigo-500"
+                                    >
+                                        <option value="REQUIREMENT_CORRECTION">REQUIREMENT_CORRECTION</option>
+                                        <option value="SAFETY_BLOCK">SAFETY_BLOCK</option>
+                                        <option value="INVALID_SUBMISSION">INVALID_SUBMISSION</option>
+                                        <option value="POLICY_CONFLICT">POLICY_CONFLICT</option>
+                                        <option value="HUMAN_VALIDATION_FAILURE">HUMAN_VALIDATION_FAILURE</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-semibold text-slate-500 mb-1">Authorized By (Modify Only)</label>
+                                    <input 
+                                        type="text" 
+                                        placeholder="Required for Modify"
+                                        value={authorizedBy}
+                                        onChange={(e) => setAuthorizedBy(e.target.value)}
+                                        className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-sm outline-none focus:ring-2 focus:ring-indigo-500"
+                                    />
+                                </div>
+                            </div>
+
                             <div className="flex gap-3">
                                 <button 
-                                    onClick={() => onAction('approve', submission)}
+                                    onClick={() => onAction('approve', submission, {
+                                        operator_id: operatorId,
+                                        operator_role: operatorRole,
+                                        reason_taxonomy: reasonTaxonomy,
+                                        expected_version: submission.expected_version || 1
+                                    })}
                                     className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-emerald-600/20"
                                 >
                                     APPROVE
                                 </button>
                                 <button 
-                                    onClick={() => onAction('reject', submission)}
+                                    onClick={() => onAction('reject', submission, {
+                                        operator_id: operatorId,
+                                        operator_role: operatorRole,
+                                        reason_taxonomy: reasonTaxonomy,
+                                        expected_version: submission.expected_version || 1
+                                    })}
                                     className="flex-1 bg-rose-600 hover:bg-rose-700 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-rose-600/20"
                                 >
                                     REJECT
@@ -77,8 +144,15 @@ const SubmissionDetail = ({ submission, onAction, onClose }) => {
                                         className="flex-1 px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
                                     />
                                     <button 
-                                        onClick={() => onAction('modify', submission, overrideTaskId)}
-                                        disabled={!overrideTaskId}
+                                        onClick={() => onAction('modify', submission, {
+                                            operator_id: operatorId,
+                                            operator_role: operatorRole,
+                                            reason_taxonomy: reasonTaxonomy,
+                                            expected_version: submission.expected_version || 1,
+                                            override_task_id: overrideTaskId,
+                                            authorized_by: authorizedBy || undefined
+                                        })}
+                                        disabled={!overrideTaskId || !authorizedBy}
                                         className="bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white px-6 py-2 rounded-lg font-bold text-sm transition-all"
                                     >
                                         MODIFY

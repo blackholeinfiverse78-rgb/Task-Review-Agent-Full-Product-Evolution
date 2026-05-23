@@ -45,7 +45,7 @@ const Dashboard = () => {
             <header className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div className="space-y-1">
                     <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white">
-                        Task Review <span className="text-blue-600">Agent</span>
+                        Parikshak
                     </h1>
                     <p className="text-slate-500 font-medium">Enterprise-grade autonomous evaluation system</p>
                 </div>

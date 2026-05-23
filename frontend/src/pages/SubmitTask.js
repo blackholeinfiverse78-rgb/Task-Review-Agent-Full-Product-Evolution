@@ -20,7 +20,7 @@ const SubmitTask = () => {
 
     // Available modules from the registry - schema_version must match registry
     const availableModules = [
-        { id: 'task-review-agent',       name: 'Task Review Agent',        schema: 'v1.0', description: 'General task review and evaluation' },
+        { id: 'task-review-agent',       name: 'Parikshak',        schema: 'v1.0', description: 'General task review and evaluation' },
         { id: 'core-development',        name: 'Core Development',         schema: 'v1.0', description: 'Core system development tasks' },
         { id: 'advanced-features',       name: 'Advanced Features',        schema: 'v1.0', description: 'Advanced feature implementation' },
         { id: 'system-integration',      name: 'System Integration',       schema: 'v1.0', description: 'System integration and connectivity' },
