@@ -88,6 +88,24 @@ python -X utf8 scripts/generate_proofs.py
 
 ---
 
+## Evaluation Flow (Task Submission → PASS/FAIL)
+
+Every submission through `POST /api/v1/production/niyantran/submit` runs this deterministic pipeline:
+
+1. **REVIEW_PACKET Gate** — `REVIEW_PACKET.md` must be present and valid or the submission is hard-rejected.
+2. **Registry Validation** — `module_id` and `schema_version` must match the static registry.
+3. **Signal Collection** — Repository, title, description, and PDF signals are collected (no scoring authority).
+4. **Rule Engine** — 4 binary checks in strict order. First failure stops execution:
+   - `schema_violation`: no repo and description < 50 words
+   - `incomplete`: no code, no proof (README/tests/docs), no architecture keywords, or < 3 files
+   - `incorrect_logic`: delivery ratio < 0.6, missing features > 3, or description < 80 words
+   - `integration_fail`: repo accessible but metadata missing
+5. **Graph Traversal** — PASS routes to `next_tasks[0]`, FAIL routes to `failure_tasks[failure_type][0]`. No fallback.
+6. **Output Contract** — Exactly 8 fields enforced: `trace_id`, `submission_id`, `evaluation_result`, `failure_type`, `selected_task_id`, `selection_reason`, `source`, `schema_version`.
+7. **Human Review Queue** — All results enter `PENDING_REVIEW`. No assignment is released without human approval.
+
+---
+
 ## Tech Stack
 - **Backend**: Python 3.11+, FastAPI, SQLite (WAL mode, Trigger locked)
 - **Serialization**: Canonical JSON (NFC UTF-8, sorted keys)
