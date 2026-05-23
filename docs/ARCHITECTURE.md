@@ -1,92 +1,60 @@
-# 🏗️ System Architecture (v6.0)
+# 🏗️ System Architecture (v6.0 - Gov-OS Hardened)
 
-The Parikshak-Niyantran system is a fully deterministic, rule-based evaluation and task-routing platform. It eliminates numeric scoring and heuristics in favor of strict binary rules and a pre-defined task graph.
+The Parikshak system is a fully deterministic, rule-based evaluation and task-routing platform. It is designed as a Governed Operational System (Gov-OS) with strict system boundaries, immutable event-sourced state reconstruction, and human-in-the-loop validation constraints.
 
 ---
 
-## 1. System Boundary Validation
-
-The system enforces a strict separation between evaluation (authority) and routing (execution).
+## 1. System Boundary Separation (Separation of Powers)
 
 ### 1.1 Sri Satya (Evaluation Engine)
-- **Primary Responsibility**: Computes `evaluation_result` (PASS/FAIL) and `failure_type`.
-- **Authority**: The ONLY component allowed to perform scoring or evaluation.
-- **Independence**: Has zero knowledge of the task graph, mapping, or traversal logic.
+- **Authority**: The sole component permitted to evaluate task submissions (PASS/FAIL) and assign failure types.
+- **Independence**: Has no knowledge of the task graph, mapping, or routing logic.
+- **Rules**: Executes 4 strict binary checks (Schema, Completeness, Logic, Integration).
 
-### 1.2 Parikshak (Task Selector)
-- **Primary Responsibility**: Mapping results to nodes and performing graph traversal.
-- **Constraint**: MUST NOT perform evaluation or infer failure types.
+### 1.2 Parikshak (Task Selector / Routing Engine)
+- **Authority**: Traverses the pre-defined task graph (`db/niyantran_tasks.json`) to select the next task.
+- **Constraint**: Must not perform scoring, evaluation, or infer failure types.
 - **Inputs**: Accepts exactly `{ evaluation_result, failure_type, trace_id, submission_id }`.
 
 ---
 
-## 2. Core Components
-
-### 2.1 Rule Engine (`evaluation_engine/rule_engine.py`)
-Deterministic binary rule resolver. Runs 4 checks in strict order:
-1. **Schema Check**: Validates minimum description length and repository presence.
-2. **Completeness Check**: Verifies presence of code, proof (README/tests), and architecture signals.
-3. **Logic Check**: Validates effort (word count) and delivery alignment.
-4. **Integration Check**: Verifies repository accessibility and metadata.
-
-### 2.2 Graph Engine (`engine/task_graph_engine.py`)
-Stateless graph traversal utility.
-- Loads `db/niyantran_tasks.json`.
-- Traverses from `current_task_id` based on result.
-- PASS → `next_tasks[0]`
-- FAIL → `failure_tasks[failure_type][0]`
-
-### 2.3 Final Convergence (`task_selector/final_convergence.py`)
-The system orchestrator.
-- Calls Sri Satya for evaluation.
-- Calls TaskGraphEngine for routing.
-- Enforces the **7-field Output Contract**.
-- Triggers **Bucket Logging**.
-
----
-
-## 3. Data Flow
+## 2. Gov-OS Hardened Storage Layer
 
 ```mermaid
 graph TD
-    A[Niyantran Submission] --> B[niyantran_connection.py]
-    B --> C[Sri Satya Orchestrator]
-    C --> D[ReviewPacketParser]
-    D -- Pass --> E[RegistryValidator]
-    E -- Pass --> F[SignalEngine]
-    F --> G[RuleEngine]
-    G -- Result --> H[FinalConvergence]
-    H --> I[TaskGraphEngine]
-    I --> J[Output Contract Guard]
-    J --> K((7-field JSON Response))
+    A[Gov-OS Mutation Request] --> B[Single-Writer Queue & Mutex]
+    B --> C[Governance Envelope Validation]
+    C -- Checksum & Signature Validation --> D[SQLite Event Journal]
+    D -- Monotonic Event Sequence --> E[WAL Mode & DB Trigger Lock]
+    E --> F[Read Model State Reconstructor]
+    F --> G[Backup Manifest & Checkpoint Manager]
 ```
 
----
+### 2.1 Immutable SQLite Event Journal
+- **No Mutations**: Database triggers (`prevent_update_events`, `prevent_delete_events`) disallow `UPDATE` and `DELETE` operations on the `events` table.
+- **Monotonic Sequence**: Every transaction increments a monotonic event sequence.
+- **WAL Mode**: Write-Ahead Logging ensures concurrent read safety.
 
-## 4. Determinism Guards
+### 2.2 Replay Checkpoint & Rollback System
+- **Deterministic Checkpoints**: Backup manifests store the exact database transaction sequence along with a cryptographic `state_hash` of the reconstructed read models.
+- **Rollback Anchors**: System rollback can be executed to restore state up to any arbitrary sequence number by re-applying the event log.
 
-1. **Upstream Trace ID**: The `trace_id` is never generated internally. It must come from Niyantran. Missing ID = HARD REJECT.
-2. **Deterministic Submission ID**: Generated as `sub-{content_hash}-{attempt_hash}` using MD5 on task metadata + trace_id.
-3. **No Randomness**: No use of `uuid.uuid4()`, `random`, or `time.time()` in the decision path.
-4. **Pure Mapping**: No keyword-based domain routing or keyword-guessing in graph selection.
-
----
-
-## 5. Output Contract (EXACT)
-
-Every successful response contains exactly these 7 fields:
-1. `trace_id`: The original ID from upstream.
-2. `submission_id`: The deterministic submission hash.
-3. `evaluation_result`: "PASS" or "FAIL".
-4. `failure_type`: Valid enum or `null`.
-5. `selected_task_id`: The next task ID from the DB.
-6. `selection_reason`: Traceable string explaining the route.
-7. `source`: Always "task_graph".
+### 2.3 Startup Safety Gate
+Halts boot if the scanner detects any of the following 6 Gov-OS flags:
+1. `HASH_MISMATCH`: Stored event hashes do not match computed hashes.
+2. `ORPHAN_EVENT`: Events exist that cannot be linked to the parent chain.
+3. `SEQUENCE_BREAK`: Non-monotonic sequence gaps in the database.
+4. `SCHEMA_DRIFT`: Logged events fail frozen schema validation.
+5. `SNAPSHOT_DIVERGENCE`: Reconstructed states do not match snapshot hashes.
+6. `CHECKPOINT_MISMATCH`: Local database doesn't match backup manifest records.
 
 ---
 
-## 6. Storage Layer
+## 3. Concurrency & Mutex Protection
+- **Single-Writer Queue**: A synchronous mutex serializes write transactions, enforcing strict transaction order and preventing concurrency conflicts.
 
-- **Bucket Logs**: Every evaluation is logged to `storage/bucket_logs/evaluations_{date}.jsonl`.
-- **Format**: JSONL (JSON lines) for high-performance append-only auditing.
-- **Searchable Index**: `evaluation_index.jsonl` maintained for rapid trace-id lookups.
+---
+
+## 4. GPT Bridge Quarantine
+- **Export-Only**: Allows exporting signed system snapshots.
+- **No DB Mutation**: Imports must be converted to draft scaffolds awaiting manual operator verification and human governance approval before commit.

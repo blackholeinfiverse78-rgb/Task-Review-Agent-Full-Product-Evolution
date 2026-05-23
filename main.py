@@ -1,5 +1,5 @@
 """
-Task Review AI - Production
+Parikshak - Production
 Version: 1.1.1
 """
 import sys
@@ -8,7 +8,7 @@ import os
 from fastapi import FastAPI, Request, status
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
-from api import lifecycle, tts, production, review_routes
+from api import lifecycle, tts, production, review_routes, task_review, gov_os_routes
 from fastapi.middleware.cors import CORSMiddleware
 import logging
 import json
@@ -24,7 +24,7 @@ logging.basicConfig(
 logger = logging.getLogger("task_review_system")
 
 app = FastAPI(
-    title="Task Review AI - Production v1.0",
+    title="Parikshak - Production v1.0",
     description="Deterministic Engineering Task Analysis System — [DFA VERIFIED | CORE LOCKED]",
     version="1.0.0"
 )
@@ -80,6 +80,8 @@ app.include_router(lifecycle.router, prefix="/api/v1", tags=["Lifecycle"])
 app.include_router(tts.router, prefix="/api/v1", tags=["TTS"])
 app.include_router(production.router, prefix="/api/v1", tags=["Production"])
 app.include_router(review_routes.router)
+app.include_router(task_review.router)
+app.include_router(gov_os_routes.router)
 
 
 @app.get("/")

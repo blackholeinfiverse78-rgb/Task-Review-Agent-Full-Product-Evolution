@@ -78,6 +78,20 @@ class ExecutionPipeline:
             eval_res = eval_output.get("evaluation_result", "FAIL")
             failure_type = eval_output.get("failure_type")
 
+            # Run human-in-loop escalation check
+            try:
+                from task_selector.human_in_loop import human_in_loop
+                decision_dict = {"decision": "APPROVED" if eval_res == "PASS" else "REJECTED"}
+                signals_dict = {"repository_available": bool(task_data.get("github_repo_link")), "domain": "engineering"}
+                human_in_loop.process_with_human_loop(
+                    evaluation_result=eval_output,
+                    decision_result=decision_dict,
+                    supporting_signals=signals_dict,
+                    trace_id=trace_id
+                )
+            except Exception as e:
+                logger.warning(f"Human-in-loop escalation check failed (non-fatal): {e}")
+
             # 5. MAPPING & GRAPH TRAVERSAL (Phase 1: Parikshak Logic)
             current_task_id = previous_task_id or task_data.get("task_id") or "T-GOV-001"
             graph_result = task_graph_engine.traverse(
@@ -162,6 +176,9 @@ class ExecutionPipeline:
         decision = "APPROVED" if output["evaluation_result"] == "PASS" else "REJECTED"
         # 8.2 In-memory persistence for Dashboard (Governance Layer)
         try:
+            score_val = 100 if output["evaluation_result"] == "PASS" else 40
+            status_val = "pass" if output["evaluation_result"] == "PASS" else "fail"
+
             submission = TaskSubmission(
                 submission_id=output["submission_id"],
                 task_id=task_data.get("task_id", "unknown"),
@@ -183,7 +200,12 @@ class ExecutionPipeline:
                 reviewed_at=datetime.now(),
                 selected_task_id=output["selected_task_id"],
                 selection_reason=output["selection_reason"],
-                review_state="PENDING_REVIEW"
+                review_state="PENDING_REVIEW",
+                score=score_val,
+                readiness_percent=score_val,
+                status=status_val,
+                candidate_name=task_data.get("submitted_by", "system"),
+                task_title=task_data.get("task_title", "Unknown")
             )
             
             product_storage.store_submission(submission)

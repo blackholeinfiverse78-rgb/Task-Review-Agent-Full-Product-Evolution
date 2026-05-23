@@ -2,10 +2,11 @@
 Live API Test - Dynamic Evaluation Engine
 Tests the new dynamic scoring with the running backend
 """
-import requests
+from fastapi.testclient import TestClient
+from main import app
 import json
 
-BASE_URL = "http://localhost:8000/api/v1/lifecycle"
+client = TestClient(app)
 
 def test_dynamic_evaluation_api():
     print("=" * 60)
@@ -44,7 +45,7 @@ def test_dynamic_evaluation_api():
         "submitted_by": "Dynamic Test User"
     }
     
-    response1 = requests.post(f"{BASE_URL}/submit", json=high_quality_task)
+    response1 = client.post("/api/v1/lifecycle/submit", data=high_quality_task)
     data1 = response1.json()
     
     print(f"Status Code: {response1.status_code}")
@@ -54,7 +55,7 @@ def test_dynamic_evaluation_api():
     print(f"Readiness: {data1['review_summary']['readiness_percent']}%")
     
     # Get detailed review
-    review_response1 = requests.get(f"{BASE_URL}/review/{data1['submission_id']}")
+    review_response1 = client.get(f"/api/v1/lifecycle/review/{data1['submission_id']}")
     review1 = review_response1.json()
     
     print(f"Technical Quality: {review1['analysis']['technical_quality']}/100")
@@ -83,7 +84,7 @@ def test_dynamic_evaluation_api():
         "submitted_by": "Dynamic Test User"
     }
     
-    response2 = requests.post(f"{BASE_URL}/submit", json=medium_quality_task)
+    response2 = client.post("/api/v1/lifecycle/submit", data=medium_quality_task)
     data2 = response2.json()
     
     print(f"Status Code: {response2.status_code}")
@@ -91,7 +92,7 @@ def test_dynamic_evaluation_api():
     print(f"Status: {data2['review_summary']['status']}")
     
     # Get detailed review
-    review_response2 = requests.get(f"{BASE_URL}/review/{data2['submission_id']}")
+    review_response2 = client.get(f"/api/v1/lifecycle/review/{data2['submission_id']}")
     review2 = review_response2.json()
     
     print(f"Failure Reasons: {len(review2['failure_reasons'])}")
@@ -108,7 +109,7 @@ def test_dynamic_evaluation_api():
         "submitted_by": "Dynamic Test User"
     }
     
-    response3 = requests.post(f"{BASE_URL}/submit", json=low_quality_task)
+    response3 = client.post("/api/v1/lifecycle/submit", data=low_quality_task)
     data3 = response3.json()
     
     print(f"Status Code: {response3.status_code}")
@@ -122,7 +123,7 @@ def test_dynamic_evaluation_api():
     print("Submitting identical task 3 times...")
     scores = []
     for i in range(3):
-        response = requests.post(f"{BASE_URL}/submit", json=high_quality_task)
+        response = client.post("/api/v1/lifecycle/submit", data=high_quality_task)
         data = response.json()
         scores.append(data['review_summary']['score'])
     
@@ -144,6 +145,9 @@ def test_dynamic_evaluation_api():
     print("✓ Score differentiation working")
     print("✓ API integration successful")
     print("=" * 60)
-
-if __name__ == "__main__":
-    test_dynamic_evaluation_api()
+    
+    # Assertions to make it a real automated test
+    assert response1.status_code == 200
+    assert response2.status_code == 200
+    assert response3.status_code == 200
+    assert len(set(scores)) == 1

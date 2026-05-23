@@ -64,15 +64,28 @@ class ReplayIntegrityEngine:
         for fname in sorted(os.listdir(CHECKPOINT_DIR)):
             if not fname.endswith(".json"):
                 continue
+            # Fast filename suffix filter
+            if not fname.replace(".json", "").endswith(f"-{trace_id[:8]}"):
+                continue
             try:
                 ckpt = load_checkpoint(fname.replace(".json", ""))
                 if ckpt.get("trace_id") == trace_id:
                     checkpoints.append(ckpt)
             except ValueError as e:
-                raise ValueError(
-                    f"REPLAY_HARD_REJECT: Checkpoint chain broken for trace_id='{trace_id}'. "
-                    f"Error: {e}"
-                )
+                # Read raw trace_id to see if it belongs to our target trace
+                try:
+                    filepath = os.path.join(CHECKPOINT_DIR, fname)
+                    with open(filepath, "r", encoding="utf-8") as f:
+                        payload = json.load(f)
+                    file_trace_id = payload.get("trace_id")
+                except Exception:
+                    file_trace_id = None
+
+                if file_trace_id == trace_id:
+                    raise ValueError(
+                        f"REPLAY_HARD_REJECT: Checkpoint chain broken for trace_id='{trace_id}'. "
+                        f"Error: {e}"
+                    )
 
         if not checkpoints:
             return {"trace_id": trace_id, "checkpoints": 0, "chain_valid": True, "warnings": ["no checkpoints found"]}

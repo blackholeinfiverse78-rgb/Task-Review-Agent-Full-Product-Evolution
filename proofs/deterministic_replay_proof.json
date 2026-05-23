@@ -1,0 +1,38 @@
+{
+    "timestamp": "2026-05-23T13:03:29.174500Z",
+    "state_1_hash": "8d4eeea32de1ed3e12d0364a3935456349f5746424d205977ba06b7968adf68e",
+    "state_2_hash": "8d4eeea32de1ed3e12d0364a3935456349f5746424d205977ba06b7968adf68e",
+    "match": true,
+    "reconstructed_read_models": {
+        "candidate_profiles": {
+            "cand-proof-001": {
+                "candidate_id": "cand-proof-001",
+                "github_handle": "nikhil-proof",
+                "name": "Nikhil Proof",
+                "performance_score": 99.0,
+                "skills": [
+                    "python",
+                    "governance"
+                ]
+            },
+            "cand-proof-002": {
+                "candidate_id": "cand-proof-002",
+                "github_handle": "nikhil-proof",
+                "name": "Alice Proof",
+                "performance_score": 99.0,
+                "skills": [
+                    "python",
+                    "governance"
+                ]
+            }
+        },
+        "task_lineage": {},
+        "review_history": {},
+        "assignment_history": {},
+        "reasoning_artifacts": {},
+        "ecosystem_dependency_context": {},
+        "product_mapping": {},
+        "strategic_notes": {},
+        "learning_signals": {}
+    }
+}

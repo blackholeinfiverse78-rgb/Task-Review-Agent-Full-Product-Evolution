@@ -76,13 +76,18 @@ class NiyantranConnectionService:
             previous_task_id=task_data.get("current_task_id")
         )
 
+        filtered_result = {
+            k: v for k, v in result.items()
+            if k in {"trace_id", "submission_id", "evaluation_result", "failure_type", "selected_task_id", "selection_reason", "source"}
+        }
+
         logger.info(
             f"[NIYANTRAN] Execution complete: trace_id={trace_id} "
-            f"result={result['evaluation_result']} "
-            f"selected={result['selected_task_id']}"
+            f"result={filtered_result['evaluation_result']} "
+            f"selected={filtered_result['selected_task_id']}"
         )
 
-        return result
+        return filtered_result
 
     def health_check(self) -> Dict[str, Any]:
         bucket_stats = bucket_integration.get_bucket_stats()

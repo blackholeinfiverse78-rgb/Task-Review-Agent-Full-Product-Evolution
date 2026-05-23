@@ -1,0 +1,10 @@
+{
+    "timestamp": "2026-05-23T13:03:29.344132Z",
+    "manifest_used": "storage/backups\\snapshot_seq_1_20260523_130329.json",
+    "state_before_restore_candidates": [
+        "cand-proof-001",
+        "cand-proof-002"
+    ],
+    "state_after_restore_candidates": [],
+    "restore_successful": true
+}

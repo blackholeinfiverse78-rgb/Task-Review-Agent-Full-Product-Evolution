@@ -1,0 +1,15 @@
+{
+  "checkpoint_id": "ckpt-20260523014832-trace-re",
+  "trace_id": "trace-recon-9d954e08",
+  "timestamp": "2026-05-23T01:48:32.520023",
+  "state_hash": "178f9edd7651a69b",
+  "state": {
+    "event_id": "evt-d18e1891",
+    "action": "modify",
+    "submission_id": "sub-recon-001",
+    "original_task": "T-GOV-001",
+    "override_task": "T-GOV-002",
+    "operator_id": "senior-op-recon"
+  },
+  "lineage_marker": true
+}

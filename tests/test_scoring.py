@@ -15,7 +15,7 @@ def test_scoring_with_good_task():
     """Test with a well-structured task that should get higher scores"""
     
     result = final_convergence.process_with_convergence(
-        task_title="Advanced Microservices Authentication API with JWT, OAuth2, RBAC, Rate Limiting, and Docker Containerization",
+        task_title="Advanced Microservices Auth API: JWT, OAuth2, RBAC, Rate Limiting, and Docker Containerization",
         task_description="""
         Build a comprehensive enterprise-grade authentication microservice with the following technical requirements:
         

@@ -3,7 +3,7 @@ import json, os, sys
 results = {}
 
 # CHECK 1 - Structure
-dirs = ['evaluation_engine', 'task_selector', 'db', 'engine', 'api']
+dirs = ['evaluation_engine', 'task_selector', 'db', 'api']
 missing_dirs = [d for d in dirs if not os.path.isdir(d)]
 results['CHECK1_structure'] = 'PASS' if not missing_dirs else f'FAIL: missing {missing_dirs}'
 
@@ -51,7 +51,7 @@ mm = open('task_selector/mandala_mapper.py', encoding='utf-8').read()
 results['CHECK5_mandala'] = 'PASS' if 'MANDALA_HARD_REJECT' in mm else 'FAIL: no hard reject'
 
 # CHECK 6 - Graph engine
-ge = open('engine/task_graph_engine.py', encoding='utf-8').read()
+ge = open('task_selector/task_graph_engine.py', encoding='utf-8').read()
 uses_next = 'candidates[0]' in ge
 uses_failure = 'failure_tasks' in ge
 no_fallback = 'fallback' not in ge.lower()

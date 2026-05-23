@@ -3,12 +3,14 @@
 Data Consistency Fix Test - Validates score aggregation pipeline
 Tests both valid submissions and registry rejections
 """
-import requests
+from fastapi.testclient import TestClient
+from main import app
 import json
+
+client = TestClient(app)
 
 def test_data_consistency_fix():
     """Test the data consistency fix"""
-    base_url = "https://task-review-agent-full-product-evolution.onrender.com"
     
     print("DATA CONSISTENCY FIX TEST")
     print("=" * 50)
@@ -25,7 +27,7 @@ def test_data_consistency_fix():
         "schema_version": "v1.0"
     }
     
-    response = requests.post(f"{base_url}/api/v1/lifecycle/submit", data=valid_data)
+    response = client.post("/api/v1/lifecycle/submit", data=valid_data)
     
     if response.status_code == 200:
         result = response.json()
@@ -38,7 +40,7 @@ def test_data_consistency_fix():
         print(f"API Response - Score: {api_score}, Status: {api_status}")
         
         # Get detailed review
-        review_response = requests.get(f"{base_url}/api/v1/lifecycle/review/{submission_id}")
+        review_response = client.get(f"/api/v1/lifecycle/review/{submission_id}")
         
         if review_response.status_code == 200:
             review_data = review_response.json()
@@ -102,7 +104,7 @@ def test_data_consistency_fix():
     invalid_data = valid_data.copy()
     invalid_data["module_id"] = "invalid-module-test"
     
-    response = requests.post(f"{base_url}/api/v1/lifecycle/submit", data=invalid_data)
+    response = client.post("/api/v1/lifecycle/submit", data=invalid_data)
     
     if response.status_code == 200:
         result = response.json()

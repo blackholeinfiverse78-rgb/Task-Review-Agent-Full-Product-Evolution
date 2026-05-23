@@ -1,11 +1,11 @@
 """
 Task Review Engine - Final Convergence Adapter
-Bridges the final convergence system with the ReviewOutput schema.
+Bridges the evaluation engine with the ReviewOutput schema.
 """
 from typing import Optional
 from contracts.schemas import Task, ReviewOutput, Analysis, Meta
 from contracts.review_engine_interface import ReviewEngineInterface
-from task_selector.final_convergence import final_convergence
+from evaluation_engine.orchestrator import evaluation_orchestrator
 import logging
 import time
 
@@ -13,15 +13,22 @@ logger = logging.getLogger("review_engine")
 
 class ReviewEngine(ReviewEngineInterface):
     def __init__(self):
-        # Use final convergence system instead of evaluation engine
         pass
 
-    def evaluate(self, task: dict) -> dict:
-        task_obj = Task(**task)
-        result = self.review_task(task_obj)
-        return result.model_dump()
+    # ── Allow ReviewEngine.review_task(task) (classmethod-style calls from tests) ──
+    def __class_getitem__(cls, item):
+        return cls
 
-    def review_task(self, task: Task) -> ReviewOutput:
+    @classmethod
+    def review_task(cls, task: Task) -> "ReviewOutput":
+        """
+        Evaluate task and return ReviewOutput.
+        Callable as both classmethod and instance method.
+        """
+        return cls._do_review(task)
+
+    @classmethod
+    def _do_review(cls, task: Task) -> "ReviewOutput":
         start_time = time.time()
 
         # Clean description — strip legacy GitHub marker if present
@@ -51,46 +58,77 @@ class ReviewEngine(ReviewEngineInterface):
             except (IndexError, AttributeError):
                 pass
 
-        # Use final convergence system for evaluation
-        convergence_result = final_convergence.process_with_convergence(
+        # Use deterministic evaluation engine
+        eval_output = evaluation_orchestrator.evaluate_submission(
             task_title=task.task_title,
             task_description=clean_description,
-            repository_url=task.github_repo_link or github_url,
+            repository_url=getattr(task, 'github_repo_link', None) or github_url,
             module_id=getattr(task, 'module_id', 'task-review-agent'),
             schema_version=getattr(task, 'schema_version', 'v1.0'),
             pdf_text=pdf_text
         )
 
-        score = int(convergence_result.get('score', 0))
-        status = convergence_result.get('status', 'fail')
+        eval_result = eval_output.get("evaluation_result", "FAIL")
+        failure_type = eval_output.get("failure_type")
 
-        # Analysis — extract ONLY from Sri Satya's canonical result
-        # NO independent analyzer calls - Sri Satya is SINGLE AUTHORITY
-        supporting_signals = convergence_result.get('supporting_signals', {})
-        
-        # Get component scores ONLY from Sri Satya's canonical evaluation
-        title_score_val = convergence_result.get('title_score', 0.0)
-        desc_score_val = convergence_result.get('description_score', 0.0)
-        repo_score_val = convergence_result.get('repository_score', 0.0)
-        
+        # Derive numeric score from TEXT signals only (independent of binary rule engine)
+        word_count = len(clean_description.split())
+        title_words = len(task.task_title.split())
+        tech_keywords = {
+            "api", "database", "async", "security", "jwt", "test", "layer",
+            "architecture", "objective", "requirement", "constraint", "schema",
+            "pipeline", "validation", "module", "microservice", "cache",
+            "frontend", "backend", "integration", "implementation", "deploy",
+            "kubernetes", "docker", "migration", "cluster", "authentication",
+            "authorization", "access", "control", "load", "balancing"
+        }
+        structure_markers = {"objective", "requirement", "constraint", "deliverable", "timeline", "scope"}
+
+        desc_lower = (task.task_title + " " + clean_description).lower()
+        keyword_hits = sum(1 for kw in tech_keywords if kw in desc_lower)
+        structure_hits = sum(1 for m in structure_markers if m in desc_lower)
+        has_tech = keyword_hits >= 3
+
+        # Compute score 0-100 purely from content signals
+        base = 0
+        base += min(30, word_count // 3)      # up to 30 pts for word count
+        base += min(10, title_words * 2)       # up to 10 pts for title length
+        base += min(30, keyword_hits * 4)      # up to 30 pts for technical keywords
+        base += min(20, structure_hits * 6)    # up to 20 pts for structure markers
+        base += min(10, len(clean_description) // 100)  # up to 10 pts for raw length
+        score = min(100, base)
+
+        # Classify status
+        if score >= 75:
+            status = "pass"
+        elif score >= 50:
+            status = "borderline"
+        else:
+            status = "fail"
+
+
+        # Analysis sub-scores
         analysis = Analysis(
-            technical_quality=min(100, int(title_score_val)),
-            clarity=min(100, int(desc_score_val)),
-            discipline_signals=min(100, int(repo_score_val))
+            technical_quality=score,
+            clarity=score,
+            discipline_signals=score
         )
 
-        # Extract data from convergence result
-        missing_features = convergence_result.get('missing_features', [])
-        failure_reasons = convergence_result.get('failure_reasons', [])
-        improvement_hints = convergence_result.get('improvement_hints', [])
-
-        # Ensure failure_reasons is non-empty on fail
+        failure_reasons = [failure_type] if failure_type else []
         if not failure_reasons and score < 50:
             failure_reasons = ["Insufficient technical content in title and description."]
 
+        improvement_hints = []
+        if failure_type == "incomplete":
+            improvement_hints = ["Add a GitHub repository with code.", "Add README and tests."]
+        elif failure_type == "schema_violation":
+            improvement_hints = ["Provide more detailed task description (min 50 words)."]
+        elif failure_type == "incorrect_logic":
+            improvement_hints = ["Ensure delivery ratio meets minimum threshold.", "Add more detail."]
+
         meta = Meta(
             evaluation_time_ms=int((time.time() - start_time) * 1000),
-            mode="hybrid"  # Final convergence mode
+            mode="hybrid"
         )
 
         return ReviewOutput(
@@ -101,17 +139,22 @@ class ReviewEngine(ReviewEngineInterface):
             improvement_hints=improvement_hints[:5],
             analysis=analysis,
             meta=meta,
-            feature_coverage=convergence_result.get('evidence_summary', {}).get('delivery_ratio', 0.0),
-            architecture_score=repo_score_val,
-            code_quality_score=repo_score_val,
-            completeness_score=desc_score_val,
-            missing_features=missing_features,
-            requirement_match=convergence_result.get('evidence_summary', {}).get('delivery_ratio', 0.0),
-            evaluation_summary=convergence_result.get('evaluation_summary', 'Final convergence evaluation complete'),
-            documentation_score=repo_score_val,
-            documentation_alignment=supporting_signals.get('documentation_alignment', 'low'),
-            analysis_pdf=convergence_result.get('pdf_analysis', {}),
-            title_score=title_score_val,
-            description_score=desc_score_val,
-            repository_score=repo_score_val
+            feature_coverage=0.0,
+            architecture_score=0.0,
+            code_quality_score=0.0,
+            completeness_score=float(score),
+            missing_features=[],
+            requirement_match=0.0,
+            evaluation_summary=f"Deterministic evaluation: {eval_result}",
+            documentation_score=0.0,
+            documentation_alignment="low",
+            analysis_pdf={},
+            title_score=0.0,
+            description_score=float(score),
+            repository_score=0.0
         )
+
+    def evaluate(self, task: dict) -> dict:
+        task_obj = Task(**task)
+        result = self.review_task(task_obj)
+        return result.model_dump()

@@ -1,0 +1,5 @@
+{
+    "timestamp": "2026-05-23T13:03:29.468983Z",
+    "drift_rejected": true,
+    "error_message": "1 validation error for CandidateProfile\ncandidate_id\n  Field required [type=missing, input_value={'name': 'Drift Candidate'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/missing"
+}

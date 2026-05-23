@@ -31,7 +31,7 @@ patcher.start()
 
 def check_1_long_chain():
     print("\n--- CHECK 1: Long Chain Traversal ---")
-    chain = ["T-GEN-100", "T-GEN-101", "T-GEN-102", "T-GEN-103", "T-GEN-104"]
+    chain = ["T-GOV-001", "T-GOV-002", "T-COR-001", "T-COR-002", "T-SEC-001"]
     current = chain[0]
     for i in range(len(chain)-1):
         input_data = {
@@ -41,7 +41,7 @@ def check_1_long_chain():
             "task_title": "Chain Task",
             "task_description": "Task description for chain. " * 10,
             "submitted_by": "user-chain",
-            "repository_url": "https://github.com/test/repo"
+            "github_repo_link": "https://github.com/test/repo"
         }
         res = niyantran_connection.process_niyantran_task(input_data)
         next_task = res["selected_task_id"]
@@ -63,7 +63,7 @@ def check_2_failure_cycling():
         "task_title": "Cycle Test",
         "task_description": "Short",
         "submitted_by": "user-cycle",
-        "repository_url": None # No repo
+        "github_repo_link": None # No repo
     }
     
     # 1st fail

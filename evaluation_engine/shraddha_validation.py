@@ -22,6 +22,9 @@ class ValidationGate:
     ) -> Dict[str, Any]:
         logger.info(f"[SHRADDHA] Validating output from: {source}")
 
+        if result is None:
+            result = {}
+
         result = self._enforce_required_fields(result)
         result = self._enforce_result_enum(result)
         result = self._enforce_failure_type(result)
@@ -36,6 +39,8 @@ class ValidationGate:
         return result
 
     def _enforce_required_fields(self, result: Dict[str, Any]) -> Dict[str, Any]:
+        if result is None:
+            result = {}
         if "submission_id" not in result:
             result["submission_id"] = "unknown"
         if "evaluation_result" not in result:

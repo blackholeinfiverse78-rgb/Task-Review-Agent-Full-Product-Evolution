@@ -54,7 +54,10 @@ class EvaluationOrchestrator:
         return {
             "evaluation_result": evaluation["evaluation_result"],
             "failure_type": evaluation.get("failure_type"),
-            "reason": evaluation.get("reason", "")
+            "reason": evaluation.get("reason", ""),
+            "pac": evaluation.get("pac", {}),
+            "rubric": evaluation.get("rubric", {}),
+            "canonical_authority": evaluation.get("canonical_authority", False)
         }
 
 evaluation_orchestrator = EvaluationOrchestrator()

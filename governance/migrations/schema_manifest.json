@@ -1,0 +1,21 @@
+{
+    "schema_version": "v1.0",
+    "migration_history": [
+        {
+            "version": "v1.0",
+            "applied_at": "2026-05-23T01:20:30Z",
+            "description": "Initial setup of 9 canonical Pydantic model schemas for candidates, tasks, reviews, and assignments."
+        }
+    ],
+    "registered_entities": {
+        "candidate_profiles": "CandidateProfile",
+        "task_lineage": "TaskLineage",
+        "review_history": "ReviewHistory",
+        "assignment_history": "AssignmentHistory",
+        "reasoning_artifacts": "ReasoningArtifacts",
+        "ecosystem_dependency_context": "EcosystemDependencyContext",
+        "product_mapping": "ProductMapping",
+        "strategic_notes": "StrategicNotes",
+        "learning_signals": "LearningSignals"
+    }
+}

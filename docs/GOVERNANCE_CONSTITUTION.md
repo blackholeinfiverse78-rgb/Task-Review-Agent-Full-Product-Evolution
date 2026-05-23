@@ -1,33 +1,44 @@
-# GOVERNANCE CONSTITUTION — TANTRA OPERATIONAL AUTHORITY
+# 📜 Governance Constitution (Gov-OS Boundaries)
 
-## 1. AUTHORITY HIERARCHY
-1. `REVIEW_OPERATOR`: Can view and approve/reject standard queue items.
-2. `SENIOR_REVIEW_OPERATOR`: Can perform all above, plus initiate high-risk `modify` escalations.
-3. `EXECUTION_AUTHORIZER`: Dual-approval authority. Required to co-sign any `modify` action.
-4. `SYSTEM_AUDITOR`: Read-only operational oversight.
-5. `REPLAY_AUDITOR`: Has authority to run forensic divergence reports and reconstruct execution.
+This document declares the strict constitutional boundaries of Parikshak. Under no circumstances may these constraints be bypassed.
 
-**Rule**: No single operator can silently control the full execution path.
+---
 
-## 2. ESCALATION SOVEREIGNTY
-- `modify` operations represent an escalation to bypass the deterministic graph.
-- An escalation requires an explicit `authorized_by` signature.
-- Escalations may ONLY alter the selected task boundary (`override_task_id`), leaving the audit lineage untouched.
-- Traversal logic itself is sealed and immutable to operators.
+## 1. Absolute Boundary Rules
 
-## 3. IRREVERSIBLE GOVERNANCE STATES
-The following states are monotonically locked and cannot be reverted without a formal superseding governance event:
-- `APPROVED`
-- `REJECTED`
-- `MODIFIED`
-- `FINAL_APPROVED`
-- `AUDIT_LOCKED`
-- `REPLAY_SEALED`
+### Rule 1: Parikshak Cannot Approve
+- The system has **zero approval authority**.
+- All state mutations and reviews require explicit human approval (`HUMAN_APPROVED`) signed off by an authorized governor.
 
-Once entering these states, any attempt to transition the state again will fail with `HTTP 409 Conflict`. All transitions are protected by strict **Optimistic Concurrency Control (OCC) locking** utilizing the `expected_version` parameter to prevent concurrent race conditions.
+### Rule 2: Parikshak Cannot Assign
+- Autonomous release or assignment of tasks is **strictly blocked**.
+- Any attempt to release or commit a task assignment without human sign-off triggers an `AutonomousReleaseBlocked` exception.
 
-## 4. DASHBOARD CONTAINMENT
-The operational dashboard is an observability surface ONLY.
-- **Action Gateway**: Every button click is forced through `api/review_routes.py` which executes `constitutional_validator.validate()`.
-- **Authority Isolation**: The dashboard cannot mutate traversal logic, skip the approval queue, or alter replay events.
-- **Operator Visibility**: `OPERATOR_VISIBILITY_LOG` tracks all actions, including blocked requests, in an append-only JSONL format.
+### Rule 3: Parikshak Cannot Self-Govern
+- The system **cannot mutate its own rules, boundaries, or schemas** at runtime.
+- The schema registry is frozen at startup to prevent dynamic mutations.
+
+### Rule 4: Parikshak Cannot Become the Source of Truth
+- Parikshak's event database is derived from human-validated actions.
+- The system does not maintain hidden state flags, unverified cache databases, or authority bypasses.
+
+---
+
+## 2. GPT Bridge Quarantine Boundaries
+
+The GPT bridge is isolated under the following rules:
+- **Export-Only**: The bridge is permitted to export signed state snapshots to GPT interfaces.
+- **No Direct DB Mutations**: The bridge cannot mutate the SQLite database.
+- **Quarantined Imports**: Any import from GPT must be converted to a draft scaffold event envelope with the status `AWAITING_HUMAN_APPROVAL`. It requires explicit manual sign-off by a human operator to be committed to the log.
+- **No Governance Authority**: The GPT bridge holds no approval or assignment authority.
+
+---
+
+## 3. Human Approval Enforcement Lock
+
+The system enforces assignment locks before task release:
+```python
+if approval_state != "HUMAN_APPROVED":
+    raise AutonomousReleaseBlocked("AI release of assignments is strictly prohibited.")
+```
+Any transaction violating this lock is rejected and rolled back immediately.

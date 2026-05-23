@@ -4,7 +4,7 @@ import json
 
 BASE_URL = "http://localhost:8000/api/v1/task"
 
-def test_case(payload, label):
+def run_test_case(payload, label):
     print(f"\n--- Testing: {label} ---")
     try:
         res = requests.post(f"{BASE_URL}/submit", json=payload)
@@ -14,7 +14,7 @@ def test_case(payload, label):
         print(f"Exception: {e}")
 
 # 1-word input
-test_case({
+run_test_case({
     "task_title": "Short",
     "task_description": "Small",
     "submitted_by": "X"
@@ -22,14 +22,14 @@ test_case({
 
 # Markdown-heavy README paste (Long input)
 large_description = "# Title\n\n" + "Requirement: This is a requirement. " * 50 + "\n\n" + "### Details\n" + "Constraint: None. " * 50
-test_case({
+run_test_case({
     "task_title": "Markdown Heavy Task with lots of symbols and structure",
     "task_description": large_description,
     "submitted_by": "Documentation Enthusiast"
 }, "Markdown Heavy/Long Input")
 
 # Special characters
-test_case({
+run_test_case({
     "task_title": "Title with %^&*()_+ and emoji 🚀",
     "task_description": "Objective: Test symbols like <> ? / \ | ` ~ [ ] { } ; : ' \" . , and more emoji 🔥🌊",
     "submitted_by": "Byte Master"

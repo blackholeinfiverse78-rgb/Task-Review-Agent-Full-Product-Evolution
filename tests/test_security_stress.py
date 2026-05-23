@@ -14,7 +14,8 @@ def test_max_length_enforcement():
         "task_title": long_title,
         "task_description": "Valid description long enough for the test case",
         "submitted_by": "User",
-        "repository_url": "https://github.com/user/repo"
+        "repository_url": "https://github.com/user/repo",
+        "trace_id": "trace-stress-test-1"
     }
     response = client.post("/api/v1/production/niyantran/submit", json=payload)
     assert response.status_code == 422
@@ -27,7 +28,8 @@ def test_max_length_enforcement():
         "task_title": "Valid Title",
         "task_description": long_desc,
         "submitted_by": "User",
-        "repository_url": "https://github.com/user/repo"
+        "repository_url": "https://github.com/user/repo",
+        "trace_id": "trace-stress-test-2"
     }
     response = client.post("/api/v1/production/niyantran/submit", json=payload)
     assert response.status_code == 422
@@ -40,7 +42,8 @@ def test_sql_injection_simulation():
         "task_title": "SELECT * FROM users; --",
         "task_description": "DROP TABLE tasks; CASCADE; ' OR '1'='1 description long enough",
         "submitted_by": "Hacker",
-        "repository_url": "https://github.com/user/repo"
+        "repository_url": "https://github.com/user/repo",
+        "trace_id": "trace-stress-test-3"
     }
     response = client.post("/api/v1/production/niyantran/submit", json=payload)
     assert response.status_code == 200 # Should be treated as normal string
@@ -51,7 +54,8 @@ def test_xss_simulation():
         "task_title": "<script>alert('xss')</script>",
         "task_description": "Check XSS: <img src=x onerror=alert(1)> and more words to make it long enough",
         "submitted_by": "Hacker",
-        "repository_url": "https://github.com/user/repo"
+        "repository_url": "https://github.com/user/repo",
+        "trace_id": "trace-stress-test-4"
     }
     response = client.post("/api/v1/production/niyantran/submit", json=payload)
     assert response.status_code == 200 # Treated as string
@@ -64,3 +68,4 @@ def test_unauthorized_access():
 def test_malformed_json():
     response = client.post("/api/v1/production/niyantran/submit", content="invalid json", headers={"Content-Type": "application/json"})
     assert response.status_code == 422
+

@@ -5,8 +5,18 @@ Run these tests to verify the operational layer works correctly.
 import requests
 import json
 import time
+import pytest
 
 BASE_URL = "http://localhost:8000"
+
+# Check if local server is running, otherwise skip tests in this module during automated pytest runs
+try:
+    requests.get(f"{BASE_URL}/api/v1/review/all", timeout=0.5)
+    server_running = True
+except requests.exceptions.RequestException:
+    server_running = False
+
+pytestmark = pytest.mark.skipif(not server_running, reason="Local FastAPI server is not running")
 
 # Test Payloads
 SAMPLE_SUBMISSION_PASS = {

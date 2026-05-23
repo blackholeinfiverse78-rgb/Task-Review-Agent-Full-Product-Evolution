@@ -143,24 +143,44 @@ def test_product_storage_operations():
 
 def test_storage_isolation():
     """Test that storage instances are isolated"""
-    storage1 = ProductStorage()
-    storage2 = ProductStorage()
+    import os
+    file1 = "storage/product_state_iso1.json"
+    file2 = "storage/product_state_iso2.json"
     
-    submission = TaskSubmission(
-        submission_id="sub-iso-001",
-        task_id="task-iso-001",
-        task_title="Isolation Test",
-        task_description="Testing storage isolation between instances.",
-        submitted_by="Tester",
-        submitted_at=datetime.now(),
-        status=TaskStatus.SUBMITTED
-    )
-    
-    storage1.store_submission(submission)
-    
-    # storage2 should not have the submission
-    assert storage1.get_submission("sub-iso-001") is not None
-    assert storage2.get_submission("sub-iso-001") is None
+    # Clean any stale test files
+    for f in [file1, file2, file1 + ".lock", file2 + ".lock"]:
+        if os.path.exists(f):
+            try:
+                os.remove(f)
+            except Exception:
+                pass
+
+    try:
+        storage1 = ProductStorage(file1)
+        storage2 = ProductStorage(file2)
+        
+        submission = TaskSubmission(
+            submission_id="sub-iso-001",
+            task_id="task-iso-001",
+            task_title="Isolation Test",
+            task_description="Testing storage isolation between instances.",
+            submitted_by="Tester",
+            submitted_at=datetime.now(),
+            status=TaskStatus.SUBMITTED
+        )
+        
+        storage1.store_submission(submission)
+        
+        # storage2 should not have the submission
+        assert storage1.get_submission("sub-iso-001") is not None
+        assert storage2.get_submission("sub-iso-001") is None
+    finally:
+        for f in [file1, file2, file1 + ".lock", file2 + ".lock"]:
+            if os.path.exists(f):
+                try:
+                    os.remove(f)
+                except Exception:
+                    pass
 
 
 def test_task_status_enum():

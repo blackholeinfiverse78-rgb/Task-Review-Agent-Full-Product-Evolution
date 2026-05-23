@@ -1,83 +1,159 @@
-# 📡 API Contracts Reference (v6.0)
+# 📡 API Contracts Reference (v6.0 - Gov-OS Hardened)
 
 > Base URL: `http://localhost:8000/api/v1`  
 > Interactive Docs: `http://localhost:8000/docs`
 
 ---
 
-## 1. Production (Niyantran) Endpoint
+## 1. Niyantran Production Endpoints
 
 ### `POST /production/niyantran/submit`
+Evaluates a task submission and places it in the human review queue.
 
-Primary deterministic entry point for task evaluation and selection.
-
-**Request** — `application/json`
-
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `trace_id` | string | ✅ | Minimum 8 characters. Must come from Niyantran. |
-| `task_id` | string | ✅ | Current task ID from the database. |
-| `task_title` | string | ✅ | Title of the submitted task. |
-| `task_description`| string | ✅ | Full description for evaluation. |
-| `submitted_by` | string | ✅ | Candidate identifier. |
-| `repository_url` | string | ✅ | GitHub repository URL. |
-
-**Response** `200 OK` (Strict 7-field Contract)
-
+**Request** `application/json`
 ```json
 {
-  "trace_id":          "trace-a3f2c1d48b9e4f2a",
-  "submission_id":     "sub-eb2e07e7c652-d42768ed",
+  "trace_id": "trace-12345",
+  "task_id": "T-GOV-001",
+  "task_title": "Implement triggers",
+  "task_description": "Add SQLite update/delete prevent triggers to events log.",
+  "submitted_by": "cand-001",
+  "repository_url": "https://github.com/bhiv/parikshak"
+}
+```
+
+**Response** `200 OK`
+```json
+{
+  "trace_id": "trace-12345",
+  "submission_id": "sub-md5hash",
   "evaluation_result": "PASS",
-  "failure_type":      null,
-  "selected_task_id":  "T-GOV-002",
-  "selection_reason":  "PASS -> next_tasks[0] = T-GOV-002",
-  "source":            "task_graph"
+  "failure_type": null,
+  "selected_task_id": "T-GOV-002",
+  "selection_reason": "PASS -> next_tasks[0] = T-GOV-002",
+  "source": "task_graph"
 }
 ```
 
-**Constraints**:
-- **Deterministic**: Same input + `trace_id` → Same output.
-- **Contract Enforcement**: Extra fields are stripped; missing fields trigger `CONTRACT_VIOLATION`.
-
 ---
 
-## 2. Status & Health
+## 2. Gov-OS Hardened Endpoints (`/api/v1/gov-os`)
 
-### `GET /production/niyantran/health`
-Returns system health and bucket statistics.
+### `POST /gov-os/mutate`
+Appends a validated, human-signed governance envelope to the event journal.
 
-### `GET /production/bucket/logs`
-Returns the 100 most recent evaluation logs from the deterministic bucket.
-
----
-
-## 3. Lifecycle (SPA Support)
-
-### `POST /lifecycle/submit`
-Legacy/SPA support for multipart submissions. Internally routes to the same deterministic pipeline.
-
-### `GET /lifecycle/review/{id}`
-Retrieves review details. Note: Numeric scores are no longer generated; this returns the PASS/FAIL result and failure type.
-
----
-
-## 4. Error Responses
-
-The system uses standard HTTP status codes combined with deterministic error types.
-
-| Status | Error Context | Cause |
-|--------|---------------|-------|
-| `400`  | `NIYANTRAN_HARD_REJECT` | Missing or invalid `trace_id`. |
-| `404`  | `GRAPH_HARD_REJECT` | `task_id` not found in database. |
-| `500`  | `CONTRACT_VIOLATION` | System output failed 7-field validation. |
-| `500`  | `MANDALA_HARD_REJECT` | Task selection logic failed internal mapping. |
-
-**Error JSON Format**:
+**Request** `application/json`
 ```json
 {
-  "detail": "Error code: MESSAGE"
+  "envelope": {
+    "trace_id": "trace-test-12345",
+    "schema_version": "v1.0",
+    "actor": "operator-1",
+    "actor_role": "operator",
+    "event_type": "candidate_profiles",
+    "payload": {
+      "candidate_id": "cand-001",
+      "name": "Nikhil",
+      "github_handle": "nikhil-dev",
+      "skills": ["python", "sqlite"],
+      "performance_score": 95.5
+    },
+    "authorized_by": "Akash",
+    "lineage_reference": "lineage-ref-abc",
+    "approval_token": "token-123",
+    "payload_checksum": "sha256-hash-of-canonical-payload",
+    "parent_event_hash": "sha256-hash-of-parent-event"
+  },
+  "executor_actor": "operator-1"
 }
 ```
-Example:
-`{ "detail": "GRAPH_HARD_REJECT: task_id 'INVALID' not in task DB." }`
+
+**Response** `200 OK`
+```json
+{
+  "status": "COMMITTED",
+  "event": {
+    "sequence": 1,
+    "event_id": "evt-xxxxx",
+    "event_type": "candidate_profiles",
+    "event_hash": "...",
+    "parent_event_hash": "...",
+    "timestamp": "2026-05-23T01:20:30Z"
+  },
+  "snapshot": "storage/backups/snapshot_seq_1_timestamp.json"
+}
+```
+
+### `GET /gov-os/export`
+Exports the current system state, signed by Parikshak.
+**Response** `200 OK`
+```json
+{
+  "system_signature": "sha256-signature-hash",
+  "exported_at": "2026-05-23T01:20:30Z",
+  "state": {
+    "candidate_profiles": {...},
+    "review_history": {...}
+  }
+}
+```
+
+### `POST /gov-os/scaffold`
+Receives raw GPT scaffolding payload, performs schema verification, and packages it in an `AWAITING_HUMAN_APPROVAL` governance envelope.
+**Request** `application/json`
+```json
+{
+  "payload": {
+    "candidate_id": "cand-gpt-99",
+    "name": "Scaffold Candidate"
+  },
+  "event_type": "candidate_profiles",
+  "trace_id": "trace-gpt-123",
+  "actor": "gpt"
+}
+```
+
+**Response** `200 OK`
+```json
+{
+  "status": "AWAITING_HUMAN_APPROVAL",
+  "bridge_validation": "PASSED",
+  "envelope": {
+    "trace_id": "trace-gpt-123",
+    "schema_version": "v1.0",
+    "actor": "gpt",
+    "event_type": "candidate_profiles",
+    "payload": {...},
+    "authorized_by": null
+  }
+}
+```
+
+### `POST /gov-os/rollback`
+Rollbacks the database state to a target sequence number anchor.
+**Request** `application/json`
+```json
+{
+  "target_seq": 1
+}
+```
+
+### `POST /gov-os/reconstruct`
+Reconstructs the SQLite database from a JSONL audit journal.
+**Request** `application/json`
+```json
+{
+  "jsonl_path": "storage/audit_logs/audit_2026-05-23.jsonl",
+  "new_db_path": "storage/reconstructed_db.sqlite"
+}
+```
+
+### `POST /gov-os/integrate`
+Propagates a mutation to the external ecosystem adapters.
+**Request** `application/json`
+```json
+{
+  "task_payload": {...},
+  "trace_id": "trace-integrated-123"
+}
+```

@@ -1,0 +1,14 @@
+{
+  "checkpoint_id": "ckpt-20260523015311-trace-ui",
+  "trace_id": "trace-ui-20260523015311-7222d218",
+  "timestamp": "2026-05-23T01:53:11.973650",
+  "state_hash": "9c5da6be7ac151d4",
+  "state": {
+    "event_id": "evt-6526c1053e1c",
+    "action": "approve",
+    "submission_id": "sub-8402d5a319a7-3db0f1d8",
+    "final_task": "T-GOV-F01",
+    "operator_id": "test-operator-001"
+  },
+  "lineage_marker": true
+}

@@ -104,6 +104,12 @@ async def approve_submission(request: GovernanceRequest):
     review.version += 1
     product_storage._save()
 
+    try:
+        from task_selector.human_in_loop import human_in_loop
+        human_in_loop.resolve_escalation_by_trace(request.trace_id, request.operator_id, "approved")
+    except Exception as e:
+        logger.warning(f"Failed to auto-resolve escalation (non-fatal): {e}")
+
     # Replay checkpoint
     event_id = f"evt-{uuid.uuid4().hex[:12]}"
     checkpoint_id = write_replay_checkpoint(request.trace_id, {
@@ -164,6 +170,12 @@ async def reject_submission(request: GovernanceRequest):
     review.review_state = ReviewState.REJECTED
     review.version += 1
     product_storage._save()
+
+    try:
+        from task_selector.human_in_loop import human_in_loop
+        human_in_loop.resolve_escalation_by_trace(request.trace_id, request.operator_id, "rejected")
+    except Exception as e:
+        logger.warning(f"Failed to auto-resolve escalation (non-fatal): {e}")
 
     event_id = f"evt-{uuid.uuid4().hex[:12]}"
     checkpoint_id = write_replay_checkpoint(request.trace_id, {
@@ -231,6 +243,12 @@ async def modify_submission(request: GovernanceRequest):
     review.version += 1
     product_storage._save()
 
+    try:
+        from task_selector.human_in_loop import human_in_loop
+        human_in_loop.resolve_escalation_by_trace(request.trace_id, request.operator_id, "modified")
+    except Exception as e:
+        logger.warning(f"Failed to auto-resolve escalation (non-fatal): {e}")
+
     event_id = f"evt-{uuid.uuid4().hex[:12]}"
     checkpoint_id = write_replay_checkpoint(request.trace_id, {
         "event_id":       event_id,
@@ -297,7 +315,8 @@ async def get_pending_reviews():
                 "failure_type":     getattr(review, "failure_type", None),
                 "selected_task_id": getattr(review, "selected_task_id", ""),
                 "trace_id":         getattr(review, "trace_id", ""),
-                "review_state":     getattr(review, "review_state", "")
+                "review_state":     getattr(review, "review_state", ""),
+                "expected_version": getattr(review, "version", 1)
             })
     return pending
 
@@ -317,6 +336,7 @@ async def get_all_reviews():
             "selected_task_id": getattr(review, "selected_task_id", ""),
             "trace_id":         review.trace_id,
             "review_state":     getattr(review, "review_state", ""),
-            "selection_reason": getattr(review, "selection_reason", "")
+            "selection_reason": getattr(review, "selection_reason", ""),
+            "expected_version": getattr(review, "version", 1)
         })
     return all_reviews

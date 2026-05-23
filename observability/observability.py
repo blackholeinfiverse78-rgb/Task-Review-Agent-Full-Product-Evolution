@@ -1,18 +1,19 @@
 import json
 import os
-import threading
 from datetime import datetime
 from typing import Dict, Any, List
+from db.persistent_storage import FileLock
 
 class SystemObserver:
     """
-    Thread-safe observability layer for the Deterministic Core.
+    Thread-safe and process-safe observability layer for the Deterministic Core.
     Tracks execution metrics, failure distributions, and trace history.
     """
     def __init__(self, log_dir: str = "storage/observability"):
         self.log_dir = log_dir
-        self._lock = threading.Lock()
         self._metrics_file = os.path.join(log_dir, "metrics.json")
+        self._lock_file = self._metrics_file + ".lock"
+        self._lock = FileLock(self._lock_file)
         self._trace_log = os.path.join(log_dir, "trace_history.log")
         
         if not os.path.exists(log_dir):
@@ -89,5 +90,21 @@ class SystemObserver:
             with open(self._metrics_file, "r") as f:
                 return json.load(f)
 
+    def log_observability_event(self, level: str, message: str, payload: Dict[str, Any]):
+        with self._lock:
+            try:
+                log_file = os.path.join(self.log_dir, "governance_events.jsonl")
+                entry = {
+                    "timestamp": datetime.now().isoformat(),
+                    "level": level,
+                    "message": message,
+                    "payload": payload
+                }
+                with open(log_file, "a", encoding="utf-8") as f:
+                    f.write(json.dumps(entry) + "\n")
+            except Exception as e:
+                print(f"[OBSERVABILITY ERROR] {e}")
+
 # Global observer instance
 observer = SystemObserver()
+observability = observer

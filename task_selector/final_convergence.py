@@ -18,12 +18,50 @@ class FinalConvergenceOrchestrator:
 
     def process_with_convergence(
         self,
-        evaluation_result: str,
-        failure_type: Optional[str],
-        submission_id: str,
-        trace_id: str,
-        current_task_id: Optional[str] = None
+        evaluation_result: str = None,
+        failure_type: Optional[str] = None,
+        submission_id: str = None,
+        trace_id: str = None,
+        current_task_id: Optional[str] = None,
+        **kwargs
     ) -> Dict[str, Any]:
+
+        # Check if legacy complete execution is requested
+        if kwargs or not trace_id:
+            from contracts.schemas import Task
+            from task_selector.review_orchestrator import ReviewOrchestrator
+            import hashlib
+            
+            task_title = kwargs.get("task_title") or evaluation_result or "Evaluation Task"
+            task_description = kwargs.get("task_description") or failure_type or ""
+            repository_url = kwargs.get("repository_url")
+            module_id = kwargs.get("module_id") or "task-review-agent"
+            schema_version = kwargs.get("schema_version") or "v1.0"
+            
+            task_hash = hashlib.md5(f"{task_title}:{task_description}:{module_id}".encode("utf-8", errors="ignore")).hexdigest()
+            task = Task(
+                task_id=f"task-conv-{task_hash}",
+                task_title=task_title,
+                task_description=task_description,
+                submitted_by="system_convergence",
+                timestamp=datetime.now(),
+                github_repo_link=repository_url or "",
+                module_id=module_id,
+                schema_version=schema_version
+            )
+            
+            orchestrator = ReviewOrchestrator()
+            res = orchestrator.process_submission(task)
+            
+            return {
+                "score": res["review"]["score"],
+                "status": res["review"]["status"],
+                "task_type": res["next_task"]["task_type"],
+                "canonical_authority": True,
+                "evaluation_basis": "assignment_engine",
+                "registry_rejection": res.get("registry_rejection", False),
+                "difficulty": res["next_task"]["difficulty"]
+            }
 
         logger.info(f"[PARIKSHAK] Starting mapping for trace: {trace_id}")
 

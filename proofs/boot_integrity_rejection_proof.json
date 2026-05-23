@@ -1,0 +1,7 @@
+{
+    "timestamp": "2026-05-23T13:03:28.935356Z",
+    "scenario": "Boot validation with corrupted events table",
+    "boot_blocked": true,
+    "exception_type": "ValueError",
+    "exception_message": "STARTUP_SAFETY_GATE_BLOCKED: Found 3 integrity issues. Errors: ['HASH_MISMATCH: Event seq 1 (evt-b028eec25138) checksum mismatch. Stored=1d96cc0e609a35e79b248d43f235a08898944e7b7a1af7b388dc984cb83db9f3, Computed=55dfc9f9fd31bc77b3f34c7045ca29411ad70ed3c44c1c3c574daa1b45298ddc', 'HASH_MISMATCH: Event seq 1 (evt-b028eec25138) hash mismatch. Stored=8f47a0ea0df0f9a42b71277d379b9964bea7208bef28de6b1714d6d06420b939, Computed=31908813bbd308b56c5775bed83b89a862254c541ad4dc035792b6b261f08bb9', \"SCHEMA_DRIFT: Event seq 1 failed schema validation: 2 validation errors for CandidateProfile\\ncandidate_id\\n  Field required [type=missing, input_value={'corrupted': 'data'}, input_type=dict]\\n    For further information visit https://errors.pydantic.dev/2.13/v/missing\\nname\\n  Field required [type=missing, input_value={'corrupted': 'data'}, input_type=dict]\\n    For further information visit https://errors.pydantic.dev/2.13/v/missing\"]"
+}

@@ -273,6 +273,17 @@ class HumanInLoopService:
             if c.status == EscalationStatus.PENDING.value
         ]
 
+    def resolve_escalation_by_trace(self, trace_id: str, reviewer: str, decision: str, notes: str = "") -> None:
+        for case in self.escalation_cases.values():
+            if case.trace_id == trace_id and case.status == EscalationStatus.PENDING.value:
+                case.status = EscalationStatus.RESOLVED.value
+                case.assigned_reviewer = reviewer
+                case.review_notes = notes
+                case.human_override = {"decision": decision}
+                case.resolved_at = datetime.now().isoformat()
+                self._save_case(case)
+                logger.info(f"[HUMAN-IN-LOOP] Auto-resolved escalation case {case.case_id} via governance action {decision}")
+
     # ── Private helpers ───────────────────────────────────────────────────
 
     def _create_escalation_case(

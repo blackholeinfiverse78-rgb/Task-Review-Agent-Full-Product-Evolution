@@ -3,7 +3,7 @@ Parikshak Assignment Engine — delegates to Rule Engine.
 Single entry point. Returns evaluation_result + failure_type only.
 No scoring. No weights. No fallback.
 """
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 import logging
 
 from evaluation_engine.rule_engine import rule_engine

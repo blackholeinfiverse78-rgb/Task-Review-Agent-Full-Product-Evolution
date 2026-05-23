@@ -1,0 +1,11 @@
+{
+  "checkpoint_id": "ckpt-20260523020223-trace-re",
+  "trace_id": "trace-resilience-001",
+  "timestamp": "2026-05-23T02:02:23.942596",
+  "state_hash": "9449d27bc4a844f2",
+  "state": {
+    "evaluation_result": "PASS",
+    "selected_task_id": "T-GOV-002"
+  },
+  "lineage_marker": true
+}

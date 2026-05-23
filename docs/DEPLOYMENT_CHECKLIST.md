@@ -1,277 +1,71 @@
-# ✅ Product Core v1 - Deployment Checklist
+# 🚀 Gov-OS Deployment Checklist (v6.0.0)
 
-**Date**: 2026-02-05  
-**Version**: 1.0.0  
-**Status**: READY FOR DEPLOYMENT
+This checklist details the steps to deploy Parikshak Gov-OS to staging and production environments safely.
 
 ---
 
-## 📋 Pre-Deployment Verification
+## 📋 1. Pre-Deployment Verification
 
-### Code Quality
-- [x] All production code written (290 lines)
-- [x] All test code written (630 lines)
-- [x] Code follows project conventions
-- [x] No hardcoded credentials or secrets
-- [x] No debug print statements in production code
-- [x] Proper error handling implemented
+### Safety Gates & Integrity Checks
+- [ ] Verify SQLite trigger generation scripts are included in the migration files.
+- [ ] Confirm startup safety gate scanner executes on database boot, scanning for all 6 integrity errors:
+  - `HASH_MISMATCH`
+  - `ORPHAN_EVENT`
+  - `SEQUENCE_BREAK`
+  - `SCHEMA_DRIFT`
+  - `SNAPSHOT_DIVERGENCE`
+  - `CHECKPOINT_MISMATCH`
+- [ ] Verify that manual updates/deletes raise database engine constraint exceptions.
 
-### Testing
-- [x] Storage layer tests: 7/7 PASSING
-- [x] Orchestrator tests: 8/8 PASSING
-- [x] Determinism tests: 4/4 PASSING
-- [x] Total: 19/19 tests PASSING (100%)
-- [x] Determinism verified (100 iterations, zero variance)
-- [x] Error handling tested
-- [x] Contract stability verified
+### Concurrency & Serializability
+- [ ] Single-writer lock is enabled.
+- [ ] All API handlers route mutations through `pipeline.submit_mutation()` using the thread-safe queue.
 
-### Documentation
-- [x] Branch documentation (`PRODUCT_CORE_V1.md`)
-- [x] Implementation summary (`PRODUCT_CORE_SUMMARY.md`)
-- [x] Integration verification (`INTEGRATION_VERIFICATION.md`)
-- [x] Quick reference guide (`PRODUCT_CORE_QUICK_REFERENCE.md`)
-- [x] Executive summary (`EXECUTIVE_SUMMARY.md`)
-- [x] Deployment checklist (this file)
-
-### Compliance
-- [x] Zero modifications to demo-freeze branch
-- [x] All existing contracts preserved
-- [x] No non-deterministic logic introduced
-- [x] Everything observable and testable
-- [x] Strict rules compliance verified
+### Human Approval Locks
+- [ ] Verify that `AutonomousReleaseBlocked` exceptions are raised for AI-initiated task assignments.
+- [ ] Validate that the GPT bridge has no mutation rights on the live database.
 
 ---
 
-## 🔍 Technical Verification
+## 🚀 2. Deployment Steps
 
-### Storage Layer
-- [x] TaskSubmission model implemented
-- [x] ReviewRecord model implemented
-- [x] NextTaskRecord model implemented
-- [x] ProductStorage class implemented
-- [x] CRUD operations functional
-- [x] Relationship lookups working
-- [x] Validation constraints enforced
+### Step 1: Initialize Database
+- Build the database container or deploy the local sqlite database file to `storage/canonical_db.sqlite`.
+- Ensure write-ahead logging (WAL mode) is active.
+- Verify trigger creation matches schema specifications.
 
-### Orchestrator Service
-- [x] ProductOrchestrator class implemented
-- [x] process_submission() method functional
-- [x] Deterministic flow verified
-- [x] Error handling with fallback
-- [x] Storage integration working
-- [x] Response contract stable
+### Step 2: Boot & Safety Gate Scan
+- Run the system startup check.
+- Observe logs for:
+  ```text
+  INFO: [STARTUP_GATE] Scanning database events...
+  INFO: [STARTUP_GATE] Scan complete. 0 issues found.
+  ```
 
-### Integration Points
-- [x] ReviewEngine interface compatible
-- [x] Task schema compatible
-- [x] ReviewOutput schema compatible
-- [x] No breaking changes to existing code
+### Step 3: Run Diagnostic Suite
+- Execute the test suite on target staging server:
+  ```bash
+  python -X utf8 scratch/test_operating_system.py
+  ```
+- Verify 12/12 test outcomes pass.
 
 ---
 
-## 📊 Performance Verification
+## 🔄 3. Rollback & Recovery Runbook
 
-### Metrics
-- [x] Storage operations: < 1ms ✅
-- [x] Orchestration flow: 120ms (deterministic) ✅
-- [x] Memory footprint: Minimal ✅
-- [x] No memory leaks detected ✅
+### Checkpoint Restore
+If a deployment fails or data corruption is introduced:
+1. Locate the correct snapshot manifest JSON inside `storage/backups/`.
+2. Execute the verification and restore routine:
+   ```python
+   BackupManager("storage/canonical_db.sqlite").verify_and_restore("storage/backups/snapshot_seq_N_timestamp.json")
+   ```
+3. Re-boot the system to trigger the startup safety gate.
 
-### Load Testing
-- [x] 100 iterations completed successfully
-- [x] Zero variance in results
-- [x] No performance degradation
-- [x] Storage isolation verified
-
----
-
-## 🔒 Security Verification
-
-### Code Security
-- [x] No SQL injection vectors (in-memory storage)
-- [x] No XSS vulnerabilities
-- [x] No hardcoded secrets
-- [x] Input validation via Pydantic
-- [x] No unsafe deserialization
-
-### Data Security
-- [x] Explicit IDs (no predictable patterns in logic)
-- [x] Timestamps for audit trail
-- [x] Status tracking for lifecycle
-- [x] No sensitive data in logs
-
----
-
-## 📦 Deployment Files
-
-### Production Code
-```
-✅ app/models/persistent_storage.py       (150 lines)
-✅ app/services/product_orchestrator.py   (140 lines)
-```
-
-### Test Code
-```
-✅ tests/test_persistent_storage.py       (180 lines)
-✅ tests/test_product_orchestrator.py     (250 lines)
-✅ tests/test_product_determinism.py      (200 lines)
-```
-
-### Documentation
-```
-✅ PRODUCT_CORE_V1.md                     (Branch docs)
-✅ PRODUCT_CORE_SUMMARY.md                (Implementation)
-✅ INTEGRATION_VERIFICATION.md            (Verification)
-✅ PRODUCT_CORE_QUICK_REFERENCE.md        (Quick ref)
-✅ EXECUTIVE_SUMMARY.md                   (Executive)
-✅ DEPLOYMENT_CHECKLIST.md                (This file)
-```
-
----
-
-## 🚀 Deployment Steps
-
-### Step 1: Code Review
-- [x] Review storage models
-- [x] Review orchestrator service
-- [x] Review test coverage
-- [x] Review documentation
-
-### Step 2: Testing
-- [x] Run all tests locally
-- [x] Verify determinism
-- [x] Check error handling
-- [x] Validate contracts
-
-### Step 3: Integration
-- [ ] Merge to main branch (when ready)
-- [ ] Deploy to staging environment
-- [ ] Run integration tests
-- [ ] Verify with existing demo
-
-### Step 4: Production
-- [ ] Deploy to production
-- [ ] Monitor logs
-- [ ] Verify functionality
-- [ ] Update documentation
-
----
-
-## 🔄 Rollback Plan
-
-### If Issues Detected
-1. **Immediate**: Revert to demo-freeze-v1.0
-2. **Reason**: Zero modifications to existing code = safe rollback
-3. **Impact**: None (new code is isolated)
-4. **Recovery**: < 5 minutes
-
-### Rollback Verification
-- [x] Demo-freeze code untouched
-- [x] New files can be removed safely
-- [x] No database migrations (in-memory)
-- [x] No external dependencies added
-
----
-
-## 📈 Post-Deployment Monitoring
-
-### Metrics to Track
-- [ ] Request latency (should be ~120ms)
-- [ ] Error rate (should be near 0%)
-- [ ] Storage operations (should be < 1ms)
-- [ ] Memory usage (should be minimal)
-
-### Health Checks
-- [ ] process_submission() responding
-- [ ] Storage operations working
-- [ ] Determinism maintained
-- [ ] Error handling functional
-
----
-
-## 🎯 Success Criteria
-
-### Immediate (Day 1)
-- [ ] All tests passing in production
-- [ ] No errors in logs
-- [ ] Response times acceptable
-- [ ] Determinism verified
-
-### Short-Term (Week 1)
-- [ ] Integration with existing APIs
-- [ ] User acceptance testing
-- [ ] Performance monitoring
-- [ ] Documentation feedback
-
-### Long-Term (Month 1)
-- [ ] Database migration planned
-- [ ] API endpoints added
-- [ ] Metrics dashboard created
-- [ ] Production load tested
-
----
-
-## 📞 Support Contacts
-
-### Technical Issues
-- **Code**: Review `app/models/persistent_storage.py` and `app/services/product_orchestrator.py`
-- **Tests**: Run `pytest tests/test_product_*.py -v`
-- **Docs**: Check `PRODUCT_CORE_QUICK_REFERENCE.md`
-
-### Escalation
-- **Critical**: Rollback to demo-freeze-v1.0
-- **Non-Critical**: Review logs and error messages
-- **Questions**: Refer to documentation
-
----
-
-## ✅ Final Sign-Off
-
-### Development Team
-- [x] Code complete and tested
-- [x] Documentation complete
-- [x] Ready for deployment
-
-### Quality Assurance
-- [x] All tests passing (19/19)
-- [x] Determinism verified
-- [x] Performance acceptable
-- [x] Security reviewed
-
-### Product Owner
-- [x] Requirements met
-- [x] Objectives achieved
-- [x] Ready for production
-
----
-
-## 🎉 Deployment Authorization
-
-**Status**: ✅ APPROVED FOR DEPLOYMENT
-
-**Confidence Level**: HIGH  
-**Risk Level**: LOW  
-**Rollback Plan**: READY  
-
-**Recommendation**: PROCEED WITH DEPLOYMENT
-
----
-
-**Prepared by**: Amazon Q Developer  
-**Reviewed by**: [Pending]  
-**Approved by**: [Pending]  
-**Date**: 2026-02-05  
-**Version**: 1.0.0
-
----
-
-## 📝 Notes
-
-- All code is isolated in new files
-- Zero breaking changes to existing demo
-- Determinism verified across 100 iterations
-- Complete test coverage (19 tests, 100% pass)
-- Documentation comprehensive (6 documents)
-- Ready for immediate deployment
-
-**Next Action**: Deploy to staging environment for final verification
+### Reconstruct from Journal
+If the SQLite file is completely lost:
+1. Re-initialize a blank database structure.
+2. Run the recovery tool to import and replay the JSONL audit log journal:
+   ```python
+   RecoveryTool("storage/canonical_db.sqlite").reconstruct_db_from_jsonl("storage/audit_logs/audit_file.jsonl", "storage/reconstructed.sqlite")
+   ```

@@ -1,0 +1,13 @@
+{
+  "checkpoint_id": "ckpt-20260523013109-trace-re",
+  "trace_id": "trace-replay-read-afe248",
+  "timestamp": "2026-05-23T01:31:09.949523",
+  "state_hash": "525d053e86c15e00",
+  "state": {
+    "event_id": "evt-read-test-4",
+    "action": "approve",
+    "submission_id": "sub-read-4",
+    "operator_id": "op-reader"
+  },
+  "lineage_marker": true
+}

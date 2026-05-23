@@ -30,14 +30,14 @@ class RuleEngine:
 
     def evaluate(self, signals: Dict[str, Any], rules: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         """
-        Run all checks in order. Return PASS or FAIL with failure_type.
+        Run all checks in order. Return PASS or FAIL with failure_type, along with pac and rubric dicts.
 
         Args:
             signals: supporting_signals dict from signal_engine
             rules: optional task-specific rules from DB
 
         Returns:
-            { "evaluation_result": "PASS"|"FAIL", "failure_type": str|None }
+            { "evaluation_result": "PASS"|"FAIL", "failure_type": str|None, "pac": dict, "rubric": dict }
         """
         logger.info("[RULE ENGINE] Starting deterministic evaluation")
         
@@ -46,6 +46,65 @@ class RuleEngine:
             "schema": {"min_word_count": 50, "require_repo": False},
             "completeness": {"min_files": 3, "require_proof": True, "require_arch": True},
             "logic": {"min_delivery_ratio": 0.6, "max_missing_features": 3, "min_word_count_for_effort": 80}
+        }
+
+        # Calculate pac and rubric upfront
+        # 1. code_present
+        repo_available = signals.get("repository_available", False)
+        repo_signals   = signals.get("repository_signals") or {}
+        structure      = repo_signals.get("structure", {})
+        file_count     = structure.get("total_files", 0)
+        code_present   = repo_available and file_count > 0
+
+        # 2. proof_present
+        quality        = repo_signals.get("quality", {})
+        readme_val     = quality.get("readme_val", 0)
+        components     = repo_signals.get("components", {})
+        test_files     = components.get("tests", [])
+        doc_files      = components.get("docs", [])
+        proof_present  = readme_val >= 1 or len(test_files) > 0 or len(doc_files) > 0
+
+        # 3. arch_present
+        arch           = repo_signals.get("architecture", {})
+        layer_count    = arch.get("layer_count", 0)
+        is_modular     = arch.get("modular", False)
+        desc_signals   = signals.get("description_signals") or {}
+        title_signals  = signals.get("title_signals") or {}
+        arch_keywords  = {"architecture", "layer", "service", "module", "component",
+                          "design", "flow", "pipeline", "orchestrat"}
+        desc_text      = str(desc_signals).lower()
+        title_text     = str(title_signals).lower()
+        has_arch_kw    = any(kw in desc_text or kw in title_text for kw in arch_keywords)
+        arch_present   = layer_count >= 2 or is_modular or (code_present and has_arch_kw)
+
+        pac = {
+            "code": 1 if code_present else 0,
+            "architecture": 1 if arch_present else 0,
+            "proof": 1 if proof_present else 0
+        }
+
+        # 4. rubric alignment
+        logic_rules    = active_rules.get("logic", {})
+        min_ratio      = logic_rules.get("min_delivery_ratio", 0.6)
+        max_missing    = logic_rules.get("max_missing_features", 3)
+        min_effort_w   = logic_rules.get("min_word_count_for_effort", 80)
+
+        evd            = signals.get("expected_vs_delivered_evidence", {})
+        delivery_ratio = evd.get("delivery_ratio", 0.0)
+        missing        = signals.get("missing_features", [])
+        desc_word_count = desc_signals.get("word_count", 0) if isinstance(desc_signals, dict) else 0
+
+        alignment = delivery_ratio >= min_ratio and len(missing) <= max_missing
+        effort    = desc_word_count >= min_effort_w or readme_val >= 1
+        
+        comp_rules     = active_rules.get("completeness", {})
+        min_files      = comp_rules.get("min_files", 3)
+        has_code_count = file_count >= min_files
+
+        rubric = {
+            "has_alignment": 1 if alignment else 0,
+            "has_effort": 1 if effort else 0,
+            "has_code": 1 if has_code_count else 0
         }
 
         for check_fn in (
@@ -58,10 +117,20 @@ class RuleEngine:
             failure_type = check_fn(signals, active_rules)
             if failure_type is not None:
                 logger.info(f"[RULE ENGINE] FAIL — {failure_type}")
-                return {"evaluation_result": "FAIL", "failure_type": failure_type}
+                return {
+                    "evaluation_result": "FAIL",
+                    "failure_type": failure_type,
+                    "pac": pac,
+                    "rubric": rubric
+                }
 
         logger.info("[RULE ENGINE] PASS — all checks passed")
-        return {"evaluation_result": "PASS", "failure_type": None}
+        return {
+            "evaluation_result": "PASS",
+            "failure_type": None,
+            "pac": pac,
+            "rubric": rubric
+        }
 
     # ── Check 1: Schema ───────────────────────────────────────────────────
 

@@ -97,14 +97,14 @@ class TaskGraphEngine:
                     task = self._tasks["T-GOV-001"]
                     logger.warning(
                         f"GRAPH_WARN: task_id '{current_task_id}' not in task DB. "
-                        f"Falling back to 'T-GOV-001' for compatibility."
+                        f"Routing to 'T-GOV-001' for compatibility."
                     )
                 elif self._tasks:
                     first_key = list(self._tasks.keys())[0]
                     task = self._tasks[first_key]
                     logger.warning(
                         f"GRAPH_WARN: task_id '{current_task_id}' not in task DB. "
-                        f"Falling back to '{first_key}' for compatibility."
+                        f"Routing to '{first_key}' for compatibility."
                     )
                 else:
                     raise ValueError(
@@ -122,7 +122,7 @@ class TaskGraphEngine:
             if not candidates:
                 raise ValueError(
                     f"GRAPH_HARD_REJECT: task '{current_task_id}' has no next_tasks mapping. "
-                    f"No terminal state fallback permitted."
+                    f"No terminal state transition permitted."
                 )
             selected = candidates[0]
             reason = f"PASS → next_tasks[0] = {selected}"

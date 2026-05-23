@@ -43,7 +43,8 @@ def test_phase_2_evaluation_engine_wiring():
             repository_url="https://github.com/test/api-project",
             module_id="task-review-agent",
             schema_version="v1.0",
-            pdf_text=""
+            pdf_text="",
+            trace_id="test-phase2-trace-123"
         )
         
         print(f"Evaluation Score: {test_result.get('score', 'N/A')}")
@@ -95,19 +96,43 @@ def test_phase_4_bucket_integration():
     
     try:
         # Test bucket logging
-        mock_evaluation = {"score": 80, "status": "pass"}
-        mock_signals = {"repository_available": True}
-        mock_decision = {"decision": "approve", "confidence": 0.95}
-        mock_next_task = {"next_task_id": "test-123", "task_type": "advancement"}
+        mock_evaluation = {
+            "evaluation_result": "PASS",
+            "failure_type": None,
+            "score": 80,
+            "status": "pass",
+            "pac": {},
+            "rubric": {},
+            "requires_human_review": False
+        }
+        mock_signals = {
+            "domain": "engineering",
+            "repository_available": True,
+            "expected_vs_delivered_evidence": {"delivery_ratio": 0.8}
+        }
+        mock_decision = {
+            "decision": "APPROVED",
+            "confidence": 0.95,
+            "next_direction": "advancement"
+        }
+        mock_next_task = {
+            "next_task_id": "test-123",
+            "task_type": "advancement",
+            "title": "Next Test Task",
+            "difficulty": "beginner"
+        }
         mock_task_data = {
+            "task_id": "test-task-123",
             "task_title": "Test Task",
             "task_description": "Test Description",
-            "submitted_by": "test-user"
+            "submitted_by": "test-user",
+            "github_repo_link": "https://github.com/test/repo"
         }
         
         trace_id = bucket_integration.log_evaluation(
             mock_evaluation, mock_signals, mock_decision, 
-            mock_next_task, mock_task_data
+            mock_next_task, mock_task_data,
+            trace_id="test-bucket-trace-123"
         )
         
         print(f"Trace ID Generated: {trace_id}")
@@ -134,13 +159,14 @@ def test_phase_5_niyantran_connection():
     try:
         # Test Niyantran task processing
         test_task = {
-            "task_id": "niyantran-test-001",
+            "task_id": "task-niyantran-test-001",
             "task_title": "Niyantran Integration Test",
             "task_description": "Test task for Niyantran connection validation",
             "submitted_by": "niyantran-system",
             "repository_url": None,
             "module_id": "task-review-agent",
-            "schema_version": "v1.0"
+            "schema_version": "v1.0",
+            "trace_id": "test-niyantran-trace-123"
         }
         
         result = niyantran_connection.process_niyantran_task(test_task)
@@ -216,12 +242,13 @@ def test_phase_7_deployment_stability():
     try:
         # Test deterministic execution
         test_task = {
-            "task_id": "determinism-test",
+            "task_id": "task-determinism-test",
             "task_title": "Determinism Validation Task",
             "task_description": "Test deterministic behavior of the evaluation system",
             "submitted_by": "test-system",
             "module_id": "task-review-agent",
-            "schema_version": "v1.0"
+            "schema_version": "v1.0",
+            "trace_id": "test-determinism-trace-123"
         }
         
         results = []
@@ -229,24 +256,24 @@ def test_phase_7_deployment_stability():
             result = niyantran_connection.process_niyantran_task(test_task)
             results.append({
                 "run": i + 1,
-                "score": result["review"]["score"],
-                "decision": result["review"]["decision"],
-                "status": result["review"]["status"]
+                "evaluation_result": result["evaluation_result"],
+                "failure_type": result["failure_type"],
+                "selected_task_id": result["selected_task_id"]
             })
         
         # Check determinism
         first_result = results[0]
         is_deterministic = all(
-            r["score"] == first_result["score"] and
-            r["decision"] == first_result["decision"] and
-            r["status"] == first_result["status"]
+            r["evaluation_result"] == first_result["evaluation_result"] and
+            r["failure_type"] == first_result["failure_type"] and
+            r["selected_task_id"] == first_result["selected_task_id"]
             for r in results
         )
         
         print(f"Deterministic Execution: {is_deterministic}")
         print(f"Test Runs: {len(results)}")
         for result in results:
-            print(f"  Run {result['run']}: Score={result['score']}, Decision={result['decision']}, Status={result['status']}")
+            print(f"  Run {result['run']}: Evaluation={result['evaluation_result']}, FailureType={result['failure_type']}, SelectedTask={result['selected_task_id']}")
         
         if is_deterministic:
             print("✅ PHASE 7 PASSED: System is Deterministic and Stable")

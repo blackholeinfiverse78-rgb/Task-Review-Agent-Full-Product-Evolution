@@ -1,0 +1,14 @@
+{
+  "checkpoint_id": "ckpt-20260523170111-trace-te",
+  "trace_id": "trace-test-default-123456",
+  "timestamp": "2026-05-23T17:01:11.817036",
+  "state_hash": "146df662449a7877",
+  "state": {
+    "event_id": "evt-374ca13d30e1",
+    "action": "approve",
+    "submission_id": "sub-540f7083ad49-044d2990",
+    "final_task": "T-GOV-F01",
+    "operator_id": "op-approve-123"
+  },
+  "lineage_marker": true
+}

@@ -162,7 +162,9 @@ class TestValidator:
     
     def test_validation_logging(self, caplog):
         """Test that validation operations are properly logged"""
-        self.validator.validate_complete("task-review-agent", "v1.0")
+        import logging
+        with caplog.at_level(logging.INFO, logger="validator"):
+            self.validator.validate_complete("task-review-agent", "v1.0")
         
         assert "Validating module_id: task-review-agent" in caplog.text
         assert "Performing complete validation" in caplog.text

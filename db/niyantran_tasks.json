@@ -1376,6 +1376,7 @@
     "completion_signals": [
       "all_tasks_done"
     ],
+    "failure_type": null,
     "prerequisites": [],
     "next_tasks": [],
     "failure_tasks": {

@@ -1,0 +1,33 @@
+{
+    "valid_envelope": {
+        "trace_id": "trace-proof-12345",
+        "schema_version": "v1.0",
+        "actor": "operator-1",
+        "actor_role": "operator",
+        "timestamp": "2026-05-23T13:03:28.450825Z",
+        "lineage_reference": "lineage-proof",
+        "event_type": "candidate_profiles",
+        "payload": {
+            "candidate_id": "cand-proof-001",
+            "name": "Nikhil Proof",
+            "github_handle": "nikhil-proof",
+            "skills": [
+                "python",
+                "governance"
+            ],
+            "performance_score": 99.0
+        },
+        "authorized_by": "Akash",
+        "approval_token": "token-proof-abc",
+        "payload_checksum": "1d96cc0e609a35e79b248d43f235a08898944e7b7a1af7b388dc984cb83db9f3",
+        "checksum": "1d96cc0e609a35e79b248d43f235a08898944e7b7a1af7b388dc984cb83db9f3",
+        "parent_event_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "invalid_envelope_missing_actor": {
+        "trace_id": "trace-123",
+        "schema_version": "v1.0",
+        "payload": {
+            "candidate_id": "cand-1"
+        }
+    }
+}

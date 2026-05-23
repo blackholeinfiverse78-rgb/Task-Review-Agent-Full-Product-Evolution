@@ -27,17 +27,35 @@ def test_next_task_generation():
     # Clear storage
     product_storage.clear_all()
     
+    orchestrator = ReviewOrchestrator()
+    
     # Test Case 1: Weak Task (should generate correction task)
     print("\n1. TESTING WEAK TASK -> CORRECTION ASSIGNMENT")
     print("-" * 60)
     
-    weak_result = final_convergence.process_with_convergence(
+    task1 = Task(
+        task_id="weak-task-001",
         task_title="Simple Login",
         task_description="Basic login form with username and password",
-        repository_url="https://github.com/user/simple-login",
+        submitted_by="test-user",
+        github_repo_link="https://github.com/user/simple-login",
         module_id="task-review-agent",
-        schema_version="v1.0"
+        schema_version="v1.0",
+        timestamp=datetime.now()
     )
+    res1 = orchestrator.process_submission(task1)
+    weak_result = {
+        "score": res1["review"]["score"],
+        "status": res1["review"]["status"],
+        "next_task_id": res1["next_task_id"],
+        "task_type": res1["next_task"]["task_type"],
+        "title": res1["next_task"]["title"],
+        "objective": res1["next_task"]["objective"],
+        "focus_area": res1["next_task"]["focus_area"],
+        "difficulty": res1["next_task"]["difficulty"],
+        "reason": res1["next_task"].get("reason", ""),
+        "evidence_driven": True
+    }
     
     print(f"Score: {weak_result.get('score')}")
     print(f"Status: {weak_result.get('status')}")
@@ -54,7 +72,8 @@ def test_next_task_generation():
     print("\n2. TESTING MEDIUM TASK -> REINFORCEMENT ASSIGNMENT")
     print("-" * 60)
     
-    medium_result = final_convergence.process_with_convergence(
+    task2 = Task(
+        task_id="medium-task-002",
         task_title="REST API with JWT Authentication and User Management",
         task_description="""
         Build a REST API with the following features:
@@ -66,10 +85,24 @@ def test_next_task_generation():
         - Error handling
         - Basic documentation
         """,
-        repository_url="https://github.com/user/rest-api-auth",
+        submitted_by="test-user",
+        github_repo_link="https://github.com/user/rest-api-auth",
         module_id="task-review-agent",
-        schema_version="v1.0"
+        schema_version="v1.0",
+        timestamp=datetime.now()
     )
+    res2 = orchestrator.process_submission(task2)
+    medium_result = {
+        "score": res2["review"]["score"],
+        "status": res2["review"]["status"],
+        "next_task_id": res2["next_task_id"],
+        "task_type": res2["next_task"]["task_type"],
+        "title": res2["next_task"]["title"],
+        "objective": res2["next_task"]["objective"],
+        "focus_area": res2["next_task"]["focus_area"],
+        "difficulty": res2["next_task"]["difficulty"],
+        "reason": res2["next_task"].get("reason", "")
+    }
     
     print(f"Score: {medium_result.get('score')}")
     print(f"Status: {medium_result.get('status')}")
@@ -85,8 +118,9 @@ def test_next_task_generation():
     print("\n3. TESTING STRONG TASK -> ADVANCEMENT ASSIGNMENT")
     print("-" * 60)
     
-    strong_result = final_convergence.process_with_convergence(
-        task_title="Enterprise Microservices Authentication Platform with OAuth2, RBAC, Rate Limiting, Docker, Monitoring, and Comprehensive Testing",
+    task3 = Task(
+        task_id="strong-task-003",
+        task_title="Enterprise Microservices Authentication Platform",
         task_description="""
         Build a comprehensive enterprise-grade authentication microservice platform with:
         
@@ -136,10 +170,24 @@ def test_next_task_generation():
         Technical Stack: Node.js, Express.js, PostgreSQL, Redis, Docker, Kubernetes, Prometheus, Grafana
         Architecture: Clean Architecture with CQRS and Event Sourcing
         """,
-        repository_url="https://github.com/enterprise/auth-platform",
+        submitted_by="test-user",
+        github_repo_link="https://github.com/enterprise/auth-platform",
         module_id="task-review-agent",
-        schema_version="v1.0"
+        schema_version="v1.0",
+        timestamp=datetime.now()
     )
+    res3 = orchestrator.process_submission(task3)
+    strong_result = {
+        "score": res3["review"]["score"],
+        "status": res3["review"]["status"],
+        "next_task_id": res3["next_task_id"],
+        "task_type": res3["next_task"]["task_type"],
+        "title": res3["next_task"]["title"],
+        "objective": res3["next_task"]["objective"],
+        "focus_area": res3["next_task"]["focus_area"],
+        "difficulty": res3["next_task"]["difficulty"],
+        "reason": res3["next_task"].get("reason", "")
+    }
     
     print(f"Score: {strong_result.get('score')}")
     print(f"Status: {strong_result.get('status')}")

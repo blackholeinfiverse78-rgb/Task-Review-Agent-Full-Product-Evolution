@@ -32,6 +32,9 @@ class ReviewSummary(BaseModel):
     failure_type: Optional[str] = None
     decision: str
     evaluation_summary: str = ""
+    score: int = 0
+    readiness_percent: int = 0
+    status: str = "fail"
 
 class NextTaskSummary(BaseModel):
     task_id: str
@@ -51,6 +54,8 @@ class SubmissionHistoryItem(BaseModel):
     task_title: str
     submitted_by: str
     submitted_at: datetime
+    score: int = 0
+    status: str = "fail"
     evaluation_result: str = "FAIL"
     failure_type: Optional[str] = None
     has_pdf: bool = False
@@ -61,6 +66,9 @@ class ReviewDetailResponse(BaseModel):
     evaluation_result: str
     failure_type: Optional[str] = None
     decision: str
+    score: int = 0
+    readiness_percent: int = 0
+    status: str = "fail"
     failure_reasons: List[str]
     improvement_hints: List[str]
     analysis: dict
@@ -157,7 +165,10 @@ async def submit_task(
                 evaluation_result=result["review"]["evaluation_result"],
                 failure_type=result["review"].get("failure_type"),
                 decision=result["review"].get("decision", "REJECTED"),
-                evaluation_summary=result["review"].get("evaluation_summary", "")
+                evaluation_summary=result["review"].get("evaluation_summary", ""),
+                score=result["review"].get("score", 0),
+                readiness_percent=result["review"].get("readiness_percent", 0),
+                status=result["review"].get("status", "fail")
             ),
             next_task_summary=NextTaskSummary(
                 task_id=result["next_task"]["task_id"],
@@ -195,6 +206,8 @@ def get_history():
             task_title=submission.task_title,
             submitted_by=submission.submitted_by,
             submitted_at=submission.submitted_at,
+            score=getattr(review, "score", 0) if review else 0,
+            status=getattr(review, "status", "fail") if review else "fail",
             evaluation_result=getattr(review, "evaluation_result", "FAIL") if review else "FAIL",
             failure_type=getattr(review, "failure_type", None) if review else None,
             has_pdf=bool(submission.pdf_file_path)
@@ -234,6 +247,9 @@ def get_review(submission_id: str):
         evaluation_result=getattr(review, "evaluation_result", "FAIL"),
         failure_type=getattr(review, "failure_type", None),
         decision=getattr(review, "decision", "REJECTED"),
+        score=getattr(review, "score", 0),
+        readiness_percent=getattr(review, "readiness_percent", 0),
+        status=getattr(review, "status", "fail"),
         failure_reasons=review.failure_reasons,
         improvement_hints=review.improvement_hints,
         analysis=review.analysis,

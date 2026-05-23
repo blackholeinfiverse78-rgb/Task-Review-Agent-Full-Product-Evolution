@@ -1,0 +1,16 @@
+{
+  "checkpoint_id": "ckpt-20260523165938-trace-ui",
+  "trace_id": "trace-ui-20260523165937-0be1efa9",
+  "timestamp": "2026-05-23T16:59:38.037200",
+  "state_hash": "49640050ee1b7e92",
+  "state": {
+    "event_id": "evt-0e0f6278492c",
+    "action": "modify",
+    "submission_id": "sub-4ec8f8319b8f-fc711a9e",
+    "original_task": "T-GOV-F01",
+    "override_task": "T-GOV-OVERRIDE",
+    "operator_id": "senior-operator-001",
+    "authorized_by": "exec-auth-001"
+  },
+  "lineage_marker": true
+}
