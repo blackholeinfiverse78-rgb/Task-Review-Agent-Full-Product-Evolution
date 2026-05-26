@@ -6,11 +6,16 @@ sys.path.append(os.getcwd())
 
 from scripts.generate_proofs import make_valid_envelope
 from canonical_db.pipeline import GovernedPipeline
+from canonical_db.db import CanonicalDB
 
 concurrent_db = "storage/concurrent_test.sqlite"
 if os.path.exists(concurrent_db):
     os.remove(concurrent_db)
-    
+
+# Pre-initialize database to create table
+db = CanonicalDB(concurrent_db)
+db.close()
+
 pipeline_c = GovernedPipeline(concurrent_db)
 
 exceptions = []
@@ -36,6 +41,12 @@ for t in threads:
 print(f"Total exceptions: {len(exceptions)}")
 for idx, exc_type, exc_msg in exceptions:
     print(f"Worker {idx} raised {exc_type}: {exc_msg}")
+
+db_check = CanonicalDB(concurrent_db)
+events = db_check.get_all_events()
+print(f"Events in DB: {len(events)}")
+print(f"Sequences: {[e['sequence'] for e in events]}")
+db_check.close()
 
 if os.path.exists(concurrent_db):
     os.remove(concurrent_db)

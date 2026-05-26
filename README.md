@@ -86,6 +86,25 @@ To run the proof generation engine generating files under `/proofs`, `/snapshots
 python -X utf8 scripts/generate_proofs.py
 ```
 
+### Latest Operational Verification Results (TANTRA Integration)
+- **Vinayak Validation Protocol (`tests/production_readiness_test.py`)**: **100% PASS (7/7 Phases)**
+  - Phase 1: Review Packet Enforcement — **PASSED**
+  - Phase 2: Evaluation Engine Wiring — **PASSED** (Canonical score: 40, status: fail)
+  - Phase 3: Decision & Output Standardization — **PASSED** (Decision: REJECTED)
+  - Phase 4: Bucket Integration — **PASSED** (Trace ID: `test-bucket-trace-123` verified)
+  - Phase 5: Niyantran Connection — **PASSED** (Niyantran Health: `healthy`)
+  - Phase 6: Human-in-Loop Escalation — **PASSED** (Escalated successfully, pending escalations: 324)
+  - Phase 7: Deployment Stability & Determinism — **PASSED** (3 identical runs produced identical scores/failures/tasks)
+- **Deterministic Replay state_hash**: `8d4eeea32de1ed3e12d0364a3935456349f5746424d205977ba06b7968adf68e` (Verified match: `True` in `proofs/deterministic_replay_proof.json`)
+- **Snapshot Restore Parity**: **PASSED** (`restore_successful = True` in `proofs/snapshot_restore_proof.json`)
+  - *Manifest Used*: `storage/backups/snapshot_seq_1_20260526_084133.json`
+  - *SQLite Snapshot file_hash*: `84a1dacf2649edf464aaa5297b63822f4c54da662edf567377c684fb4d1a8baa`
+  - *Reconstructed state_hash*: `9d0b1fad105fb242de9bdf23d4b7133814b827f3248f5d149b17da9ff07b298d`
+- **Corruption Rejection**: **PASSED** (Corruption detected instantly; raises `HASH_MISMATCH` and `SCHEMA_DRIFT` on tampered rows, blocking DB mutations).
+- **Concurrency Serialization**: **PASSED**
+  - *Fail-Closed Case (Empty DB)*: Spawning `threads_spawned=5` on an uninitialized/non-existent database correctly triggers `DATABASE_CORRUPT` via `IntegrityValidator.run_full_scan()` before sqlite locking, safely failing closed (`events_written=0`, `strictly_ordered=False`).
+  - *Serialized Case (Initialized DB)*: Spawning `threads_spawned=5` on a pre-initialized database serializes all concurrent writes flawlessly with 0 exceptions, resulting in `events_written=5` with sequential sequence numbers `[1, 2, 3, 4, 5]`.
+
 ---
 
 ## Evaluation Flow (Task Submission → PASS/FAIL)

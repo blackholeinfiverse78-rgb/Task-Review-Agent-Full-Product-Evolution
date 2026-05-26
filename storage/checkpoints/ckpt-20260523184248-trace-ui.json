@@ -1,0 +1,14 @@
+{
+  "checkpoint_id": "ckpt-20260523184248-trace-ui",
+  "trace_id": "trace-ui-20260523184203-ba26a2d0",
+  "timestamp": "2026-05-23T18:42:48.005860",
+  "state_hash": "930becfa56d6878e",
+  "state": {
+    "event_id": "evt-799c6e69b6b6",
+    "action": "approve",
+    "submission_id": "sub-4bf8662ac78a-b9da0e0a",
+    "final_task": "T-GOV-002",
+    "operator_id": "Akash "
+  },
+  "lineage_marker": true
+}

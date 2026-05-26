@@ -49,3 +49,7 @@
 {"operator_id": "op-modify-123", "action": "modify", "submission_id": "sub-677601a3ee63-002-fail", "outcome": "MODIFIED", "timestamp": "2026-05-23T17:01:26.648844", "_checksum": "1df34b40c1df52d1"}
 {"operator_id": "test-operator-001", "action": "approve", "submission_id": "sub-8402d5a319a7-f1a374af", "outcome": "APPROVED", "timestamp": "2026-05-23T17:02:53.619624", "_checksum": "7c40b81d5b52d7a7"}
 {"operator_id": "senior-operator-001", "action": "modify", "submission_id": "sub-4ec8f8319b8f-b718fe18", "outcome": "MODIFIED", "timestamp": "2026-05-23T17:02:53.899191", "_checksum": "260771be438a46f5"}
+{"operator_id": "operator-1", "action": "approve", "submission_id": "sub-fab08d89d4a1-43c737d8", "outcome": "APPROVED", "timestamp": "2026-05-23T18:37:48.138765", "_checksum": "f10f4435d124c95f"}
+{"operator_id": "Akash ", "action": "approve", "submission_id": "sub-4bf8662ac78a-b9da0e0a", "outcome": "APPROVED", "timestamp": "2026-05-23T18:42:48.078173", "_checksum": "b0b53f11f6612673"}
+{"operator_id": "Aakash", "action": "approve", "submission_id": "sub-4bf8662ac78a-c6a7622c", "outcome": "APPROVED", "timestamp": "2026-05-23T19:40:19.141800", "_checksum": "3046e26929e6388f"}
+{"operator_id": "operator-1", "action": "reject", "submission_id": "sub-f3ff01ae1131-f003748a", "outcome": "REJECTED", "timestamp": "2026-05-23T19:40:30.327527", "_checksum": "b3e6fcf77519f77f"}

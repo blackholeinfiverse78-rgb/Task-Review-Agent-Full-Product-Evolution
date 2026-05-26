@@ -1,0 +1,394 @@
+{
+  "timestamp": "2026-05-26T14:54:20.659263",
+  "test_results": [
+    {
+      "test": "Input Validation - '; DROP TABLE users;...",
+      "status": "PASS",
+      "details": "Malicious input should be sanitized",
+      "timestamp": "2026-05-26T14:54:19.254461"
+    },
+    {
+      "test": "Input Validation - 1' OR '1'='1...",
+      "status": "WARN",
+      "details": "Needs validation check",
+      "timestamp": "2026-05-26T14:54:19.254512"
+    },
+    {
+      "test": "Input Validation - <script>alert('xss')...",
+      "status": "PASS",
+      "details": "Malicious input should be sanitized",
+      "timestamp": "2026-05-26T14:54:19.254524"
+    },
+    {
+      "test": "Input Validation - ../../etc/passwd...",
+      "status": "WARN",
+      "details": "Needs validation check",
+      "timestamp": "2026-05-26T14:54:19.254532"
+    },
+    {
+      "test": "Input Validation - ../../../windows/sys...",
+      "status": "WARN",
+      "details": "Needs validation check",
+      "timestamp": "2026-05-26T14:54:19.254540"
+    },
+    {
+      "test": "Input Validation - {{7*7}}...",
+      "status": "WARN",
+      "details": "Needs validation check",
+      "timestamp": "2026-05-26T14:54:19.254550"
+    },
+    {
+      "test": "Input Validation - ${jndi:ldap://evil.c...",
+      "status": "PASS",
+      "details": "Malicious input should be sanitized",
+      "timestamp": "2026-05-26T14:54:19.254558"
+    },
+    {
+      "test": "Input Validation - eval(base64_decode('...",
+      "status": "PASS",
+      "details": "Malicious input should be sanitized",
+      "timestamp": "2026-05-26T14:54:19.254564"
+    },
+    {
+      "test": "Path Traversal - ../../../etc/passwd...",
+      "status": "FAIL",
+      "details": "Path traversal possible",
+      "timestamp": "2026-05-26T14:54:20.482559"
+    },
+    {
+      "test": "Path Traversal - ..\\..\\..\\windows\\sys...",
+      "status": "FAIL",
+      "details": "Path traversal possible",
+      "timestamp": "2026-05-26T14:54:20.482605"
+    },
+    {
+      "test": "Path Traversal - ....//....//....//et...",
+      "status": "FAIL",
+      "details": "Path traversal possible",
+      "timestamp": "2026-05-26T14:54:20.482624"
+    },
+    {
+      "test": "Path Traversal - %2e%2e%2f%2e%2e%2f%2...",
+      "status": "PASS",
+      "details": "Path properly sanitized",
+      "timestamp": "2026-05-26T14:54:20.482639"
+    },
+    {
+      "test": "Path Traversal - ..%252f..%252f..%252...",
+      "status": "PASS",
+      "details": "Path properly sanitized",
+      "timestamp": "2026-05-26T14:54:20.482654"
+    },
+    {
+      "test": "Auth Required - /api/v1/lifecycle/submit",
+      "status": "FAIL",
+      "details": "No authentication mechanism implemented",
+      "timestamp": "2026-05-26T14:54:20.482668"
+    },
+    {
+      "test": "Auth Required - /api/v1/lifecycle/history",
+      "status": "FAIL",
+      "details": "No authentication mechanism implemented",
+      "timestamp": "2026-05-26T14:54:20.482678"
+    },
+    {
+      "test": "Auth Required - /api/v1/lifecycle/review/test-id",
+      "status": "FAIL",
+      "details": "No authentication mechanism implemented",
+      "timestamp": "2026-05-26T14:54:20.482683"
+    },
+    {
+      "test": "Auth Required - /api/v1/lifecycle/next/test-id",
+      "status": "FAIL",
+      "details": "No authentication mechanism implemented",
+      "timestamp": "2026-05-26T14:54:20.482686"
+    },
+    {
+      "test": "Default Credentials Check",
+      "status": "PASS",
+      "details": "No default credentials found",
+      "timestamp": "2026-05-26T14:54:20.482692"
+    },
+    {
+      "test": "API Key Validation",
+      "status": "FAIL",
+      "details": "No API key validation implemented",
+      "timestamp": "2026-05-26T14:54:20.482697"
+    },
+    {
+      "test": "Log File Check - app.log",
+      "status": "PASS",
+      "details": "Log file not found",
+      "timestamp": "2026-05-26T14:54:20.482749"
+    },
+    {
+      "test": "Log File Check - error.log",
+      "status": "PASS",
+      "details": "Log file not found",
+      "timestamp": "2026-05-26T14:54:20.482767"
+    },
+    {
+      "test": "Log File Check - debug.log",
+      "status": "PASS",
+      "details": "Log file not found",
+      "timestamp": "2026-05-26T14:54:20.482782"
+    },
+    {
+      "test": "Environment File Security",
+      "status": "WARN",
+      "details": ".env file exists - ensure it's not in version control",
+      "timestamp": "2026-05-26T14:54:20.482799"
+    },
+    {
+      "test": "Large Input Handling",
+      "status": "PASS",
+      "details": "Large input properly rejected",
+      "timestamp": "2026-05-26T14:54:20.512563"
+    },
+    {
+      "test": "Rate Limiting",
+      "status": "FAIL",
+      "details": "No rate limiting implemented",
+      "timestamp": "2026-05-26T14:54:20.512596"
+    },
+    {
+      "test": "File Type Validation - malicious.exe",
+      "status": "PASS",
+      "details": "Non-PDF files should be rejected",
+      "timestamp": "2026-05-26T14:54:20.512614"
+    },
+    {
+      "test": "File Type Validation - script.js",
+      "status": "PASS",
+      "details": "Non-PDF files should be rejected",
+      "timestamp": "2026-05-26T14:54:20.512623"
+    },
+    {
+      "test": "File Type Validation - payload.php",
+      "status": "PASS",
+      "details": "Non-PDF files should be rejected",
+      "timestamp": "2026-05-26T14:54:20.512628"
+    },
+    {
+      "test": "File Type Validation - backdoor.jsp",
+      "status": "PASS",
+      "details": "Non-PDF files should be rejected",
+      "timestamp": "2026-05-26T14:54:20.512632"
+    },
+    {
+      "test": "File Type Validation - virus.bat",
+      "status": "PASS",
+      "details": "Non-PDF files should be rejected",
+      "timestamp": "2026-05-26T14:54:20.512636"
+    },
+    {
+      "test": "File Size Limits",
+      "status": "WARN",
+      "details": "Check if file size limits are enforced",
+      "timestamp": "2026-05-26T14:54:20.512640"
+    },
+    {
+      "test": "File Content Validation",
+      "status": "WARN",
+      "details": "Ensure PDF content is validated",
+      "timestamp": "2026-05-26T14:54:20.512645"
+    },
+    {
+      "test": "Error Handling",
+      "status": "PASS",
+      "details": "Errors handled without information disclosure",
+      "timestamp": "2026-05-26T14:54:20.547376"
+    },
+    {
+      "test": "Dependency Security",
+      "status": "PASS",
+      "details": "No obviously vulnerable dependencies found",
+      "timestamp": "2026-05-26T14:54:20.547812"
+    },
+    {
+      "test": "CORS Configuration",
+      "status": "WARN",
+      "details": "Error checking CORS: [Errno 2] No such file or directory: 'app/main.py'",
+      "timestamp": "2026-05-26T14:54:20.547894"
+    },
+    {
+      "test": "Logging Security",
+      "status": "PASS",
+      "details": "Logging configured properly",
+      "timestamp": "2026-05-26T14:54:20.547913"
+    },
+    {
+      "test": "Log Injection",
+      "status": "WARN",
+      "details": "Check if log injection is prevented",
+      "timestamp": "2026-05-26T14:54:20.547918"
+    },
+    {
+      "test": "Score Validation",
+      "status": "WARN",
+      "details": "Error testing score validation: '<=' not supported between instances of 'NoneType' and 'int'",
+      "timestamp": "2026-05-26T14:54:20.567685"
+    },
+    {
+      "test": "Authority Bypass",
+      "status": "PASS",
+      "details": "Assignment Authority cannot be bypassed",
+      "timestamp": "2026-05-26T14:54:20.567704"
+    },
+    {
+      "test": "Data Validation",
+      "status": "PASS",
+      "details": "Invalid data properly rejected",
+      "timestamp": "2026-05-26T14:54:20.567775"
+    },
+    {
+      "test": "Assignment Authority",
+      "status": "PASS",
+      "details": "Assignment Authority working correctly",
+      "timestamp": "2026-05-26T14:54:20.567885"
+    },
+    {
+      "test": "Signal Collector",
+      "status": "PASS",
+      "details": "Signal Collector working correctly",
+      "timestamp": "2026-05-26T14:54:20.658768"
+    },
+    {
+      "test": "Validation Gate",
+      "status": "FAIL",
+      "details": "Validation Gate not working",
+      "timestamp": "2026-05-26T14:54:20.658810"
+    }
+  ],
+  "summary": {
+    "total_tests": 43,
+    "passed": 23,
+    "failed": 10,
+    "warnings": 10,
+    "security_score": 53.48837209302325,
+    "critical_issues": [
+      {
+        "test": "Path Traversal - ../../../etc/passwd...",
+        "status": "FAIL",
+        "details": "Path traversal possible",
+        "timestamp": "2026-05-26T14:54:20.482559"
+      },
+      {
+        "test": "Path Traversal - ..\\..\\..\\windows\\sys...",
+        "status": "FAIL",
+        "details": "Path traversal possible",
+        "timestamp": "2026-05-26T14:54:20.482605"
+      },
+      {
+        "test": "Path Traversal - ....//....//....//et...",
+        "status": "FAIL",
+        "details": "Path traversal possible",
+        "timestamp": "2026-05-26T14:54:20.482624"
+      },
+      {
+        "test": "Auth Required - /api/v1/lifecycle/submit",
+        "status": "FAIL",
+        "details": "No authentication mechanism implemented",
+        "timestamp": "2026-05-26T14:54:20.482668"
+      },
+      {
+        "test": "Auth Required - /api/v1/lifecycle/history",
+        "status": "FAIL",
+        "details": "No authentication mechanism implemented",
+        "timestamp": "2026-05-26T14:54:20.482678"
+      },
+      {
+        "test": "Auth Required - /api/v1/lifecycle/review/test-id",
+        "status": "FAIL",
+        "details": "No authentication mechanism implemented",
+        "timestamp": "2026-05-26T14:54:20.482683"
+      },
+      {
+        "test": "Auth Required - /api/v1/lifecycle/next/test-id",
+        "status": "FAIL",
+        "details": "No authentication mechanism implemented",
+        "timestamp": "2026-05-26T14:54:20.482686"
+      },
+      {
+        "test": "API Key Validation",
+        "status": "FAIL",
+        "details": "No API key validation implemented",
+        "timestamp": "2026-05-26T14:54:20.482697"
+      },
+      {
+        "test": "Rate Limiting",
+        "status": "FAIL",
+        "details": "No rate limiting implemented",
+        "timestamp": "2026-05-26T14:54:20.512596"
+      },
+      {
+        "test": "Validation Gate",
+        "status": "FAIL",
+        "details": "Validation Gate not working",
+        "timestamp": "2026-05-26T14:54:20.658810"
+      }
+    ],
+    "warning_issues": [
+      {
+        "test": "Input Validation - 1' OR '1'='1...",
+        "status": "WARN",
+        "details": "Needs validation check",
+        "timestamp": "2026-05-26T14:54:19.254512"
+      },
+      {
+        "test": "Input Validation - ../../etc/passwd...",
+        "status": "WARN",
+        "details": "Needs validation check",
+        "timestamp": "2026-05-26T14:54:19.254532"
+      },
+      {
+        "test": "Input Validation - ../../../windows/sys...",
+        "status": "WARN",
+        "details": "Needs validation check",
+        "timestamp": "2026-05-26T14:54:19.254540"
+      },
+      {
+        "test": "Input Validation - {{7*7}}...",
+        "status": "WARN",
+        "details": "Needs validation check",
+        "timestamp": "2026-05-26T14:54:19.254550"
+      },
+      {
+        "test": "Environment File Security",
+        "status": "WARN",
+        "details": ".env file exists - ensure it's not in version control",
+        "timestamp": "2026-05-26T14:54:20.482799"
+      },
+      {
+        "test": "File Size Limits",
+        "status": "WARN",
+        "details": "Check if file size limits are enforced",
+        "timestamp": "2026-05-26T14:54:20.512640"
+      },
+      {
+        "test": "File Content Validation",
+        "status": "WARN",
+        "details": "Ensure PDF content is validated",
+        "timestamp": "2026-05-26T14:54:20.512645"
+      },
+      {
+        "test": "CORS Configuration",
+        "status": "WARN",
+        "details": "Error checking CORS: [Errno 2] No such file or directory: 'app/main.py'",
+        "timestamp": "2026-05-26T14:54:20.547894"
+      },
+      {
+        "test": "Log Injection",
+        "status": "WARN",
+        "details": "Check if log injection is prevented",
+        "timestamp": "2026-05-26T14:54:20.547918"
+      },
+      {
+        "test": "Score Validation",
+        "status": "WARN",
+        "details": "Error testing score validation: '<=' not supported between instances of 'NoneType' and 'int'",
+        "timestamp": "2026-05-26T14:54:20.567685"
+      }
+    ]
+  }
+}

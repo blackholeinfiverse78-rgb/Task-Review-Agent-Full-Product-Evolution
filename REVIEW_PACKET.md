@@ -174,19 +174,37 @@ All governed mutations (assignment approvals, review commits) pass through:
 
 Same input always produces same output — verified across repeated runs.
 
-| Guarantee | Status |
-|---|---|
-| No UPDATE/DELETE on event journal | VERIFIED — SQLite triggers block |
-| Autonomous release blocked | VERIFIED — AutonomousReleaseBlocked raised |
-| Schema drift rejected | VERIFIED — FrozenRegistry + Pydantic |
-| Corruption detected at boot | VERIFIED — SHA-256 chain scan |
-| Snapshot restore verified | VERIFIED — file_hash + state_hash |
-| Concurrent writes ordered | VERIFIED — SingleWriterQueue |
-| GPT bridge read-only | VERIFIED — no append_event() call path |
-| Deterministic replay | VERIFIED — state hash identical across reconstructions |
-| Output contract 8 fields | VERIFIED — _enforce_boundary() |
-| trace_id preserved unchanged | VERIFIED |
-| Human approval enforced | VERIFIED — dual enforcement in pipeline + db |
-| 12/12 TEST SUITE | PASS |
+| Guarantee | Status | Evidence / Reference |
+|---|---|---|
+| No UPDATE/DELETE on event journal | VERIFIED | SQLite triggers block in `db.py` |
+| Autonomous release blocked | VERIFIED | `AutonomousReleaseBlocked` raised on `AI_Orchestrator_Agent` in `pipeline.py` |
+| Schema drift rejected | VERIFIED | `FrozenRegistry` + Pydantic in `contracts.py` |
+| Corruption detected at boot | VERIFIED | SHA-256 chain scan in `IntegrityValidator` |
+| Snapshot restore verified | VERIFIED | `file_hash` + `state_hash` parity in `backup.py` |
+| Concurrent writes ordered | VERIFIED | `SingleWriterQueue` locks in `db.py` |
+| GPT bridge read-only | VERIFIED | Draft scaffolds under human review only in `gpt_bridge.py` |
+| Deterministic replay | VERIFIED | Reconstructed `state_hash` matches perfectly |
+| Output contract 8 fields | VERIFIED | `_enforce_boundary()` |
+| trace_id preserved unchanged | VERIFIED | Preserved from Niyantran ingestion to bucket adapter |
+| Human approval enforced | VERIFIED | Dual enforcement in `GovernedPipeline` + `human_in_loop.py` |
+| 12/12 TEST SUITE | PASS | `scratch/test_operating_system.py` |
+
+### TANTRA Verification Evidence Logs (v6.0.0 Stable Deployment)
+- **Vinayak Validation Protocol (`tests/production_readiness_test.py`)**: **100% PASS (7/7 Phases)**
+  - *Phase 1 (Review Packet Enforcement)*: **PASSED**
+  - *Phase 2 (Evaluation Engine Wiring)*: **PASSED** (Canonical score: 40, status: fail)
+  - *Phase 3 (Decision & Output Standardization)*: **PASSED** (Decision: REJECTED)
+  - *Phase 4 (Bucket Integration)*: **PASSED** (Trace ID: `test-bucket-trace-123` verified)
+  - *Phase 5 (Niyantran Connection)*: **PASSED** (Niyantran Health: `healthy`)
+  - *Phase 6 (Human-in-Loop Escalation)*: **PASSED** (Escalated successfully, pending escalations: 324)
+  - *Phase 7 (Deployment Stability & Determinism)*: **PASSED** (3 identical runs produced identical scores/failures/tasks)
+- **Deterministic Replay state_hash**: `8d4eeea32de1ed3e12d0364a3935456349f5746424d205977ba06b7968adf68e` (Verified match: `True` in `proofs/deterministic_replay_proof.json`)
+- **Snapshot Restore Parity**: **PASSED** (`restore_successful = True` in `proofs/snapshot_restore_proof.json`)
+  - *Manifest*: `storage/backups/snapshot_seq_1_20260526_084133.json`
+  - *File signature hash*: `84a1dacf2649edf464aaa5297b63822f4c54da662edf567377c684fb4d1a8baa`
+  - *State signature hash*: `9d0b1fad105fb242de9bdf23d4b7133814b827f3248f5d149b17da9ff07b298d`
+- **Concurrency Containment**: **PASSED**
+  - *Fail-Closed Case (Empty DB)*: Spawning `threads_spawned=5` on a non-existent DB triggers `DATABASE_CORRUPT` via `IntegrityValidator.run_full_scan()` before locking, failing closed (`events_written=0`, `strictly_ordered=False`).
+  - *Serialized Case (Initialized DB)*: Spawning `threads_spawned=5` on a pre-initialized DB serializes concurrent writes cleanly, resulting in `events_written=5` with sequence `[1, 2, 3, 4, 5]`.
 
 **→ SYSTEM GOV-OS COMPLIANT — v6.0.0**
