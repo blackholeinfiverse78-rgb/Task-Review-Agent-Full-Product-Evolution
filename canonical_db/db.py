@@ -6,7 +6,7 @@ import uuid
 import queue
 import threading
 from typing import Dict, Any, List, Optional
-from datetime import datetime
+from datetime import datetime, timezone
 from canonical_db.contracts import GovernanceEnvelope, ENTITY_SCHEMAS, canonical_json
 
 # Primary keys for read model indexing
@@ -104,10 +104,10 @@ class CanonicalDB:
         return queue_instance.submit(self, envelope, actor)
 
     def _append_event_sync(self, envelope: GovernanceEnvelope, actor: str) -> Dict[str, Any]:
-        # Validate schema first
+        # Called only from SingleWriterQueue.submit() which holds threading.Lock.
+        # No additional file lock needed — the threading.Lock already serializes all writes.
         envelope.validate_payload()
-        
-        # Enforce assignment release lock and AI signing locks
+
         from canonical_db.pipeline import AUTHORIZED_GOVERNORS
         from canonical_db.contracts import AutonomousReleaseBlocked
 
@@ -116,52 +116,44 @@ class CanonicalDB:
             if approval_state != "HUMAN_APPROVED":
                 raise AutonomousReleaseBlocked("GOVERNANCE_REJECT: Autonomous release is blocked.")
 
-        from db.persistent_storage import FileLock
-        lock_path = self.db_path + ".lock"
-        with FileLock(lock_path):
-            cursor = self.conn.cursor()
-            # Get last event to calculate parent_event_hash
-            cursor.execute("SELECT event_hash FROM events ORDER BY sequence DESC LIMIT 1")
-            row = cursor.fetchone()
-            parent_hash = row["event_hash"] if row else GENESIS_HASH
+        cursor = self.conn.cursor()
+        cursor.execute("SELECT event_hash FROM events ORDER BY sequence DESC LIMIT 1")
+        row = cursor.fetchone()
+        parent_hash = row["event_hash"] if row else GENESIS_HASH
 
-            # Enforce parent event hash alignment
-            if envelope.parent_event_hash and envelope.parent_event_hash != "0"*64 and envelope.parent_event_hash != parent_hash:
-                raise ValueError(f"CHECKPOINT_MISMATCH: parent event hash mismatch. Expected {parent_hash}, got {envelope.parent_event_hash}")
+        if envelope.parent_event_hash and envelope.parent_event_hash != "0"*64 and envelope.parent_event_hash != parent_hash:
+            raise ValueError(f"CHECKPOINT_MISMATCH: parent event hash mismatch. Expected {parent_hash}, got {envelope.parent_event_hash}")
 
-            envelope.parent_event_hash = parent_hash
-            
-            # Generate event properties
-            event_id = f"evt-{uuid.uuid4().hex[:12]}"
-            timestamp = datetime.utcnow().isoformat() + "Z"
-            checksum = envelope.compute_checksum()
-            payload_str = canonical_json(envelope.payload)
+        envelope.parent_event_hash = parent_hash
 
-            # Compute SHA256 integrity hash for the chain
-            lineage_ref = envelope.lineage_reference or ""
-            hash_input = (
-                f"{event_id}|{envelope.trace_id}|{envelope.schema_version}|{actor}|"
-                f"{timestamp}|{envelope.event_type}|{lineage_ref}|{payload_str}|{parent_hash}"
-            )
-            event_hash = hashlib.sha256(hash_input.encode('utf-8')).hexdigest()
+        event_id = f"evt-{uuid.uuid4().hex[:12]}"
+        timestamp = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+        checksum = envelope.compute_checksum()
+        payload_str = canonical_json(envelope.payload)
 
-            cursor.execute("""
-                INSERT INTO events (
-                    event_id, trace_id, schema_version, actor, timestamp,
-                    event_type, lineage_reference, payload, parent_event_hash,
-                    event_hash, checksum
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """, (
-                event_id, envelope.trace_id, envelope.schema_version, actor, timestamp,
-                envelope.event_type, envelope.lineage_reference, payload_str, parent_hash,
+        lineage_ref = envelope.lineage_reference or ""
+        hash_input = (
+            f"{event_id}|{envelope.trace_id}|{envelope.schema_version}|{actor}|"
+            f"{timestamp}|{envelope.event_type}|{lineage_ref}|{payload_str}|{parent_hash}"
+        )
+        event_hash = hashlib.sha256(hash_input.encode('utf-8')).hexdigest()
+
+        cursor.execute("""
+            INSERT INTO events (
+                event_id, trace_id, schema_version, actor, timestamp,
+                event_type, lineage_reference, payload, parent_event_hash,
                 event_hash, checksum
-            ))
-            self.conn.commit()
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, (
+            event_id, envelope.trace_id, envelope.schema_version, actor, timestamp,
+            envelope.event_type, envelope.lineage_reference, payload_str, parent_hash,
+            event_hash, checksum
+        ))
+        self.conn.commit()
 
-            # Retrieve the newly inserted event
-            cursor.execute("SELECT * FROM events WHERE event_id = ?", (event_id,))
-            new_row = cursor.fetchone()
-            return dict(new_row)
+        cursor.execute("SELECT * FROM events WHERE event_id = ?", (event_id,))
+        new_row = cursor.fetchone()
+        return dict(new_row)
 
     def get_last_event(self) -> Optional[Dict[str, Any]]:
         cursor = self.conn.cursor()

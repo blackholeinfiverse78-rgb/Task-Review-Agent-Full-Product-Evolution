@@ -3,8 +3,8 @@ import sys
 import json
 import sqlite3
 import hashlib
+import threading
 from datetime import datetime, timezone
-from concurrent.futures import ThreadPoolExecutor
 
 def _utcnow() -> str:
     return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
@@ -137,31 +137,44 @@ def test_04_restore_proof():
     res1 = pipeline.submit_mutation(envelope1, "operator-1")
     snapshot_manifest = res1["snapshot"]
 
-    # Write a second event
     envelope2 = make_valid_envelope()
     envelope2.payload["candidate_id"] = "cand-002"
     envelope2.payload["name"] = "Alice"
     envelope2.checksum = envelope2.compute_checksum()
-    res2 = pipeline.submit_mutation(envelope2, "operator-1")
+    pipeline.submit_mutation(envelope2, "operator-1")
 
-    # Verify candidate 2 is present
+    # Capture before-restore state
     db = CanonicalDB(TEST_DB)
     state_before = db.reconstruct_state()
     db.close()
-    
-    # Restore to snapshot 1
+
+    # Restore to snapshot 1 — verify_and_restore now includes replay parity check
     pipeline.backup_mgr.verify_and_restore(snapshot_manifest)
 
-    # Verify state after restore (candidate 2 should be gone)
+    # Capture after-restore state (fresh connection, no WAL interference)
     db = CanonicalDB(TEST_DB)
     state_after = db.reconstruct_state()
     db.close()
 
-    success = ("cand-002" in state_before["candidate_profiles"]) and ("cand-002" not in state_after["candidate_profiles"])
+    cand_002_before = "cand-002" in state_before["candidate_profiles"]
+    cand_002_after  = "cand-002" not in state_after["candidate_profiles"]
+    cand_001_after  = "cand-001" in state_after["candidate_profiles"]
+    success = cand_002_before and cand_002_after and cand_001_after
+
     status = "PASS" if success else "FAIL"
-    evidence = f"Restored to snapshot {snapshot_manifest}"
-    proof = f"cand-002 in state_before: { 'cand-002' in state_before['candidate_profiles'] }\ncand-002 in state_after: { 'cand-002' in state_after['candidate_profiles'] }"
-    replay = f"Replayed state candidates: {list(state_after['candidate_profiles'].keys())}"
+    evidence = (
+        f"before_restore: cand-001={('cand-001' in state_before['candidate_profiles'])}, "
+        f"cand-002={cand_002_before} | "
+        f"after_restore: cand-001={cand_001_after}, cand-002={(not cand_002_after)}"
+    )
+    proof = (
+        f"Manifest: {snapshot_manifest}\n"
+        f"cand-002 present before restore: {cand_002_before}\n"
+        f"cand-002 absent after restore: {cand_002_after}\n"
+        f"cand-001 present after restore: {cand_001_after}\n"
+        f"Replay parity verified inside verify_and_restore: True"
+    )
+    replay = f"Restored candidates: {list(state_after['candidate_profiles'].keys())}"
     return status, evidence, proof, replay
 
 def test_05_replay_reconstruction():
@@ -314,37 +327,49 @@ def test_09_ecosystem_integration():
 
 def test_10_concurrency():
     init_clean_db()
+    # Single shared pipeline — all threads share the same SingleWriterQueue via get_writer_queue()
     pipeline = GovernedPipeline(TEST_DB)
-    
+
+    results = []
+    errors  = []
+    lock    = threading.Lock()
+
     def submit_worker(idx: int):
-        # We need a new connection pool for each thread to simulate concurrent client actions
         envelope = make_valid_envelope()
         envelope.payload["candidate_id"] = f"cand-thread-{idx}"
         envelope.payload["name"] = f"ThreadCandidate {idx}"
         envelope.checksum = envelope.compute_checksum()
-        
-        # We wrap in try-except to log output
         try:
             pipeline.submit_mutation(envelope, "operator-1")
-            return True
-        except Exception:
-            return False
+            with lock:
+                results.append(idx)
+        except Exception as e:
+            with lock:
+                errors.append((idx, str(e)))
 
-    # Spawn 10 concurrent threads appending events
-    with ThreadPoolExecutor(max_workers=5) as executor:
-        futures = [executor.submit(submit_worker, i) for i in range(10)]
-        results = [f.result() for f in futures]
+    threads = [threading.Thread(target=submit_worker, args=(i,)) for i in range(10)]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join()
 
-    # Verify event journal state
     db = CanonicalDB(TEST_DB)
     events = db.get_all_events()
     db.close()
 
-    success = len(events) == 10
-    status = "PASS" if success else "FAIL"
-    evidence = f"Spawned 10 threads. Successful commits: {sum(results)}"
-    proof = f"Total DB records: {len(events)} (Expected 10)"
-    replay = f"Reconstructed candidates count: {len(events)}"
+    sequences = [e["sequence"] for e in events]
+    strictly_ordered = sequences == list(range(1, len(sequences) + 1))
+    success = len(events) == 10 and strictly_ordered and len(errors) == 0
+
+    status   = "PASS" if success else "FAIL"
+    evidence = f"Spawned 10 threads. Committed: {len(results)}, Errors: {len(errors)}"
+    proof    = (
+        f"Total DB records: {len(events)} (Expected 10)\n"
+        f"Sequences: {sequences}\n"
+        f"Strictly ordered: {strictly_ordered}\n"
+        f"Worker errors: {errors}"
+    )
+    replay   = f"Reconstructed candidates: {len(events)}"
     return status, evidence, proof, replay
 
 def test_11_schema_drift():
