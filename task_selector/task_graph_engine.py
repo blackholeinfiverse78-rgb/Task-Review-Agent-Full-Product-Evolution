@@ -125,6 +125,13 @@ class TaskGraphEngine:
                     f"No terminal state transition permitted."
                 )
             selected = candidates[0]
+            # COMPLETED is a valid terminal state — not a routing error
+            if selected == "COMPLETED":
+                return {
+                    "selected_task_id": "COMPLETED",
+                    "selection_reason": f"PASS → next_tasks[0] = COMPLETED (lifecycle terminal state)",
+                    "source": "task_graph"
+                }
             reason = f"PASS → next_tasks[0] = {selected}"
 
         else:  # FAIL
