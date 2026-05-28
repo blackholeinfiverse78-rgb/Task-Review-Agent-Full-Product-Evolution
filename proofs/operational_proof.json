@@ -1,0 +1,101 @@
+{
+    "timestamp": "2026-05-28T12:09:17.293200Z",
+    "overall": "PASS",
+    "results": {
+        "section_1_calibration": {
+            "status": "PASS",
+            "corpus_hash": "0948afd7f7762e02eac72d7b4a170f17064c46a8d643d6fd87fae41f2a6f6b4e",
+            "replay_hashes": [
+                {
+                    "corpus_id": "CAL-001",
+                    "hash": "d8e947d8c2403c3cb48f623acf5a5dd527f25e9dd954043b460f5d90aff3b9a5",
+                    "replay_match": true
+                },
+                {
+                    "corpus_id": "CAL-002",
+                    "hash": "a5fbd52c6382aaa8c626e2f5c6df147a02552a356b1071670ae167eec11bb40c",
+                    "replay_match": true
+                },
+                {
+                    "corpus_id": "CAL-003",
+                    "hash": "ec8e636c874cb540dec1867f845d7d8f4b8f1eb9b6b465c9903046ec30e6b57b",
+                    "replay_match": true
+                },
+                {
+                    "corpus_id": "CAL-004",
+                    "hash": "4436cb5bc18034647b73b3297c5180c8a234cbf185c84428cc3f498fb91ea05f",
+                    "replay_match": true
+                },
+                {
+                    "corpus_id": "CAL-005",
+                    "hash": "20d84162705ee3346f11f751bce2f1980d30d2c602b702df2cccb2d6ec530a96",
+                    "replay_match": true
+                }
+            ]
+        },
+        "section_2_bhiv_db": {
+            "status": "PASS",
+            "events_scanned": 3,
+            "state_hash": "82df3442ac7c0375c174084340737b23f71ca81a2630c24ef08d34314979bc42",
+            "schema_drift_blocked": true,
+            "invalid_lineage_blocked": true,
+            "note_sequences": [
+                1,
+                2,
+                3
+            ]
+        },
+        "section_3_niyantran_flow": {
+            "status": "PASS",
+            "evaluation_result": "FAIL",
+            "selected_task_id": "T-GOV-F01",
+            "reasoning_hash": "d606931a24a35bd19aaa3414ad3978c1a57a7a770a00a6c20ad19071c0a17969",
+            "unauthorized_release_blocked": true,
+            "reasoning_artifact_seq": 4,
+            "review_history_seq": 5,
+            "assignment_seq": 6,
+            "bucket_lineage_confirmed": true
+        },
+        "section_4_concurrency": {
+            "status": "PASS",
+            "threads_spawned": 10,
+            "events_committed": 10,
+            "errors": [],
+            "sequences": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15,
+                16
+            ],
+            "strictly_ordered": true
+        },
+        "section_5_deployment": {
+            "status": "PASS",
+            "state_before_hash": "e8066196d292c5410b584afb6730ada7b678b320f8f2ea86bb723f5cfc6c3797",
+            "corrupted_restore_blocked": true,
+            "post_restore_integrity": true,
+            "snapshots_available": 16
+        },
+        "section_6_replay": {
+            "status": "PASS",
+            "events_exported": 1,
+            "original_state_hash": "b4203c61c186ddc78a67433303e37c17e46c785cd6e3d1b541ff5863b14c760c",
+            "reconstructed_state_hash": "b4203c61c186ddc78a67433303e37c17e46c785cd6e3d1b541ff5863b14c760c",
+            "replay_parity": true,
+            "gpt_write_authority": "NONE",
+            "gpt_approval_authority": "NONE"
+        }
+    }
+}

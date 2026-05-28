@@ -21,6 +21,9 @@ class GovernedPipeline:
     def __init__(self, db_path: str = "storage/canonical_db.sqlite"):
         self.db_path = db_path
         self.backup_mgr = BackupManager(self.db_path)
+        # Ensure DB and schema exist before any integrity scan
+        db = CanonicalDB(self.db_path)
+        db.close()
 
     def submit_mutation(self, envelope: GovernanceEnvelope, executor_actor: str) -> Dict[str, Any]:
         """

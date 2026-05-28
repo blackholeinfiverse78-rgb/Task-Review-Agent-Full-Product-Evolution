@@ -3,7 +3,7 @@ import json
 import unicodedata
 from typing import Dict, Any, Optional, List
 from pydantic import BaseModel, Field
-from datetime import datetime
+from datetime import datetime, timezone
 
 class AutonomousReleaseBlocked(PermissionError):
     pass
@@ -99,7 +99,7 @@ class GovernanceEnvelope(BaseModel):
     schema_version: str = "v1.0"
     actor: str
     actor_role: str = "operator"
-    timestamp: str = Field(default_factory=lambda: datetime.utcnow().isoformat() + "Z")
+    timestamp: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"))
     lineage_reference: Optional[str] = None
     event_type: str  # Must be one of ENTITY_SCHEMAS keys
     payload: Dict[str, Any]
