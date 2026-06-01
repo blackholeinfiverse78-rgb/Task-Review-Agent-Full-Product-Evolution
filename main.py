@@ -5,11 +5,12 @@ Version: 1.1.1
 import sys
 import os
 
-from fastapi import FastAPI, Request, status
-from fastapi.responses import JSONResponse
+from fastapi import FastAPI, Request, status, HTTPException
+from fastapi.responses import JSONResponse, FileResponse
 from fastapi.exceptions import RequestValidationError
 from api import lifecycle, tts, production, review_routes, task_review, gov_os_routes
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 import logging
 import json
 from dotenv import load_dotenv
@@ -84,20 +85,51 @@ app.include_router(task_review.router)
 app.include_router(gov_os_routes.router)
 
 
-@app.get("/")
-async def root():
-    return {
-        "message": "Parikshak Production System Online",
-        "documentation": "/docs",
-        "health": "/health",
-        "production_status": "/api/v1/production/system/production-status",
-        "niyantran_endpoint": "/api/v1/production/niyantran/submit",
-        "version": "1.1.0"
-    }
-
 @app.get("/health")
 async def health():
     return {"status": "healthy", "version": "1.1.0"}
+
+# Serve React Frontend SPA
+build_dir = os.path.join(os.path.dirname(__file__), "frontend", "build")
+if os.path.exists(build_dir):
+    # Mount the /static directory
+    static_dir = os.path.join(build_dir, "static")
+    if os.path.exists(static_dir):
+        app.mount("/static", StaticFiles(directory=static_dir), name="static")
+
+    # Define catch-all handler for serving React assets and SPA pages
+    @app.get("/{catchall:path}")
+    async def serve_spa(catchall: str):
+        # Prevent catching API/docs routes
+        if (catchall.startswith("api/") or 
+            catchall.startswith("health") or 
+            catchall.startswith("docs") or 
+            catchall.startswith("openapi.json") or 
+            catchall.startswith("redoc")):
+            raise HTTPException(status_code=404, detail="Not Found")
+            
+        # Check if file exists in the build root (like favicon.ico, logo192.png, asset-manifest.json etc.)
+        file_path = os.path.join(build_dir, catchall)
+        if os.path.exists(file_path) and os.path.isfile(file_path):
+            return FileResponse(file_path)
+            
+        # Fallback to index.html for React Router SPA routes
+        index_path = os.path.join(build_dir, "index.html")
+        if os.path.exists(index_path):
+            return FileResponse(index_path)
+            
+        raise HTTPException(status_code=404, detail="React build index.html not found")
+else:
+    @app.get("/")
+    async def root():
+        return {
+            "message": "Parikshak Production System Online (API only, frontend build not found)",
+            "documentation": "/docs",
+            "health": "/health",
+            "production_status": "/api/v1/production/system/production-status",
+            "niyantran_endpoint": "/api/v1/production/niyantran/submit",
+            "version": "1.1.0"
+        }
 
 if __name__ == "__main__":
     import uvicorn

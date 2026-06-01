@@ -1,35 +1,13 @@
 services:
-  # 1. Backend Service
   - type: web
-    name: task-review-backend
-    env: python
-    runtime: python
-    # Removed plan (let Render use default free tier if available)
+    name: task-review-unified
+    env: docker
     region: oregon
-    buildCommand: pip install -r requirements.txt
-    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /health
     envVars:
-      - key: PYTHON_VERSION
-        value: 3.11.7
       - key: GITHUB_TOKEN
         sync: false
       - key: GROQ_API_KEY
         sync: false
       - key: ALLOWED_ORIGINS
-        value: '["https://task-review-frontend-fjdr.onrender.com"]'
-
-  # 2. Frontend Static Site Service
-  - type: web
-    name: task-review-frontend
-    runtime: static
-    # Removed plan (static sites are always free)
-    buildCommand: cd frontend && npm install && npm run build
-    staticPublishPath: ./frontend/build
-    routes:
-      - type: rewrite
-        source: /*
-        destination: /index.html
-    envVars:
-      - key: REACT_APP_BACKEND_URL
-        value: "https://task-review-backend-fjdr.onrender.com"
+        value: '["*"]'

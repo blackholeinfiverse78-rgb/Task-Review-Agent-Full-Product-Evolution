@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const RAW_BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000';
+const RAW_BACKEND_URL = process.env.REACT_APP_BACKEND_URL || window.location.origin;
 let BACKEND_URL = RAW_BACKEND_URL.replace(/\/+$/, '');
 if (BACKEND_URL.endsWith('/api/v1')) {
     BACKEND_URL = BACKEND_URL.replace(/\/api\/v1$/, '');

@@ -1,14 +1,14 @@
 {
   "v": "1.0",
-  "total_executions": 146,
+  "total_executions": 150,
   "pass_count": 4,
-  "fail_count": 142,
+  "fail_count": 146,
   "failure_distribution": {
-    "schema_violation": 140,
+    "schema_violation": 144,
     "incomplete": 2,
     "incorrect_logic": 0,
     "integration_fail": 0
   },
-  "hard_reject_count": 23,
-  "last_updated": "2026-06-01T14:24:05.189556"
+  "hard_reject_count": 25,
+  "last_updated": "2026-06-01T15:18:26.279172"
 }
