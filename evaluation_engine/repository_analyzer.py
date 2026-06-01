@@ -16,7 +16,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 logger = logging.getLogger("repository_analyzer")
 
-load_dotenv()
+load_dotenv(override=True)  # override=True ensures .env always wins over stale OS env vars
 
 _SAFE_REPO_SEGMENT = re.compile(r'^[a-zA-Z0-9_.-]{1,100}$')
 
