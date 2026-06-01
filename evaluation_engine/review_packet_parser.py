@@ -113,7 +113,14 @@ class ReviewPacketParser:
         Hard gate. Returns dict with valid=True/False.
         On valid=True also returns confidence, validation_depth, warnings.
         """
-        packet_file = os.path.join(project_root, self.packet_path)
+        # Resolve relative to this file's directory (project root) so it works
+        # regardless of the process CWD (local vs Render/Docker deployment).
+        _this_dir = os.path.dirname(os.path.abspath(__file__))
+        _repo_root = os.path.dirname(_this_dir)
+        packet_file = os.path.join(_repo_root, self.packet_path)
+        # Fallback to caller-supplied root if the above doesn't exist
+        if not os.path.exists(packet_file):
+            packet_file = os.path.join(project_root, self.packet_path)
 
         # Gate 1: file exists
         if not os.path.exists(packet_file):
