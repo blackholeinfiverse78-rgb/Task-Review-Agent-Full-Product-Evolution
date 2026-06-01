@@ -89,8 +89,10 @@ class RuleEngine:
         max_missing    = logic_rules.get("max_missing_features", 3)
         min_effort_w   = logic_rules.get("min_word_count_for_effort", 80)
 
-        evd            = signals.get("expected_vs_delivered_evidence", {})
-        delivery_ratio = evd.get("delivery_ratio", 0.0)
+        evd            = signals.get("expected_vs_delivered_evidence") or {}
+        expected_count = evd.get("expected_count", 0)
+        # If no features were expected, treat delivery as complete (ratio = 1.0)
+        delivery_ratio = evd.get("delivery_ratio", 1.0) if expected_count > 0 else 1.0
         missing        = signals.get("missing_features", [])
         desc_word_count = desc_signals.get("word_count", 0) if isinstance(desc_signals, dict) else 0
 
@@ -224,8 +226,9 @@ class RuleEngine:
         max_missing    = logic_rules.get("max_missing_features", 3)
         min_effort_w   = logic_rules.get("min_word_count_for_effort", 80)
 
-        evd            = signals.get("expected_vs_delivered_evidence", {})
-        delivery_ratio = evd.get("delivery_ratio", 0.0)
+        evd            = signals.get("expected_vs_delivered_evidence") or {}
+        expected_count = evd.get("expected_count", 0)
+        delivery_ratio = evd.get("delivery_ratio", 1.0) if expected_count > 0 else 1.0
         missing        = signals.get("missing_features", [])
         desc_signals   = signals.get("description_signals") or {}
         word_count     = desc_signals.get("word_count", 0) if isinstance(desc_signals, dict) else 0
