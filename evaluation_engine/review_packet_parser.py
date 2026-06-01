@@ -96,6 +96,10 @@ class ReviewPacketData:
 
 # ── Parser ────────────────────────────────────────────────────────────────
 
+# Project root = one level above this file (evaluation_engine/)
+_PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+
 class ReviewPacketParser:
     """
     Phase 1 Hard Gate — structure-aware REVIEW_PACKET.md enforcement.
@@ -103,24 +107,19 @@ class ReviewPacketParser:
     """
 
     def __init__(self, packet_path: str = "REVIEW_PACKET.md"):
-        self.packet_path = packet_path
+        # Resolve absolute path at instantiation time — CWD-independent
+        self.packet_file = os.path.join(_PROJECT_ROOT, packet_path)
         self.required_sections = REQUIRED_SECTIONS
 
     # ── Public entry point ────────────────────────────────────────────────
 
-    def enforce_packet_requirement(self, project_root: str) -> Dict[str, Any]:
+    def enforce_packet_requirement(self, project_root: str = None) -> Dict[str, Any]:
         """
         Hard gate. Returns dict with valid=True/False.
-        On valid=True also returns confidence, validation_depth, warnings.
+        Path is resolved at instantiation time relative to the project root,
+        making it CWD-independent on any deployment (local, Docker, Render).
         """
-        # Resolve relative to this file's directory (project root) so it works
-        # regardless of the process CWD (local vs Render/Docker deployment).
-        _this_dir = os.path.dirname(os.path.abspath(__file__))
-        _repo_root = os.path.dirname(_this_dir)
-        packet_file = os.path.join(_repo_root, self.packet_path)
-        # Fallback to caller-supplied root if the above doesn't exist
-        if not os.path.exists(packet_file):
-            packet_file = os.path.join(project_root, self.packet_path)
+        packet_file = self.packet_file
 
         # Gate 1: file exists
         if not os.path.exists(packet_file):
