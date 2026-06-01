@@ -5,7 +5,7 @@
 # Documentation
 docs/
 *.md
-REVIEW_PACKET.md
+!REVIEW_PACKET.md
 
 # Tests
 tests/
