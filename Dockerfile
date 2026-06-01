@@ -10,7 +10,8 @@ RUN npm ci --legacy-peer-deps || npm install --legacy-peer-deps
 COPY frontend/ ./
 
 # Build the production bundle
-ENV REACT_APP_BACKEND_URL=""
+ENV REACT_APP_BACKEND_URL="/"
+ENV REACT_APP_API_BASE="/api/v1"
 ENV GENERATE_SOURCEMAP=false
 ENV CI=false
 RUN npm run build
