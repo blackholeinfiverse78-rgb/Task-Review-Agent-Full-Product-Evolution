@@ -38,9 +38,5 @@ COPY --from=frontend-builder /app/frontend/build ./frontend/build/
 # Expose port
 EXPOSE 8000
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=15s --retries=3 \
-    CMD curl -f http://localhost:8000/health || exit 1
-
-# Start FastAPI backend
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Start FastAPI backend (bind dynamically to cloud provider's injected PORT environment variable)
+CMD uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}
