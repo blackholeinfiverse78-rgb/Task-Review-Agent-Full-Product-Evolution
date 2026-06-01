@@ -221,7 +221,7 @@ class RepositoryAnalyzer:
         doc_density = doc_count / code_count if code_count > 0 else 0
         
         return {
-            "readme_score": readme_score,
+            "readme_val": readme_score,   # Key aligned with rule_engine.py expectation
             "documentation_density": doc_density,
             "naming_consistency": 0.8, # Placeholder for more complex logic
             "has_license": any('license' in p for p in paths)

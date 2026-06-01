@@ -1,5 +1,5 @@
 {
-    "timestamp": "2026-05-28T12:09:17.293200Z",
+    "timestamp": "2026-05-30T06:04:34.386758Z",
     "overall": "PASS",
     "results": {
         "section_1_calibration": {
@@ -83,7 +83,7 @@
         },
         "section_5_deployment": {
             "status": "PASS",
-            "state_before_hash": "e8066196d292c5410b584afb6730ada7b678b320f8f2ea86bb723f5cfc6c3797",
+            "state_before_hash": "b7eb4d8a67882b5dc132cf17eaea3804a5ec47750baa043f88501c70c6ba2da0",
             "corrupted_restore_blocked": true,
             "post_restore_integrity": true,
             "snapshots_available": 16

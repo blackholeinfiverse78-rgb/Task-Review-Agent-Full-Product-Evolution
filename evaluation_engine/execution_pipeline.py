@@ -4,6 +4,7 @@ import hashlib
 import time
 
 from evaluation_engine.orchestrator import evaluation_orchestrator
+from evaluation_engine.evaluation_runner import evaluation_runner
 from task_selector.task_graph_engine import task_graph_engine
 from task_selector.bucket_integration import bucket_integration
 from db.persistent_storage import product_storage, TaskSubmission, ReviewRecord, TaskStatus
@@ -142,32 +143,32 @@ class ExecutionPipeline:
 
     def _enforce_boundary(self, output: Dict[str, Any]) -> None:
         """Strict validation of the 8-field contract and domain rules"""
+        # 1. Ensure schema_version is owned by pipeline layer
+        schema_version = output.get("schema_version")
+        if not schema_version:
+            raise ValueError("HARD_REJECT: Missing schema_version")
+
+        # 2. Strip schema_version and delegate 7-field contract enforcement to EvaluationRunner (Sri Satya)
+        seven_field_output = {k: v for k, v in output.items() if k != "schema_version"}
+        try:
+            evaluation_runner.evaluate(seven_field_output)
+        except ValueError as e:
+            raise ValueError(f"HARD_REJECT: Contract violations detected by EvaluationRunner: {e}")
+
+        # 3. Pipeline specific validations
+        # Trace ID min-length requirement
+        trace_id = output.get("trace_id")
+        if not trace_id or len(str(trace_id)) < 8:
+            raise ValueError(f"HARD_REJECT: trace_id too short or invalid ({trace_id})")
+
+        # Mapping verification
+        if not output.get("selected_task_id"):
+            raise ValueError("HARD_REJECT: Missing task mapping. No alternative permitted.")
+
+        # 4. Enforce output contract contains exactly the 8 expected fields
         missing = _REQUIRED_OUTPUT_FIELDS - set(output.keys())
         if missing:
             raise ValueError(f"HARD_REJECT: Missing output fields {missing}")
-        
-        # 1. Trace ID Hard Reject
-        trace_id = output.get("trace_id")
-        if not trace_id or len(str(trace_id)) < 8:
-            raise ValueError(f"HARD_REJECT: trace_id missing or invalid ({trace_id})")
-
-        # 2. Evaluation Result Hard Reject
-        if output["evaluation_result"] not in ("PASS", "FAIL"):
-            raise ValueError(f"HARD_REJECT: Invalid evaluation_result: {output['evaluation_result']}")
-        
-        # 3. Failure Type Hard Reject
-        valid_failures = {"schema_violation", "incomplete", "incorrect_logic", "integration_fail"}
-        if output["evaluation_result"] == "FAIL":
-            if output["failure_type"] not in valid_failures:
-                raise ValueError(f"HARD_REJECT: Invalid failure_type for FAIL status: {output['failure_type']}")
-        elif output["failure_type"] is not None:
-            raise ValueError("HARD_REJECT: failure_type must be null for PASS status")
-
-        # 4. Mapping Hard Reject (already handled by graph traversal, but verify result)
-        if not output["selected_task_id"]:
-            raise ValueError("HARD_REJECT: Missing task mapping. No alternative permitted.")
-
-        # 5. Output contract size (exactly 8 fields)
         if len(output) != 8:
             extra = set(output.keys()) - _REQUIRED_OUTPUT_FIELDS
             raise ValueError(f"HARD_REJECT: Extra fields detected: {extra}")

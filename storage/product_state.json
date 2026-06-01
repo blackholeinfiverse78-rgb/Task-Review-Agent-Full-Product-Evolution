@@ -1,17 +1,119 @@
 {
   "submissions": {
-    "sub-2cc91e7140aa-85790d1d": {
-      "submission_id": "sub-2cc91e7140aa-85790d1d",
-      "task_id": "determinism-test",
-      "task_title": "Determinism Verification Task",
-      "task_description": "Test deterministic scoring with identical inputs",
-      "submitted_by": "Test Runner",
-      "submitted_at": "2026-05-26T14:52:48.776572",
+    "sub-e48f4ed5688f-de063396": {
+      "submission_id": "sub-e48f4ed5688f-de063396",
+      "task_id": "task-1780304059.631308",
+      "task_title": "Build Microservice Authentication System with JWT and OAuth2",
+      "task_description": "Objective: Develop a scalable microservice for user authentication and authorization\n        \n        Technical Requirements:\n        - JWT token generation and validation with RS256 algorithm\n        - OAuth2 integration with Google and GitHub providers\n        - Rate limiting for security (100 requests/minute per IP)\n        - Database persistence with PostgreSQL and Redis caching\n        - API documentation with OpenAPI/Swagger\n        \n        Technical Implementation:\n        1. FastAPI framework setup with async/await patterns\n        2. Database models and Alembic migrations\n        3. Authentication endpoints (/login, /register, /refresh)\n        4. Token management utilities and middleware\n        5. Security middleware with CORS and CSRF protection\n        \n        Testing Strategy:\n        - Unit tests for all endpoints (pytest)\n        - Integration tests for database operations\n        - Security penetration testing with OWASP guidelines\n        - Load testing with 1000+ concurrent users",
+      "submitted_by": "Dynamic Test User",
+      "submitted_at": "2026-06-01T14:24:19.631314",
       "status": "submitted",
       "previous_task_id": null,
       "pdf_file_path": null,
-      "pdf_extracted_text": null,
-      "module_id": "core-development",
+      "pdf_extracted_text": "",
+      "module_id": "task-review-agent",
+      "schema_version": "v1.0",
+      "registry_validation_status": "VALID",
+      "registry_validation_reason": "Validation Passed",
+      "review_state": "PENDING_REVIEW"
+    },
+    "sub-46066ebe3b1c-633438e4": {
+      "submission_id": "sub-46066ebe3b1c-633438e4",
+      "task_id": "task-1780304059.803327",
+      "task_title": "Create User Login System",
+      "task_description": "Build a login system for users.\n        \n        Requirements:\n        - Users can register with email and password\n        - Users can login and logout\n        - Password should be secure\n        \n        Implementation:\n        - Use a web framework\n        - Store data in database\n        - Add some security features",
+      "submitted_by": "Dynamic Test User",
+      "submitted_at": "2026-06-01T14:24:19.803333",
+      "status": "submitted",
+      "previous_task_id": null,
+      "pdf_file_path": null,
+      "pdf_extracted_text": "",
+      "module_id": "task-review-agent",
+      "schema_version": "v1.0",
+      "registry_validation_status": "VALID",
+      "registry_validation_reason": "Validation Passed",
+      "review_state": "PENDING_REVIEW"
+    },
+    "sub-41ee0cb40dfd-ce643f4d": {
+      "submission_id": "sub-41ee0cb40dfd-ce643f4d",
+      "task_id": "task-1780304059.981442",
+      "task_title": "Make website",
+      "task_description": "Create a simple website with some pages and forms.",
+      "submitted_by": "Dynamic Test User",
+      "submitted_at": "2026-06-01T14:24:19.981448",
+      "status": "submitted",
+      "previous_task_id": null,
+      "pdf_file_path": null,
+      "pdf_extracted_text": "",
+      "module_id": "task-review-agent",
+      "schema_version": "v1.0",
+      "registry_validation_status": "VALID",
+      "registry_validation_reason": "Validation Passed",
+      "review_state": "PENDING_REVIEW"
+    },
+    "sub-e48f4ed5688f-98203adf": {
+      "submission_id": "sub-e48f4ed5688f-98203adf",
+      "task_id": "task-1780304060.141078",
+      "task_title": "Build Microservice Authentication System with JWT and OAuth2",
+      "task_description": "Objective: Develop a scalable microservice for user authentication and authorization\n        \n        Technical Requirements:\n        - JWT token generation and validation with RS256 algorithm\n        - OAuth2 integration with Google and GitHub providers\n        - Rate limiting for security (100 requests/minute per IP)\n        - Database persistence with PostgreSQL and Redis caching\n        - API documentation with OpenAPI/Swagger\n        \n        Technical Implementation:\n        1. FastAPI framework setup with async/await patterns\n        2. Database models and Alembic migrations\n        3. Authentication endpoints (/login, /register, /refresh)\n        4. Token management utilities and middleware\n        5. Security middleware with CORS and CSRF protection\n        \n        Testing Strategy:\n        - Unit tests for all endpoints (pytest)\n        - Integration tests for database operations\n        - Security penetration testing with OWASP guidelines\n        - Load testing with 1000+ concurrent users",
+      "submitted_by": "Dynamic Test User",
+      "submitted_at": "2026-06-01T14:24:20.141084",
+      "status": "submitted",
+      "previous_task_id": null,
+      "pdf_file_path": null,
+      "pdf_extracted_text": "",
+      "module_id": "task-review-agent",
+      "schema_version": "v1.0",
+      "registry_validation_status": "VALID",
+      "registry_validation_reason": "Validation Passed",
+      "review_state": "PENDING_REVIEW"
+    },
+    "sub-e48f4ed5688f-3ef9a103": {
+      "submission_id": "sub-e48f4ed5688f-3ef9a103",
+      "task_id": "task-1780304060.318481",
+      "task_title": "Build Microservice Authentication System with JWT and OAuth2",
+      "task_description": "Objective: Develop a scalable microservice for user authentication and authorization\n        \n        Technical Requirements:\n        - JWT token generation and validation with RS256 algorithm\n        - OAuth2 integration with Google and GitHub providers\n        - Rate limiting for security (100 requests/minute per IP)\n        - Database persistence with PostgreSQL and Redis caching\n        - API documentation with OpenAPI/Swagger\n        \n        Technical Implementation:\n        1. FastAPI framework setup with async/await patterns\n        2. Database models and Alembic migrations\n        3. Authentication endpoints (/login, /register, /refresh)\n        4. Token management utilities and middleware\n        5. Security middleware with CORS and CSRF protection\n        \n        Testing Strategy:\n        - Unit tests for all endpoints (pytest)\n        - Integration tests for database operations\n        - Security penetration testing with OWASP guidelines\n        - Load testing with 1000+ concurrent users",
+      "submitted_by": "Dynamic Test User",
+      "submitted_at": "2026-06-01T14:24:20.318488",
+      "status": "submitted",
+      "previous_task_id": null,
+      "pdf_file_path": null,
+      "pdf_extracted_text": "",
+      "module_id": "task-review-agent",
+      "schema_version": "v1.0",
+      "registry_validation_status": "VALID",
+      "registry_validation_reason": "Validation Passed",
+      "review_state": "PENDING_REVIEW"
+    },
+    "sub-e48f4ed5688f-4e1f7153": {
+      "submission_id": "sub-e48f4ed5688f-4e1f7153",
+      "task_id": "task-1780304060.486842",
+      "task_title": "Build Microservice Authentication System with JWT and OAuth2",
+      "task_description": "Objective: Develop a scalable microservice for user authentication and authorization\n        \n        Technical Requirements:\n        - JWT token generation and validation with RS256 algorithm\n        - OAuth2 integration with Google and GitHub providers\n        - Rate limiting for security (100 requests/minute per IP)\n        - Database persistence with PostgreSQL and Redis caching\n        - API documentation with OpenAPI/Swagger\n        \n        Technical Implementation:\n        1. FastAPI framework setup with async/await patterns\n        2. Database models and Alembic migrations\n        3. Authentication endpoints (/login, /register, /refresh)\n        4. Token management utilities and middleware\n        5. Security middleware with CORS and CSRF protection\n        \n        Testing Strategy:\n        - Unit tests for all endpoints (pytest)\n        - Integration tests for database operations\n        - Security penetration testing with OWASP guidelines\n        - Load testing with 1000+ concurrent users",
+      "submitted_by": "Dynamic Test User",
+      "submitted_at": "2026-06-01T14:24:20.486853",
+      "status": "submitted",
+      "previous_task_id": null,
+      "pdf_file_path": null,
+      "pdf_extracted_text": "",
+      "module_id": "task-review-agent",
+      "schema_version": "v1.0",
+      "registry_validation_status": "VALID",
+      "registry_validation_reason": "Validation Passed",
+      "review_state": "PENDING_REVIEW"
+    },
+    "sub-533e01a33369-69221ad8": {
+      "submission_id": "sub-533e01a33369-69221ad8",
+      "task_id": "task-1780304090.57977",
+      "task_title": "Build Parikshak Deterministic Evaluation Pipeline with FastAPI and Rule Engine",
+      "task_description": "Implement a full-stack deterministic engineering task evaluation system using FastAPI as the backend framework with modular service architecture. The system must include a rule engine that evaluates submissions as PASS or FAIL based on strict binary checks for schema validation, completeness, logic alignment, and integration integrity. Build a signal engine to collect supporting signals from repositories and task descriptions, including feature matching and delivery ratio computation. Implement a task graph engine for deterministic task selection after each evaluation. Add a governance layer with an immutable event journal, SQLite canonical database, and complete audit trail. Create a React frontend for task submission and a review dashboard. Include observability hooks, API route modules, and comprehensive test coverage using pytest.",
+      "submitted_by": "demo-user",
+      "submitted_at": "2026-06-01T14:24:50.579780",
+      "status": "submitted",
+      "previous_task_id": null,
+      "pdf_file_path": null,
+      "pdf_extracted_text": "",
+      "module_id": "task-review-agent",
       "schema_version": "v1.0",
       "registry_validation_status": "VALID",
       "registry_validation_reason": "Validation Passed",
@@ -19,10 +121,40 @@
     }
   },
   "reviews": {
-    "rev-sub-2cc91e7140aa-85790d1d": {
-      "review_id": "rev-sub-2cc91e7140aa-85790d1d",
-      "submission_id": "sub-2cc91e7140aa-85790d1d",
-      "trace_id": "trace-test-default-123456",
+    "rev-sub-e48f4ed5688f-de063396": {
+      "review_id": "rev-sub-e48f4ed5688f-de063396",
+      "submission_id": "sub-e48f4ed5688f-de063396",
+      "trace_id": "trace-ui-20260601142419-8c4841fe",
+      "evaluation_result": "FAIL",
+      "failure_type": "incomplete",
+      "decision": "REJECTED",
+      "failure_reasons": [
+        "incomplete"
+      ],
+      "improvement_hints": [],
+      "analysis": {
+        "technical_quality": 40,
+        "clarity": 40,
+        "discipline_signals": 40
+      },
+      "reviewed_at": "2026-06-01T14:24:19.631314",
+      "evaluation_time_ms": 0,
+      "missing_features": [],
+      "evaluation_summary": "Parikshak Evaluation: FAIL",
+      "selected_task_id": "T-GOV-F01",
+      "selection_reason": "FAIL(incomplete) → failure_tasks['incomplete'][0] = T-GOV-F01",
+      "review_state": "PENDING_REVIEW",
+      "version": 1,
+      "score": 40,
+      "readiness_percent": 40,
+      "status": "fail",
+      "candidate_name": "Dynamic Test User",
+      "task_title": "Build Microservice Authentication System with JWT and OAuth2"
+    },
+    "rev-sub-46066ebe3b1c-633438e4": {
+      "review_id": "rev-sub-46066ebe3b1c-633438e4",
+      "submission_id": "sub-46066ebe3b1c-633438e4",
+      "trace_id": "trace-ui-20260601142419-e54c80bc",
       "evaluation_result": "FAIL",
       "failure_type": "schema_violation",
       "decision": "REJECTED",
@@ -31,11 +163,11 @@
       ],
       "improvement_hints": [],
       "analysis": {
-        "technical_quality": 12,
-        "clarity": 12,
-        "discipline_signals": 12
+        "technical_quality": 40,
+        "clarity": 40,
+        "discipline_signals": 40
       },
-      "reviewed_at": "2026-05-26T14:52:48.776572",
+      "reviewed_at": "2026-06-01T14:24:19.803333",
       "evaluation_time_ms": 0,
       "missing_features": [],
       "evaluation_summary": "Parikshak Evaluation: FAIL",
@@ -46,22 +178,172 @@
       "score": 40,
       "readiness_percent": 40,
       "status": "fail",
-      "candidate_name": "Test Runner",
-      "task_title": "Determinism Verification Task"
+      "candidate_name": "Dynamic Test User",
+      "task_title": "Create User Login System"
+    },
+    "rev-sub-41ee0cb40dfd-ce643f4d": {
+      "review_id": "rev-sub-41ee0cb40dfd-ce643f4d",
+      "submission_id": "sub-41ee0cb40dfd-ce643f4d",
+      "trace_id": "trace-ui-20260601142419-3eea54d1",
+      "evaluation_result": "FAIL",
+      "failure_type": "schema_violation",
+      "decision": "REJECTED",
+      "failure_reasons": [
+        "schema_violation"
+      ],
+      "improvement_hints": [],
+      "analysis": {
+        "technical_quality": 40,
+        "clarity": 40,
+        "discipline_signals": 40
+      },
+      "reviewed_at": "2026-06-01T14:24:19.981448",
+      "evaluation_time_ms": 0,
+      "missing_features": [],
+      "evaluation_summary": "Parikshak Evaluation: FAIL",
+      "selected_task_id": "T-GOV-F01",
+      "selection_reason": "FAIL(schema_violation) → failure_tasks['schema_violation'][0] = T-GOV-F01",
+      "review_state": "PENDING_REVIEW",
+      "version": 1,
+      "score": 40,
+      "readiness_percent": 40,
+      "status": "fail",
+      "candidate_name": "Dynamic Test User",
+      "task_title": "Make website"
+    },
+    "rev-sub-e48f4ed5688f-98203adf": {
+      "review_id": "rev-sub-e48f4ed5688f-98203adf",
+      "submission_id": "sub-e48f4ed5688f-98203adf",
+      "trace_id": "trace-ui-20260601142420-8c4841fe",
+      "evaluation_result": "FAIL",
+      "failure_type": "incomplete",
+      "decision": "REJECTED",
+      "failure_reasons": [
+        "incomplete"
+      ],
+      "improvement_hints": [],
+      "analysis": {
+        "technical_quality": 40,
+        "clarity": 40,
+        "discipline_signals": 40
+      },
+      "reviewed_at": "2026-06-01T14:24:20.141084",
+      "evaluation_time_ms": 0,
+      "missing_features": [],
+      "evaluation_summary": "Parikshak Evaluation: FAIL",
+      "selected_task_id": "T-GOV-F01",
+      "selection_reason": "FAIL(incomplete) → failure_tasks['incomplete'][0] = T-GOV-F01",
+      "review_state": "PENDING_REVIEW",
+      "version": 1,
+      "score": 40,
+      "readiness_percent": 40,
+      "status": "fail",
+      "candidate_name": "Dynamic Test User",
+      "task_title": "Build Microservice Authentication System with JWT and OAuth2"
+    },
+    "rev-sub-e48f4ed5688f-3ef9a103": {
+      "review_id": "rev-sub-e48f4ed5688f-3ef9a103",
+      "submission_id": "sub-e48f4ed5688f-3ef9a103",
+      "trace_id": "trace-ui-20260601142420-8c4841fe",
+      "evaluation_result": "FAIL",
+      "failure_type": "incomplete",
+      "decision": "REJECTED",
+      "failure_reasons": [
+        "incomplete"
+      ],
+      "improvement_hints": [],
+      "analysis": {
+        "technical_quality": 40,
+        "clarity": 40,
+        "discipline_signals": 40
+      },
+      "reviewed_at": "2026-06-01T14:24:20.318488",
+      "evaluation_time_ms": 0,
+      "missing_features": [],
+      "evaluation_summary": "Parikshak Evaluation: FAIL",
+      "selected_task_id": "T-GOV-F01",
+      "selection_reason": "FAIL(incomplete) → failure_tasks['incomplete'][0] = T-GOV-F01",
+      "review_state": "PENDING_REVIEW",
+      "version": 1,
+      "score": 40,
+      "readiness_percent": 40,
+      "status": "fail",
+      "candidate_name": "Dynamic Test User",
+      "task_title": "Build Microservice Authentication System with JWT and OAuth2"
+    },
+    "rev-sub-e48f4ed5688f-4e1f7153": {
+      "review_id": "rev-sub-e48f4ed5688f-4e1f7153",
+      "submission_id": "sub-e48f4ed5688f-4e1f7153",
+      "trace_id": "trace-ui-20260601142420-8c4841fe",
+      "evaluation_result": "FAIL",
+      "failure_type": "incomplete",
+      "decision": "REJECTED",
+      "failure_reasons": [
+        "incomplete"
+      ],
+      "improvement_hints": [],
+      "analysis": {
+        "technical_quality": 40,
+        "clarity": 40,
+        "discipline_signals": 40
+      },
+      "reviewed_at": "2026-06-01T14:24:20.486853",
+      "evaluation_time_ms": 0,
+      "missing_features": [],
+      "evaluation_summary": "Parikshak Evaluation: FAIL",
+      "selected_task_id": "T-GOV-F01",
+      "selection_reason": "FAIL(incomplete) → failure_tasks['incomplete'][0] = T-GOV-F01",
+      "review_state": "PENDING_REVIEW",
+      "version": 1,
+      "score": 40,
+      "readiness_percent": 40,
+      "status": "fail",
+      "candidate_name": "Dynamic Test User",
+      "task_title": "Build Microservice Authentication System with JWT and OAuth2"
+    },
+    "rev-sub-533e01a33369-69221ad8": {
+      "review_id": "rev-sub-533e01a33369-69221ad8",
+      "submission_id": "sub-533e01a33369-69221ad8",
+      "trace_id": "trace-ui-20260601142450-b07031fc",
+      "evaluation_result": "FAIL",
+      "failure_type": "incomplete",
+      "decision": "REJECTED",
+      "failure_reasons": [
+        "incomplete"
+      ],
+      "improvement_hints": [],
+      "analysis": {
+        "technical_quality": 40,
+        "clarity": 40,
+        "discipline_signals": 40
+      },
+      "reviewed_at": "2026-06-01T14:24:50.579780",
+      "evaluation_time_ms": 0,
+      "missing_features": [],
+      "evaluation_summary": "Parikshak Evaluation: FAIL",
+      "selected_task_id": "T-GOV-F01",
+      "selection_reason": "FAIL(incomplete) → failure_tasks['incomplete'][0] = T-GOV-F01",
+      "review_state": "PENDING_REVIEW",
+      "version": 1,
+      "score": 40,
+      "readiness_percent": 40,
+      "status": "fail",
+      "candidate_name": "demo-user",
+      "task_title": "Build Parikshak Deterministic Evaluation Pipeline with FastAPI and Rule Engine"
     }
   },
   "next_tasks": {
     "T-GOV-F01": {
       "next_task_id": "T-GOV-F01",
-      "review_id": "rev-sub-2cc91e7140aa-85790d1d",
-      "previous_submission_id": "sub-2cc91e7140aa-85790d1d",
+      "review_id": "rev-sub-533e01a33369-69221ad8",
+      "previous_submission_id": "sub-533e01a33369-69221ad8",
       "task_type": "correction",
       "title": "Next Task T-GOV-F01",
       "objective": "Complete task T-GOV-F01",
       "focus_area": "general",
       "difficulty": "beginner",
-      "reason": "FAIL(schema_violation) → failure_tasks['schema_violation'][0] = T-GOV-F01 correction",
-      "assigned_at": "2026-05-26T14:52:48.776572"
+      "reason": "FAIL(incomplete) → failure_tasks['incomplete'][0] = T-GOV-F01 correction",
+      "assigned_at": "2026-06-01T14:24:50.579780"
     }
   }
 }
