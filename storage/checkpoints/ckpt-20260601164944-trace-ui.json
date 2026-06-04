@@ -1,0 +1,13 @@
+{
+  "checkpoint_id": "ckpt-20260601164944-trace-ui",
+  "trace_id": "trace-ui-20260601162842-84897564",
+  "timestamp": "2026-06-01T16:49:44.762785",
+  "state_hash": "4ab2d3f65c38e3e7",
+  "state": {
+    "event_id": "evt-d7422c521fa2",
+    "action": "reject",
+    "submission_id": "sub-a6e8dba3568b-ae29ad3f",
+    "operator_id": "operator-1"
+  },
+  "lineage_marker": true
+}

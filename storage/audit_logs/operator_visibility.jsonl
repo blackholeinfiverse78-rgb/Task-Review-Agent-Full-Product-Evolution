@@ -55,3 +55,10 @@
 {"operator_id": "operator-1", "action": "reject", "submission_id": "sub-f3ff01ae1131-f003748a", "outcome": "REJECTED", "timestamp": "2026-05-23T19:40:30.327527", "_checksum": "b3e6fcf77519f77f"}
 {"operator_id": "AAKASH", "action": "approve", "submission_id": "sub-a6e8dba3568b-267b4fef", "outcome": "APPROVED", "timestamp": "2026-05-30T14:39:24.482721", "_checksum": "8e9e93814234fab9"}
 {"operator_id": "AAKASH", "action": "reject", "submission_id": "sub-db21dd1508de-927db3d4", "outcome": "REJECTED", "timestamp": "2026-05-30T14:40:59.911868", "_checksum": "307ed33c5be05a01"}
+{"operator_id": "Aakash", "action": "approve", "submission_id": "sub-a6e8dba3568b-4b320cb9", "outcome": "APPROVED", "timestamp": "2026-06-01T16:49:39.060881", "_checksum": "cc0f056ef2b7fe79"}
+{"operator_id": "operator-1", "action": "reject", "submission_id": "sub-a6e8dba3568b-ae29ad3f", "outcome": "REJECTED", "timestamp": "2026-06-01T16:49:44.835463", "_checksum": "69ae853b707f9870"}
+{"operator_id": "Nikhil", "action": "approve", "submission_id": "sub-d1c0e36e22b0-089598de", "outcome": "REJECTED_GOVERNANCE", "timestamp": "2026-06-01T17:22:41.660321", "_checksum": "f938bbf14d55d8c9"}
+{"operator_id": "Nikhil", "action": "approve", "submission_id": "sub-d1c0e36e22b0-089598de", "outcome": "REJECTED_GOVERNANCE", "timestamp": "2026-06-01T17:22:46.135462", "_checksum": "a883e5d0e8fdfedb"}
+{"operator_id": "Nikhil", "action": "approve", "submission_id": "sub-d1c0e36e22b0-089598de", "outcome": "REJECTED_GOVERNANCE", "timestamp": "2026-06-01T17:22:50.990826", "_checksum": "2ecd3efc2f0a555b"}
+{"operator_id": "Nikhil", "action": "approve", "submission_id": "sub-d1c0e36e22b0-089598de", "outcome": "REJECTED_GOVERNANCE", "timestamp": "2026-06-01T17:22:57.684704", "_checksum": "9ccdc090054da95e"}
+{"operator_id": "Nikhil", "action": "approve", "submission_id": "sub-d1c0e36e22b0-089598de", "outcome": "APPROVED", "timestamp": "2026-06-01T17:23:35.922991", "_checksum": "63bfc57d2aa12098"}
