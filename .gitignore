@@ -125,3 +125,8 @@ logs/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Transient storage artifacts
+storage/backups/*
+storage/checkpoints/*
+

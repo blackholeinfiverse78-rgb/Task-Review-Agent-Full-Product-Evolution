@@ -1,12 +1,12 @@
 {
   "submissions": {
-    "sub-730867379140-4d5dd81e": {
-      "submission_id": "sub-730867379140-4d5dd81e",
+    "sub-730867379140-589331b9": {
+      "submission_id": "sub-730867379140-589331b9",
       "task_id": "test-001",
       "task_title": "Test Task for History Verification",
       "task_description": "Objective: Verify that submitted tasks appear in history\n        \n        Deliverables:\n        - Task submission functionality\n        - History display functionality\n        - Proper data flow\n        \n        Timeline: Immediate testing\n        \n        Scope: End-to-end verification",
       "submitted_by": "Test User",
-      "submitted_at": "2026-06-08T13:41:43.220560",
+      "submitted_at": "2026-06-09T12:27:39.673540",
       "status": "submitted",
       "previous_task_id": null,
       "pdf_file_path": null,
@@ -17,64 +17,13 @@
       "registry_validation_reason": "Validation Passed",
       "review_state": "PENDING_REVIEW"
     },
-    "sub-53b98bd54d7c-f8863463": {
-      "submission_id": "sub-53b98bd54d7c-f8863463",
+    "sub-53b98bd54d7c-39be3ca1": {
+      "submission_id": "sub-53b98bd54d7c-39be3ca1",
       "task_id": "test-002",
       "task_title": "Second Test Task",
       "task_description": "Testing multiple submissions in history",
       "submitted_by": "Test User 2",
-      "submitted_at": "2026-06-08T13:41:43.240008",
-      "status": "submitted",
-      "previous_task_id": null,
-      "pdf_file_path": null,
-      "pdf_extracted_text": null,
-      "module_id": "task-review-agent",
-      "schema_version": "v1.0",
-      "registry_validation_status": "VALID",
-      "registry_validation_reason": "Validation Passed",
-      "review_state": "PENDING_REVIEW"
-    },
-    "sub-995ca4d21092-b0ddde9e": {
-      "submission_id": "sub-995ca4d21092-b0ddde9e",
-      "task_id": "bench-task-1",
-      "task_title": "Benchmark Task Implementation",
-      "task_description": "Build a high performance benchmark suite with multi-threaded execution.",
-      "submitted_by": "Sri Satya",
-      "submitted_at": "2026-06-09T11:26:16.947727",
-      "status": "submitted",
-      "previous_task_id": null,
-      "pdf_file_path": null,
-      "pdf_extracted_text": null,
-      "module_id": "task-review-agent",
-      "schema_version": "v1.0",
-      "registry_validation_status": "VALID",
-      "registry_validation_reason": "Validation Passed",
-      "review_state": "PENDING_REVIEW"
-    },
-    "sub-995ca4d21092-257e0250": {
-      "submission_id": "sub-995ca4d21092-257e0250",
-      "task_id": "bench-task-1",
-      "task_title": "Benchmark Task Implementation",
-      "task_description": "Build a high performance benchmark suite with multi-threaded execution.",
-      "submitted_by": "Sri Satya",
-      "submitted_at": "2026-06-09T11:26:40.324439",
-      "status": "submitted",
-      "previous_task_id": null,
-      "pdf_file_path": null,
-      "pdf_extracted_text": null,
-      "module_id": "task-review-agent",
-      "schema_version": "v1.0",
-      "registry_validation_status": "VALID",
-      "registry_validation_reason": "Validation Passed",
-      "review_state": "PENDING_REVIEW"
-    },
-    "sub-995ca4d21092-7f69beee": {
-      "submission_id": "sub-995ca4d21092-7f69beee",
-      "task_id": "bench-task-1",
-      "task_title": "Benchmark Task Implementation",
-      "task_description": "Build a high performance benchmark suite with multi-threaded execution.",
-      "submitted_by": "Sri Satya",
-      "submitted_at": "2026-06-09T11:26:52.729946",
+      "submitted_at": "2026-06-09T12:27:39.691674",
       "status": "submitted",
       "previous_task_id": null,
       "pdf_file_path": null,
@@ -87,9 +36,9 @@
     }
   },
   "reviews": {
-    "rev-sub-730867379140-4d5dd81e": {
-      "review_id": "rev-sub-730867379140-4d5dd81e",
-      "submission_id": "sub-730867379140-4d5dd81e",
+    "rev-sub-730867379140-589331b9": {
+      "review_id": "rev-sub-730867379140-589331b9",
+      "submission_id": "sub-730867379140-589331b9",
       "trace_id": "trace-test-default-123456",
       "evaluation_result": "FAIL",
       "failure_type": "schema_violation",
@@ -103,7 +52,7 @@
         "clarity": 49,
         "discipline_signals": 49
       },
-      "reviewed_at": "2026-06-08T13:41:43.220560",
+      "reviewed_at": "2026-06-09T12:27:39.673540",
       "evaluation_time_ms": 0,
       "missing_features": [],
       "evaluation_summary": "Parikshak Evaluation: FAIL",
@@ -117,9 +66,9 @@
       "candidate_name": "Test User",
       "task_title": "Test Task for History Verification"
     },
-    "rev-sub-53b98bd54d7c-f8863463": {
-      "review_id": "rev-sub-53b98bd54d7c-f8863463",
-      "submission_id": "sub-53b98bd54d7c-f8863463",
+    "rev-sub-53b98bd54d7c-39be3ca1": {
+      "review_id": "rev-sub-53b98bd54d7c-39be3ca1",
+      "submission_id": "sub-53b98bd54d7c-39be3ca1",
       "trace_id": "trace-test-default-123456",
       "evaluation_result": "FAIL",
       "failure_type": "schema_violation",
@@ -133,7 +82,7 @@
         "clarity": 11,
         "discipline_signals": 11
       },
-      "reviewed_at": "2026-06-08T13:41:43.240008",
+      "reviewed_at": "2026-06-09T12:27:39.691674",
       "evaluation_time_ms": 0,
       "missing_features": [],
       "evaluation_summary": "Parikshak Evaluation: FAIL",
@@ -146,116 +95,20 @@
       "status": "fail",
       "candidate_name": "Test User 2",
       "task_title": "Second Test Task"
-    },
-    "rev-sub-995ca4d21092-b0ddde9e": {
-      "review_id": "rev-sub-995ca4d21092-b0ddde9e",
-      "submission_id": "sub-995ca4d21092-b0ddde9e",
-      "trace_id": "bench-trace-rev-007",
-      "evaluation_result": "PASS",
-      "failure_type": null,
-      "decision": "APPROVED",
-      "failure_reasons": [],
-      "improvement_hints": [],
-      "analysis": {
-        "technical_quality": 90,
-        "clarity": 90,
-        "discipline_signals": 90
-      },
-      "reviewed_at": "2026-06-09T11:26:16.947727",
-      "evaluation_time_ms": 0,
-      "missing_features": [],
-      "evaluation_summary": "Parikshak Evaluation: PASS",
-      "selected_task_id": "T-GOV-002",
-      "selection_reason": "PASS → next_tasks[0] = T-GOV-002",
-      "review_state": "PENDING_REVIEW",
-      "version": 1,
-      "score": 100,
-      "readiness_percent": 100,
-      "status": "pass",
-      "candidate_name": "Sri Satya",
-      "task_title": "Benchmark Task Implementation"
-    },
-    "rev-sub-995ca4d21092-257e0250": {
-      "review_id": "rev-sub-995ca4d21092-257e0250",
-      "submission_id": "sub-995ca4d21092-257e0250",
-      "trace_id": "bench-trace-rev-014",
-      "evaluation_result": "PASS",
-      "failure_type": null,
-      "decision": "APPROVED",
-      "failure_reasons": [],
-      "improvement_hints": [],
-      "analysis": {
-        "technical_quality": 90,
-        "clarity": 90,
-        "discipline_signals": 90
-      },
-      "reviewed_at": "2026-06-09T11:26:40.324439",
-      "evaluation_time_ms": 0,
-      "missing_features": [],
-      "evaluation_summary": "Parikshak Evaluation: PASS",
-      "selected_task_id": "T-GOV-002",
-      "selection_reason": "PASS → next_tasks[0] = T-GOV-002",
-      "review_state": "PENDING_REVIEW",
-      "version": 1,
-      "score": 100,
-      "readiness_percent": 100,
-      "status": "pass",
-      "candidate_name": "Sri Satya",
-      "task_title": "Benchmark Task Implementation"
-    },
-    "rev-sub-995ca4d21092-7f69beee": {
-      "review_id": "rev-sub-995ca4d21092-7f69beee",
-      "submission_id": "sub-995ca4d21092-7f69beee",
-      "trace_id": "bench-trace-rev-012",
-      "evaluation_result": "PASS",
-      "failure_type": null,
-      "decision": "APPROVED",
-      "failure_reasons": [],
-      "improvement_hints": [],
-      "analysis": {
-        "technical_quality": 90,
-        "clarity": 90,
-        "discipline_signals": 90
-      },
-      "reviewed_at": "2026-06-09T11:26:52.729946",
-      "evaluation_time_ms": 0,
-      "missing_features": [],
-      "evaluation_summary": "Parikshak Evaluation: PASS",
-      "selected_task_id": "T-GOV-002",
-      "selection_reason": "PASS → next_tasks[0] = T-GOV-002",
-      "review_state": "PENDING_REVIEW",
-      "version": 1,
-      "score": 100,
-      "readiness_percent": 100,
-      "status": "pass",
-      "candidate_name": "Sri Satya",
-      "task_title": "Benchmark Task Implementation"
     }
   },
   "next_tasks": {
     "T-GOV-F01": {
       "next_task_id": "T-GOV-F01",
-      "review_id": "rev-sub-53b98bd54d7c-f8863463",
-      "previous_submission_id": "sub-53b98bd54d7c-f8863463",
+      "review_id": "rev-sub-53b98bd54d7c-39be3ca1",
+      "previous_submission_id": "sub-53b98bd54d7c-39be3ca1",
       "task_type": "correction",
       "title": "Next Task T-GOV-F01",
       "objective": "Complete task T-GOV-F01",
       "focus_area": "general",
       "difficulty": "beginner",
       "reason": "FAIL(schema_violation) → failure_tasks['schema_violation'][0] = T-GOV-F01 correction",
-      "assigned_at": "2026-06-08T13:41:43.240008"
-    },
-    "T-GOV-002": {
-      "next_task_id": "T-GOV-002",
-      "review_id": "rev-sub-995ca4d21092-7f69beee",
-      "previous_submission_id": "sub-995ca4d21092-7f69beee",
-      "task_type": "advancement",
-      "title": "Next Task T-GOV-002",
-      "objective": "Complete task T-GOV-002",
-      "focus_area": "general",
-      "difficulty": "beginner",
-      "reason": "PASS → next_tasks[0] = T-GOV-002",
-      "assigned_at": "2026-06-09T11:26:52.729946"
+      "assigned_at": "2026-06-09T12:27:39.691674"
     }
   }
 }

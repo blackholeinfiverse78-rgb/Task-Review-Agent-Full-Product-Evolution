@@ -1,0 +1,45 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ReviewRequest",
+  "type": "object",
+  "properties": {
+    "mode": {
+      "type": "string",
+      "enum": [
+        "task_review"
+      ]
+    },
+    "title": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 100
+    },
+    "description": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 2000
+    },
+    "submitted_by": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 50
+    },
+    "submission": {
+      "type": "string"
+    },
+    "repo_url": {
+      "type": "string",
+      "format": "uri"
+    },
+    "trace_id": {
+      "type": "string",
+      "minLength": 8
+    }
+  },
+  "required": [
+    "title",
+    "description",
+    "submitted_by",
+    "trace_id"
+  ]
+}

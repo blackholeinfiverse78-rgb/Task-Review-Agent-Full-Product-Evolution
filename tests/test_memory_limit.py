@@ -1,6 +1,6 @@
-
 import requests
 import uuid
+import pytest
 
 BASE_URL = "http://127.0.0.1:8000/api/v1/task"
 
@@ -14,7 +14,10 @@ def test_memory_limit():
             "task_description": "Requirement: Test memory limits. Objective: Ensure LRU/FIFO eviction works.",
             "submitted_by": "Memory Tester"
         }
-        res = requests.post(f"{BASE_URL}/submit", json=payload)
+        try:
+            res = requests.post(f"{BASE_URL}/submit", json=payload)
+        except requests.exceptions.ConnectionError:
+            pytest.skip("FastAPI server is not running on localhost:8000")
         ids.append(res.json()["task_id"])
         if i % 100 == 0:
             print(f"Submitted {i}...")

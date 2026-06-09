@@ -1,0 +1,33 @@
+{
+  "reviews_per_sec": 140386.34,
+  "reviews_per_min": 8423180.6,
+  "concurrency_latencies": {
+    "1": {
+      "total_duration_ms": 0.77,
+      "avg_latency_ms": 0.02,
+      "max_latency_ms": 0.02,
+      "throughput_req_sec": 1294.5
+    },
+    "10": {
+      "total_duration_ms": 1.47,
+      "avg_latency_ms": 0.02,
+      "max_latency_ms": 0.03,
+      "throughput_req_sec": 6810.13
+    },
+    "50": {
+      "total_duration_ms": 6.97,
+      "avg_latency_ms": 0.02,
+      "max_latency_ms": 0.02,
+      "throughput_req_sec": 7169.69
+    },
+    "100": {
+      "total_duration_ms": 13.71,
+      "avg_latency_ms": 0.02,
+      "max_latency_ms": 0.03,
+      "throughput_req_sec": 7294.42
+    }
+  },
+  "cold_start_ms": 6.02,
+  "warm_start_ms": 1.94,
+  "single_review_latency_ms": 0.007
+}

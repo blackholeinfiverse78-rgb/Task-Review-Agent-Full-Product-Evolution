@@ -1,0 +1,6 @@
+{
+  "memory_growth_100_reviews_mb": 0.0039,
+  "avg_json_event_size_bytes": 673,
+  "database_overhead_50_events_bytes": 40960,
+  "estimated_growth_per_1000_reviews_mb": 0.6418
+}
