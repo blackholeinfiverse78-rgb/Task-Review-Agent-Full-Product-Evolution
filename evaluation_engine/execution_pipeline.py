@@ -122,6 +122,12 @@ class ExecutionPipeline:
             except Exception as e:
                 logger.warning(f"Persistence error (non-fatal): {e}")
 
+            # 8.5 VaaniTTS Integration (Audio Review Synthesis)
+            try:
+                self._synthesize_voice_summary(output, task_data)
+            except Exception as e:
+                logger.warning(f"VaaniTTS synthesis error (non-fatal): {e}")
+
             # 9. OBSERVABILITY (Success)
             try:
                 from observability.observability import observer
@@ -228,5 +234,54 @@ class ExecutionPipeline:
             },
             trace_id=output["trace_id"]
         )
+
+    def _synthesize_voice_summary(self, output: Dict[str, Any], task_data: Dict[str, Any]) -> None:
+        """Synthesize task review outcomes to audio using VaaniTTS."""
+        candidate = task_data.get("submitted_by", "candidate")
+        task_title = task_data.get("task_title", "Task")
+        result = output.get("evaluation_result", "FAIL")
+        next_task = output.get("selected_task_id", "unknown")
+        
+        summary_text = (
+            f"Task review completed for {candidate}. "
+            f"The submission for task {task_title} resulted in {result}. "
+            f"The next assigned task is {next_task}."
+        )
+        
+        import sys
+        import os
+        project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        vaani_path = os.path.join(project_root, "VaaniTTS_Standalone")
+        if vaani_path not in sys.path:
+            sys.path.insert(0, vaani_path)
+            
+        try:
+            from tts_service import text_to_speech_stream
+            from prosody_mapper import generate_prosody_hint
+            
+            # Generate prosody logging info
+            try:
+                prosody = generate_prosody_hint(summary_text, "en", "friendly")
+                logger.info(f"[VAANI INTEGRATION] Generated prosody hint: {prosody.get('prosody_hint')}")
+            except:
+                pass
+                
+            audio_data = text_to_speech_stream(
+                text=summary_text,
+                language="en",
+                use_google_tts=True,
+                translate=False
+            )
+            
+            if audio_data:
+                tts_dir = os.path.join(project_root, "storage", "tts_reviews")
+                os.makedirs(tts_dir, exist_ok=True)
+                format_ext = "wav" if audio_data[:4] == b"RIFF" else "mp3"
+                filepath = os.path.join(tts_dir, f"rev-{output['submission_id']}.{format_ext}")
+                with open(filepath, "wb") as f:
+                    f.write(audio_data)
+                logger.info(f"[VAANI INTEGRATION] Saved synthesized review to {filepath}")
+        except Exception as e:
+            logger.error(f"[VAANI INTEGRATION] Audio synthesis failed: {e}")
 
 execution_pipeline = ExecutionPipeline()

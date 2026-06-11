@@ -1,6 +1,6 @@
 {
-    "timestamp": "2026-06-04T07:30:35.758401Z",
-    "manifest_used": "storage/backups\\snapshot_seq_1_20260604_073035.json",
+    "timestamp": "2026-06-09T09:25:36.489392Z",
+    "manifest_used": "storage/backups\\snapshot_seq_1_20260609_092536.json",
     "state_before_restore_candidates": [
         "cand-proof-001",
         "cand-proof-002"

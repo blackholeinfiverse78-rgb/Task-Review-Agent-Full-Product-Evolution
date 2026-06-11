@@ -1,37 +1,40 @@
-# Integration Examples & Guides
+# Parikshak Integration Examples
 
-### Python Client Integration Example
+This document provides complete, runnable curl and python examples demonstrating integration with the Parikshak API.
 
+### Python Integration Example
 ```python
 import requests
-import json
 
+url = "http://localhost:8000/api/v1/production/niyantran/submit"
 payload = {
-    "mode": "task_review",
-    "title": "Implement REST API endpoint",
-    "description": "Write a secure REST handler with JWT validation using FastAPI.",
-    "submitted_by": "Developer Akash",
-    "repo_url": "https://github.com/blackholeinfiverse78-rgb/test-repo",
-    "trace_id": "trace-python-client-111"
+    "task_id": "T-GOV-001",
+    "task_title": "REST API Service with Layered Architecture",
+    "task_description": "Objective: Build a production-ready REST API service. Requirements: Implement service, controller, and data layers.",
+    "submitted_by": "Akash Dev",
+    "github_repo_link": "https://github.com/developer/sec-auth",
+    "module_id": "task-review-agent",
+    "schema_version": "v1.0",
+    "trace_id": "trace-integration-example-999"
 }
 
-response = requests.post("http://localhost:8000/parikshak/review", json=payload)
-data = response.json()
-
-print(f"Status: {data['status']}")
-print(f"Score: {data['score']}")
-print(f"Next Task Assigned: {data['next_task']}")
+response = requests.post(url, json=payload)
+print(response.status_code)
+print(response.json())
 ```
 
-### cURL CLI Example
-
+### Curl Submission Example
 ```bash
-curl -X POST http://localhost:8000/parikshak/review \
-     -H "Content-Type: application/json" \
-     -d '{
-       "title": "Build user auth schema",
-       "description": "Create SQLite database schema with hashed passwords.",
-       "submitted_by": "Akash",
-       "trace_id": "trace-curl-client-222"
-     }'
+curl -X POST http://localhost:8000/api/v1/production/niyantran/submit \
+  -H "Content-Type: application/json" \
+  -d '{
+    "task_id": "T-GOV-001",
+    "task_title": "REST API Service with Layered Architecture",
+    "task_description": "Objective: Build a production-ready REST API service.",
+    "submitted_by": "Akash Dev",
+    "github_repo_link": "https://github.com/developer/sec-auth",
+    "module_id": "task-review-agent",
+    "schema_version": "v1.0",
+    "trace_id": "trace-integration-example-888"
+  }'
 ```

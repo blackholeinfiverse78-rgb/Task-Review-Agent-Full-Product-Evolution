@@ -1,10 +1,10 @@
 {
-    "timestamp": "2026-06-04T07:30:35.765333Z",
+    "timestamp": "2026-06-09T09:25:36.493986Z",
     "valid": false,
     "errors": [
-        "HASH_MISMATCH: Event seq 1 (evt-46fbf3926f4f) checksum mismatch. Stored=1d96cc0e609a35e79b248d43f235a08898944e7b7a1af7b388dc984cb83db9f3, Computed=55dfc9f9fd31bc77b3f34c7045ca29411ad70ed3c44c1c3c574daa1b45298ddc",
-        "HASH_MISMATCH: Event seq 1 (evt-46fbf3926f4f) hash mismatch. Stored=fa9ee9a937a144d7eea9f80a0a6d0c802b39b958db1c91cd71eaec61f2c39ff6, Computed=9ce7cd50f7ac36492b09ea357188bf1c453d21367ae3faee3c659ca7839deb7b",
-        "SCHEMA_DRIFT: Event seq 1 failed schema validation: 2 validation errors for CandidateProfile\ncandidate_id\n  Field required [type=missing, input_value={'corrupted': 'data'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.8/v/missing\nname\n  Field required [type=missing, input_value={'corrupted': 'data'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.8/v/missing",
+        "HASH_MISMATCH: Event seq 1 (evt-86cddcec0dae) checksum mismatch. Stored=1d96cc0e609a35e79b248d43f235a08898944e7b7a1af7b388dc984cb83db9f3, Computed=55dfc9f9fd31bc77b3f34c7045ca29411ad70ed3c44c1c3c574daa1b45298ddc",
+        "HASH_MISMATCH: Event seq 1 (evt-86cddcec0dae) hash mismatch. Stored=6669c748c904bc67038ede6976e4c9be532f01f41bdc743b430611957c1330af, Computed=07b3547a0167fe855e331d672a4197a4ca714e1d8b7434c95627a91bbe9c728c",
+        "SCHEMA_DRIFT: Event seq 1 failed schema validation: 2 validation errors for CandidateProfile\ncandidate_id\n  Field required [type=missing, input_value={'corrupted': 'data'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/missing\nname\n  Field required [type=missing, input_value={'corrupted': 'data'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/missing",
         "SNAPSHOT_DIVERGENCE: Replayed state hash for seq 1 doesn't match checkpoint state_hash 9d0b1fad105fb242de9bdf23d4b7133814b827f3248f5d149b17da9ff07b298d"
     ]
 }

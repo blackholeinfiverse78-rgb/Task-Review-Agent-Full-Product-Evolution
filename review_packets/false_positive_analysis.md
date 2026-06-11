@@ -1,9 +1,16 @@
 # Parikshak False Positive Analysis
 
-- **False-Positive Definition**: A submission containing invalid, copied, or gamed content that was incorrectly classified as `PASS` by the system.
-- **Measured False-Positive Rate**: **0.0% (0 out of 11 attacks bypassed the system)**.
+This document details the analysis of false-positive vulnerabilities in the Parikshak evaluation loop (i.e. cheat vectors that bypass automated gates).
 
-### Analysis of Safeguards
-1. **Zero-Trust File Checking**: The system requires at least `min_files = 3`. This easily blocks README-only and empty repository attacks.
-2. **Deterministic Feature Checking**: Keyword gaming fails because the feature matcher queries the implementation file tree. If code is absent or has 0% implementation, the delivery ratio falls below the `0.6` threshold.
-3. **Language Detection Verification**: Missing python files trigger `proof` or `code` errors under the completeness rule.
+## False Positive Summary
+* **Total Gaming Inputs Tested**: 11
+* **Bypassed Submissions (False Positives)**: 0
+* **False Positive Rate**: **0.00%**
+
+## Validation Gate Protections
+1. **Empty / Boilerplate Detection**: Prevented by checking the `delivery_ratio` (Logic check). If `delivery_ratio < 0.6` (e.g. template repos, empty features), the engine immediately marks the submission as `FAIL` with `incorrect_logic`.
+2. **README-Only Gaming**: Submissions that only contain a README file but no code will trigger `incomplete` because `code_present` is false (requires files count > 0).
+3. **Keyword-Match Exploits**: Fake descriptions containing keyword matching but flat structures are caught by the architecture checker (`arch_present = False` triggers `incomplete`).
+4. **Wrong-Language Gaming**: Prevented by missing expected features because file analyzers search for extensions matching target stacks, resulting in a low `delivery_ratio` under logic check.
+
+*Verified: 2026-06-11T06:13:04.524847Z UTC*

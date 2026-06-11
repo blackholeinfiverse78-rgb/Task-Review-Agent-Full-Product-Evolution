@@ -2,10 +2,11 @@
 Production API - Parikshak Production Endpoints
 Niyantran integration, human-in-loop, bucket access, and system monitoring
 """
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, status
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 from typing import List, Optional, Dict, Any
-from datetime import datetime
+from datetime import datetime, timezone
 import logging
 
 from task_selector.niyantran_connection import niyantran_connection
@@ -78,21 +79,25 @@ async def submit_task_from_niyantran(request: NiyantranTaskRequest):
         elif "graph" in error_msg.lower():
             error_code = "GRAPH_HARD_REJECT"
             
-        return {
-            "error": error_code,
-            "trace_id": request.trace_id if hasattr(request, "trace_id") else None,
-            "status": "REJECTED",
-            "details": error_msg
-        }
+        return JSONResponse(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            content={
+                "detail": f"HARD REJECT: {error_msg}",
+                "error_code": error_code,
+                "timestamp": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+            }
+        )
         
     except Exception as e:
         logger.error(f"[PRODUCTION API] Niyantran task processing failed: {e}")
-        return {
-            "error": "SYSTEM_ERROR",
-            "trace_id": getattr(request, "trace_id", None),
-            "status": "REJECTED",
-            "details": f"Task processing failed: {str(e)}"
-        }
+        return JSONResponse(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            content={
+                "detail": f"Task processing failed: {str(e)}",
+                "error_code": "SYSTEM_ERROR",
+                "timestamp": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+            }
+        )
 
 @router.get("/niyantran/health")
 async def niyantran_health_check():

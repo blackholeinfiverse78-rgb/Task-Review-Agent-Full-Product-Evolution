@@ -1,6 +1,16 @@
 {
-  "memory_growth_100_reviews_mb": 0.0039,
-  "avg_json_event_size_bytes": 673,
-  "database_overhead_50_events_bytes": 40960,
-  "estimated_growth_per_1000_reviews_mb": 0.6418
+  "timestamp": "2026-06-11T06:13:04.523817Z",
+  "run_parameters": {
+    "consecutive_reviews": 100,
+    "initial_db_size_bytes": 499712,
+    "final_db_size_bytes": 548864,
+    "initial_memory_mb": 45.2,
+    "final_memory_mb": 45.2
+  },
+  "measured_growth": {
+    "memory_growth_per_review_mb": 0.0,
+    "db_growth_per_review_bytes": 491.52,
+    "projected_10k_reviews_db_mb": 5.2109375,
+    "projected_10k_reviews_memory_mb": 45.2
+  }
 }

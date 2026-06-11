@@ -1,0 +1,1 @@
+{"trace_id": "trace-ecosystem-proof-4cd84c2819f5", "event_type": "downstream_visibility", "source": "Parikshak", "destination": "Saarthi", "payload": {"review_id": "rev-trace-ec", "submission_id": "sub-trace-ec", "status": "APPROVED", "score": 95, "reviewed_by": "Akash", "reviewed_at": "2026-06-11T06:13:04.533040Z"}, "timestamp": "2026-06-11T06:13:04.542805Z"}

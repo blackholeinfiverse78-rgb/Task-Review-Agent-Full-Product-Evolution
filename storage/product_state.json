@@ -33,6 +33,23 @@
       "registry_validation_status": "VALID",
       "registry_validation_reason": "Validation Passed",
       "review_state": "PENDING_REVIEW"
+    },
+    "sub-f02a760bab28-ac98aeb6": {
+      "submission_id": "sub-f02a760bab28-ac98aeb6",
+      "task_id": "test-verification-123",
+      "task_title": "REST API Authentication System",
+      "task_description": "Implement JWT-based authentication with role-based access control, password hashing, and session management for a microservices architecture.",
+      "submitted_by": "developer",
+      "submitted_at": "2026-06-09T16:25:19.083113",
+      "status": "submitted",
+      "previous_task_id": null,
+      "pdf_file_path": null,
+      "pdf_extracted_text": null,
+      "module_id": "task-review-agent",
+      "schema_version": "v1.0",
+      "registry_validation_status": "VALID",
+      "registry_validation_reason": "Validation Passed",
+      "review_state": "PENDING_REVIEW"
     }
   },
   "reviews": {
@@ -95,20 +112,50 @@
       "status": "fail",
       "candidate_name": "Test User 2",
       "task_title": "Second Test Task"
+    },
+    "rev-sub-f02a760bab28-ac98aeb6": {
+      "review_id": "rev-sub-f02a760bab28-ac98aeb6",
+      "submission_id": "sub-f02a760bab28-ac98aeb6",
+      "trace_id": "trace-test-default-123456",
+      "evaluation_result": "FAIL",
+      "failure_type": "schema_violation",
+      "decision": "REJECTED",
+      "failure_reasons": [
+        "schema_violation"
+      ],
+      "improvement_hints": [],
+      "analysis": {
+        "technical_quality": 42,
+        "clarity": 42,
+        "discipline_signals": 42
+      },
+      "reviewed_at": "2026-06-09T16:25:19.083113",
+      "evaluation_time_ms": 0,
+      "missing_features": [],
+      "evaluation_summary": "Parikshak Evaluation: FAIL",
+      "selected_task_id": "T-GOV-F01",
+      "selection_reason": "FAIL(schema_violation) → failure_tasks['schema_violation'][0] = T-GOV-F01",
+      "review_state": "PENDING_REVIEW",
+      "version": 1,
+      "score": 40,
+      "readiness_percent": 40,
+      "status": "fail",
+      "candidate_name": "developer",
+      "task_title": "REST API Authentication System"
     }
   },
   "next_tasks": {
     "T-GOV-F01": {
       "next_task_id": "T-GOV-F01",
-      "review_id": "rev-sub-53b98bd54d7c-39be3ca1",
-      "previous_submission_id": "sub-53b98bd54d7c-39be3ca1",
+      "review_id": "rev-sub-f02a760bab28-ac98aeb6",
+      "previous_submission_id": "sub-f02a760bab28-ac98aeb6",
       "task_type": "correction",
       "title": "Next Task T-GOV-F01",
       "objective": "Complete task T-GOV-F01",
       "focus_area": "general",
       "difficulty": "beginner",
       "reason": "FAIL(schema_violation) → failure_tasks['schema_violation'][0] = T-GOV-F01 correction",
-      "assigned_at": "2026-06-09T12:27:39.691674"
+      "assigned_at": "2026-06-09T16:25:19.083113"
     }
   }
 }

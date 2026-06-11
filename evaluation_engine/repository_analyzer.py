@@ -86,6 +86,15 @@ class RepositoryAnalyzer:
             tree_data = self._fetch_recursive_tree(owner, repo, default_branch)
             files = tree_data.get('tree', [])
             
+            # B-02: Prevent Path Synonym Gaming by ignoring empty/placeholder files (size < 10 bytes)
+            filtered_files = []
+            for f in files:
+                if f.get('type') == 'blob' and f.get('size', 0) < 10:
+                    logger.info(f"Ignoring empty/placeholder file: {f['path']} (size: {f.get('size', 0)} bytes)")
+                    continue
+                filtered_files.append(f)
+            files = filtered_files
+            
             signals = {
                 "structure": self._analyze_structure(files),
                 "components": self._analyze_components(files),

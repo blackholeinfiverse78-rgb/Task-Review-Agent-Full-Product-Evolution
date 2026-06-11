@@ -49,7 +49,7 @@ TEMP_BUCKET_PATH = os.path.join(project_root, "scratch", "temp_bucket_logs")
 canonical_db.integration.SAARTHI_VISIBILITY_LEDGER = TEMP_SAARTHI_LEDGER
 canonical_db.integration.NIYANTRAN_ASSIGNMENTS_LEDGER = TEMP_NIYANTRAN_LEDGER
 
-ARTIFACT_DIR = r"C:\Users\black\.gemini\antigravity-ide\brain\b22567c1-6a04-41d3-911d-d496882aae10"
+ARTIFACT_DIR = os.getenv("ARTIFACT_DIR", os.path.join(project_root, "review_packets"))
 
 
 def clean_temp_files():

@@ -36,7 +36,7 @@ from contracts.schemas import Task
 from evaluation_engine.rule_engine import RuleEngine
 
 # Output markdown report path
-ARTIFACT_DIR = r"C:\Users\black\.gemini\antigravity-ide\brain\b22567c1-6a04-41d3-911d-d496882aae10"
+ARTIFACT_DIR = os.getenv("ARTIFACT_DIR", os.path.join(project_root, "review_packets"))
 REPORT_PATH = os.path.join(ARTIFACT_DIR, "runtime_evidence_report.md")
 
 
