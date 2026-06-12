@@ -1,0 +1,20 @@
+{
+  "payload": {
+    "task_id": "T-CON-001",
+    "task_title": "Service Integration for Niyantran",
+    "task_description": "Enforce contract compliance for Niyantran without custom logic.",
+    "submitted_by": "developer-niyantran",
+    "repository_url": "https://github.com/blackholeinfiverse78-rgb/test-repo",
+    "trace_id": "trace-consumer-001-Niya",
+    "current_task_id": "T-GOV-001"
+  },
+  "receipt": {
+    "trace_id": "trace-consumer-001-Niya",
+    "submission_id": "sub-8187cee268da-001-Niya",
+    "evaluation_result": "FAIL",
+    "failure_type": "schema_violation",
+    "selected_task_id": "T-GOV-F01",
+    "selection_reason": "FAIL(schema_violation) \u2192 failure_tasks['schema_violation'][0] = T-GOV-F01",
+    "source": "task_graph"
+  }
+}

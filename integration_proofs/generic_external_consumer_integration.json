@@ -1,0 +1,20 @@
+{
+  "payload": {
+    "task_id": "T-CON-002",
+    "task_title": "Service Integration for Generic External Consumer",
+    "task_description": "Enforce contract compliance for Generic External Consumer without custom logic.",
+    "submitted_by": "developer-generic-external-consumer",
+    "repository_url": "https://github.com/blackholeinfiverse78-rgb/test-repo",
+    "trace_id": "trace-consumer-002-Gene",
+    "current_task_id": "T-GOV-001"
+  },
+  "receipt": {
+    "trace_id": "trace-consumer-002-Gene",
+    "submission_id": "sub-db7bd43f50ad-002-Gene",
+    "evaluation_result": "FAIL",
+    "failure_type": "schema_violation",
+    "selected_task_id": "T-GOV-F01",
+    "selection_reason": "FAIL(schema_violation) \u2192 failure_tasks['schema_violation'][0] = T-GOV-F01",
+    "source": "task_graph"
+  }
+}
