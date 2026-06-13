@@ -102,6 +102,18 @@ All contract violations trigger immediate transaction rollbacks.
 
 ---
 
-## 7. Ownership Boundary
+## 7. Versioning Rules
+- **Governance Envelope Schema Key**: Governed by the `schema_version` inside the governance envelope.
+- **Increment Policy**: Bumping schema structure or changing allowed events requires a major schema version bump. Adding optional payload fields requires a minor version bump.
+
+---
+
+## 8. Compatibility Rules
+- **Backward Compatibility**: The mutation engine must support older valid event schema versions.
+- **Validation Constraints**: Any new governors added to the allowlist are forward-compatible. System updates must not break historical sequence validation.
+
+---
+
+## 9. Ownership Boundary
 - **Parikshak Boundary**: Verifies signatures, computes SHA-256 hashes, maintains trigger constraints, creates snapshots.
 - **Consumer Boundary**: Consumers cannot call the mutate endpoint directly without generating a correct envelope signed by an authorized governor.

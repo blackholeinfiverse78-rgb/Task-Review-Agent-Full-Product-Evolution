@@ -19,6 +19,31 @@ from canonical_db.integrity import IntegrityValidator
 from canonical_db.backup import BackupManager
 from canonical_db.recovery import RecoveryTool
 
+# Monkeypatch to sandbox temp databases and isolate them from storage/backups
+original_iv_init = IntegrityValidator.__init__
+def patched_iv_init(self, db_path, backup_dir=None):
+    if backup_dir is None:
+        backup_dir = "storage/backups"
+    if "proof_db" not in db_path:
+        sandbox_dir = os.path.join(os.getcwd(), "scratch", "temp_backups_generate_proofs")
+        os.makedirs(sandbox_dir, exist_ok=True)
+        original_iv_init(self, db_path, backup_dir=sandbox_dir)
+    else:
+        original_iv_init(self, db_path, backup_dir)
+IntegrityValidator.__init__ = patched_iv_init
+
+original_bm_init = BackupManager.__init__
+def patched_bm_init(self, db_path, backup_dir=None):
+    if backup_dir is None:
+        backup_dir = "storage/backups"
+    if "proof_db" not in db_path:
+        sandbox_dir = os.path.join(os.getcwd(), "scratch", "temp_backups_generate_proofs")
+        os.makedirs(sandbox_dir, exist_ok=True)
+        original_bm_init(self, db_path, backup_dir=sandbox_dir)
+    else:
+        original_bm_init(self, db_path, backup_dir)
+BackupManager.__init__ = patched_bm_init
+
 def make_valid_envelope():
     env = GovernanceEnvelope(
         trace_id="trace-proof-12345",
@@ -54,6 +79,14 @@ def main():
                     os.remove(os.path.join(backup_dir, f))
                 except Exception:
                     pass
+
+    # Clean sandbox backup dir to avoid stale test snapshots
+    sandbox_dir = "scratch/temp_backups_generate_proofs"
+    if os.path.exists(sandbox_dir):
+        try:
+            shutil.rmtree(sandbox_dir)
+        except Exception:
+            pass
 
     os.makedirs("proofs", exist_ok=True)
     os.makedirs("replay_logs", exist_ok=True)

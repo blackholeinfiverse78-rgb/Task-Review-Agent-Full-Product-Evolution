@@ -11,7 +11,10 @@ Defines the schema contracts and file formats for downstream ledger propagation.
 
 ---
 
-## 2. Downstream Target Ledgers
+## 2. Inputs
+The export contract consumes transaction events committed to the SQLite Event Journal. Specifically, it listens to:
+- `review_history` events (manual reviews and overrides approved by governors).
+- `assignment_history` events (routing choices finalized in the task graph).
 
 ```mermaid
 graph TD
@@ -23,7 +26,8 @@ graph TD
 
 ---
 
-## 3. Propagation Schemas
+## 3. Outputs
+Exported events are propagated to three distinct JSON Lines (.jsonl) files on disk:
 
 ### 3.1 Saarthi Visibility Ledger Schema
 - **Path**: `storage/saarthi_visibility.jsonl`

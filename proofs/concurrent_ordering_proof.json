@@ -1,7 +1,13 @@
 {
-    "timestamp": "2026-05-26T08:41:33.872885Z",
+    "timestamp": "2026-06-13T10:55:07.683593Z",
     "threads_spawned": 5,
-    "events_written": 0,
-    "ordered_sequences": [],
-    "strictly_ordered": false
+    "events_written": 5,
+    "ordered_sequences": [
+        1,
+        2,
+        3,
+        4,
+        5
+    ],
+    "strictly_ordered": true
 }

@@ -879,6 +879,270 @@
         "failure_type": "schema_violation",
         "message": "Evaluation: FAIL → T-GOV-F01"
       }
+    },
+    {
+      "event_type": "SUBMISSION",
+      "trace_id": "trace-readiness-777",
+      "timestamp": "2026-06-12T08:26:19.526Z",
+      "severity": "INFO",
+      "details": {
+        "submission_id": "sub-fa216b246d69-ness-777",
+        "message": "Submission received: sub-fa216b246d69-ness-777"
+      }
+    },
+    {
+      "event_type": "EVALUATION",
+      "trace_id": "trace-readiness-777",
+      "timestamp": "2026-06-12T08:26:19.528Z",
+      "severity": "INFO",
+      "details": {
+        "evaluation_result": "FAIL",
+        "selected_task_id": "T-GOV-F01",
+        "failure_type": "schema_violation",
+        "message": "Evaluation: FAIL → T-GOV-F01"
+      }
+    },
+    {
+      "event_type": "SUBMISSION",
+      "trace_id": "trace-consumer-000-Hack",
+      "timestamp": "2026-06-12T08:26:20.593Z",
+      "severity": "INFO",
+      "details": {
+        "submission_id": "sub-9ebc4a5afb04-000-Hack",
+        "message": "Submission received: sub-9ebc4a5afb04-000-Hack"
+      }
+    },
+    {
+      "event_type": "EVALUATION",
+      "trace_id": "trace-consumer-000-Hack",
+      "timestamp": "2026-06-12T08:26:20.595Z",
+      "severity": "INFO",
+      "details": {
+        "evaluation_result": "FAIL",
+        "selected_task_id": "T-GOV-F01",
+        "failure_type": "schema_violation",
+        "message": "Evaluation: FAIL → T-GOV-F01"
+      }
+    },
+    {
+      "event_type": "SUBMISSION",
+      "trace_id": "trace-consumer-001-Niya",
+      "timestamp": "2026-06-12T08:26:21.994Z",
+      "severity": "INFO",
+      "details": {
+        "submission_id": "sub-8187cee268da-001-Niya",
+        "message": "Submission received: sub-8187cee268da-001-Niya"
+      }
+    },
+    {
+      "event_type": "EVALUATION",
+      "trace_id": "trace-consumer-001-Niya",
+      "timestamp": "2026-06-12T08:26:21.997Z",
+      "severity": "INFO",
+      "details": {
+        "evaluation_result": "FAIL",
+        "selected_task_id": "T-GOV-F01",
+        "failure_type": "schema_violation",
+        "message": "Evaluation: FAIL → T-GOV-F01"
+      }
+    },
+    {
+      "event_type": "SUBMISSION",
+      "trace_id": "trace-consumer-002-Gene",
+      "timestamp": "2026-06-12T08:26:22.837Z",
+      "severity": "INFO",
+      "details": {
+        "submission_id": "sub-db7bd43f50ad-002-Gene",
+        "message": "Submission received: sub-db7bd43f50ad-002-Gene"
+      }
+    },
+    {
+      "event_type": "EVALUATION",
+      "trace_id": "trace-consumer-002-Gene",
+      "timestamp": "2026-06-12T08:26:22.840Z",
+      "severity": "INFO",
+      "details": {
+        "evaluation_result": "FAIL",
+        "selected_task_id": "T-GOV-F01",
+        "failure_type": "schema_violation",
+        "message": "Evaluation: FAIL → T-GOV-F01"
+      }
+    },
+    {
+      "event_type": "SUBMISSION",
+      "trace_id": "trace-readiness-777",
+      "timestamp": "2026-06-13T10:53:28.706Z",
+      "severity": "INFO",
+      "details": {
+        "submission_id": "sub-fa216b246d69-ness-777",
+        "message": "Submission received: sub-fa216b246d69-ness-777"
+      }
+    },
+    {
+      "event_type": "EVALUATION",
+      "trace_id": "trace-readiness-777",
+      "timestamp": "2026-06-13T10:53:28.707Z",
+      "severity": "INFO",
+      "details": {
+        "evaluation_result": "FAIL",
+        "selected_task_id": "T-GOV-F01",
+        "failure_type": "schema_violation",
+        "message": "Evaluation: FAIL → T-GOV-F01"
+      }
+    },
+    {
+      "event_type": "SUBMISSION",
+      "trace_id": "trace-consumer-000-Hack",
+      "timestamp": "2026-06-13T10:53:30.021Z",
+      "severity": "INFO",
+      "details": {
+        "submission_id": "sub-9ebc4a5afb04-000-Hack",
+        "message": "Submission received: sub-9ebc4a5afb04-000-Hack"
+      }
+    },
+    {
+      "event_type": "EVALUATION",
+      "trace_id": "trace-consumer-000-Hack",
+      "timestamp": "2026-06-13T10:53:30.023Z",
+      "severity": "INFO",
+      "details": {
+        "evaluation_result": "FAIL",
+        "selected_task_id": "T-GOV-F01",
+        "failure_type": "schema_violation",
+        "message": "Evaluation: FAIL → T-GOV-F01"
+      }
+    },
+    {
+      "event_type": "SUBMISSION",
+      "trace_id": "trace-consumer-001-Niya",
+      "timestamp": "2026-06-13T10:53:31.071Z",
+      "severity": "INFO",
+      "details": {
+        "submission_id": "sub-8187cee268da-001-Niya",
+        "message": "Submission received: sub-8187cee268da-001-Niya"
+      }
+    },
+    {
+      "event_type": "EVALUATION",
+      "trace_id": "trace-consumer-001-Niya",
+      "timestamp": "2026-06-13T10:53:31.073Z",
+      "severity": "INFO",
+      "details": {
+        "evaluation_result": "FAIL",
+        "selected_task_id": "T-GOV-F01",
+        "failure_type": "schema_violation",
+        "message": "Evaluation: FAIL → T-GOV-F01"
+      }
+    },
+    {
+      "event_type": "SUBMISSION",
+      "trace_id": "trace-consumer-002-Gene",
+      "timestamp": "2026-06-13T10:53:32.276Z",
+      "severity": "INFO",
+      "details": {
+        "submission_id": "sub-db7bd43f50ad-002-Gene",
+        "message": "Submission received: sub-db7bd43f50ad-002-Gene"
+      }
+    },
+    {
+      "event_type": "EVALUATION",
+      "trace_id": "trace-consumer-002-Gene",
+      "timestamp": "2026-06-13T10:53:32.278Z",
+      "severity": "INFO",
+      "details": {
+        "evaluation_result": "FAIL",
+        "selected_task_id": "T-GOV-F01",
+        "failure_type": "schema_violation",
+        "message": "Evaluation: FAIL → T-GOV-F01"
+      }
+    },
+    {
+      "event_type": "SUBMISSION",
+      "trace_id": "trace-readiness-777",
+      "timestamp": "2026-06-13T10:55:11.000Z",
+      "severity": "INFO",
+      "details": {
+        "submission_id": "sub-fa216b246d69-ness-777",
+        "message": "Submission received: sub-fa216b246d69-ness-777"
+      }
+    },
+    {
+      "event_type": "EVALUATION",
+      "trace_id": "trace-readiness-777",
+      "timestamp": "2026-06-13T10:55:11.002Z",
+      "severity": "INFO",
+      "details": {
+        "evaluation_result": "FAIL",
+        "selected_task_id": "T-GOV-F01",
+        "failure_type": "schema_violation",
+        "message": "Evaluation: FAIL → T-GOV-F01"
+      }
+    },
+    {
+      "event_type": "SUBMISSION",
+      "trace_id": "trace-consumer-000-Hack",
+      "timestamp": "2026-06-13T10:55:12.324Z",
+      "severity": "INFO",
+      "details": {
+        "submission_id": "sub-9ebc4a5afb04-000-Hack",
+        "message": "Submission received: sub-9ebc4a5afb04-000-Hack"
+      }
+    },
+    {
+      "event_type": "EVALUATION",
+      "trace_id": "trace-consumer-000-Hack",
+      "timestamp": "2026-06-13T10:55:12.326Z",
+      "severity": "INFO",
+      "details": {
+        "evaluation_result": "FAIL",
+        "selected_task_id": "T-GOV-F01",
+        "failure_type": "schema_violation",
+        "message": "Evaluation: FAIL → T-GOV-F01"
+      }
+    },
+    {
+      "event_type": "SUBMISSION",
+      "trace_id": "trace-consumer-001-Niya",
+      "timestamp": "2026-06-13T10:55:13.585Z",
+      "severity": "INFO",
+      "details": {
+        "submission_id": "sub-8187cee268da-001-Niya",
+        "message": "Submission received: sub-8187cee268da-001-Niya"
+      }
+    },
+    {
+      "event_type": "EVALUATION",
+      "trace_id": "trace-consumer-001-Niya",
+      "timestamp": "2026-06-13T10:55:13.587Z",
+      "severity": "INFO",
+      "details": {
+        "evaluation_result": "FAIL",
+        "selected_task_id": "T-GOV-F01",
+        "failure_type": "schema_violation",
+        "message": "Evaluation: FAIL → T-GOV-F01"
+      }
+    },
+    {
+      "event_type": "SUBMISSION",
+      "trace_id": "trace-consumer-002-Gene",
+      "timestamp": "2026-06-13T10:55:14.680Z",
+      "severity": "INFO",
+      "details": {
+        "submission_id": "sub-db7bd43f50ad-002-Gene",
+        "message": "Submission received: sub-db7bd43f50ad-002-Gene"
+      }
+    },
+    {
+      "event_type": "EVALUATION",
+      "trace_id": "trace-consumer-002-Gene",
+      "timestamp": "2026-06-13T10:55:14.682Z",
+      "severity": "INFO",
+      "details": {
+        "evaluation_result": "FAIL",
+        "selected_task_id": "T-GOV-F01",
+        "failure_type": "schema_violation",
+        "message": "Evaluation: FAIL → T-GOV-F01"
+      }
     }
   ]
 }

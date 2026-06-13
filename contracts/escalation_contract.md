@@ -87,6 +87,12 @@ If `requires_escalation` is `true`, an escalation case file is persisted at `sto
 
 ---
 
-## 7. Ownership Boundary
+## 7. Compatibility Rules
+- **Confidence Computation Parity**: Any changes to the confidence grading formula weights must maintain backward compatibility, ensuring existing pending reviews or past escalated submissions can still be parsed and validated.
+- **Client Fallbacks**: Consumers relying on escalation status payloads must gracefully handle additions of new fields or metadata in the escalation JSON structure.
+
+---
+
+## 8. Ownership Boundary
 - **Parikshak Ownership**: Computing confidence, generating the escalation ID, storing the case JSON, and preventing release propagation until status resolves.
 - **Consumer Ownership**: Consumers cannot directly close, modify, or create escalation cases. They can only poll the pending queue or register callback webhooks to receive notification of resolutions.
