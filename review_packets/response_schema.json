@@ -1,55 +1,36 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "NiyantranTaskResponse",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ReviewResponse",
   "type": "object",
   "properties": {
-    "trace_id": {
-      "type": "string"
-    },
-    "submission_id": {
-      "type": "string"
-    },
-    "evaluation_result": {
+    "status": {
       "type": "string",
       "enum": [
         "PASS",
+        "PARTIAL",
         "FAIL"
       ]
     },
-    "failure_type": {
-      "type": [
-        "string",
-        "null"
-      ],
-      "enum": [
-        "schema_violation",
-        "incomplete",
-        "incorrect_logic",
-        "integration_fail",
-        null
-      ]
-    },
-    "selected_task_id": {
+    "review": {
       "type": "string"
     },
-    "selection_reason": {
+    "score": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "next_task": {
       "type": "string"
     },
-    "source": {
-      "type": "string"
-    },
-    "schema_version": {
+    "trace_id": {
       "type": "string"
     }
   },
   "required": [
-    "trace_id",
-    "submission_id",
-    "evaluation_result",
-    "failure_type",
-    "selected_task_id",
-    "selection_reason",
-    "source",
-    "schema_version"
+    "status",
+    "review",
+    "score",
+    "next_task",
+    "trace_id"
   ]
 }

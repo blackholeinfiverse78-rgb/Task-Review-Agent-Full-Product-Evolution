@@ -1,9 +1,0 @@
-{
-    "replay_checkpoint_id": "chk-2f1ceefa6760",
-    "snapshot_db": "snapshot_seq_4_20260613_105507.sqlite",
-    "last_seq": 4,
-    "head_hash": "271e26b61873f6588398b06b10afa5a8b42f3e701cfe59efdba34b6fcfa5ce4d",
-    "timestamp": "2026-06-13T10:55:07.662671Z",
-    "file_hash": "367a183227a813aa8b2642e303d5dccb8249f4899c3a62cbf5d41e44d6967b91",
-    "state_hash": "805a0e50ba382dd1a5b680ae98a2e370c8638cdc3a539f3b233c26101377ebe9"
-}

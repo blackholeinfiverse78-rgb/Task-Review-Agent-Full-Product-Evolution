@@ -1,36 +1,28 @@
 # Parikshak Ecosystem Flow Proof
 
-This document proves active downstream data consumption by Saarthi and Niyantran systems.
+Demonstrates that all external adapters successfully processed the transaction output.
 
-### Saarthi Visibility Log Ingestion
+### 1. Saarthi Visibility Ledger Output
 ```json
-{
-  "trace_id": "trace-ecosystem-proof-4cd84c2819f5",
-  "event_type": "downstream_visibility",
-  "source": "Parikshak",
-  "destination": "Saarthi",
-  "payload": {
-    "review_id": "rev-trace-ec",
-    "submission_id": "sub-trace-ec",
-    "status": "APPROVED",
-    "score": 95,
-    "reviewed_by": "Akash",
-    "reviewed_at": "2026-06-11T06:13:04.533040Z"
-  },
-  "timestamp": "2026-06-11T06:13:04.542805Z"
-}
+{"trace_id": "trace-ecosystem-proof-999", "event_type": "downstream_visibility", "source": "Parikshak", "destination": "Saarthi", "payload": {"review_id": "rev-trace-ec", "submission_id": "sub-trace-ec", "trace_id": "trace-ecosystem-proof-999", "evaluation_result": "PASS", "failure_type": null, "decision": "APPROVED", "failure_reasons": [], "improvement_hints": [], "analysis": {"technical_quality": 95, "clarity": 95, "discipline_signals": 95}, "reviewed_by": "Akash", "reviewed_at": "2026-06-15T11:03:32.613331Z", "evaluation_time_ms": 15, "missing_features": [], "evaluation_summary": "Passed evaluation requirements.", "selected_task_id": "T-GOV-003", "selection_reason": "Advancement to next evolutionary stage", "review_state": "APPROVED", "score": 95, "readiness_percent": 95, "status": "pass", "candidate_name": "Akash", "task_title": "Implement Niyantran Connection Proof"}, "timestamp": "2026-06-15T11:03:32.624007Z"}
 ```
 
-### Niyantran Assignment Dispatch Log
+### 2. Niyantran Assignments Ledger Output
+```json
+{"trace_id": "trace-ecosystem-proof-999", "assignment_id": "assign-trace-ec", "task_id": "T-GOV-003", "candidate_id": "Akash", "assigned_by": "Akash", "timestamp": "2026-06-15T11:03:32.624007Z"}
+```
+
+### 3. Bucket Ingestion Index Entry
 ```json
 {
-  "trace_id": "trace-ecosystem-proof-4cd84c2819f5",
-  "assignment_id": "assign-trace-ec",
-  "task_id": "T-GOV-003",
+  "trace_id": "trace-ecosystem-proof-999",
+  "timestamp": "2026-06-15T16:33:32.622268",
+  "type": "task_review",
   "candidate_id": "Akash",
-  "assigned_by": "Akash",
-  "timestamp": "2026-06-11T06:13:04.543321Z"
+  "task_id": "T-GOV-002",
+  "evaluation_result": "PASS",
+  "failure_type": null,
+  "decision": "APPROVED",
+  "task_title": "Implement Niyantran Connection Proof"
 }
 ```
-
-*Verified: 2026-06-11T06:13:04.546503Z UTC*

@@ -2,8 +2,8 @@
     "valid": false,
     "reason": "Found 4 integrity issues",
     "errors": [
-        "HASH_MISMATCH: Event seq 1 (evt-0882a75c7280) checksum mismatch. Stored=1d96cc0e609a35e79b248d43f235a08898944e7b7a1af7b388dc984cb83db9f3, Computed=55dfc9f9fd31bc77b3f34c7045ca29411ad70ed3c44c1c3c574daa1b45298ddc",
-        "HASH_MISMATCH: Event seq 1 (evt-0882a75c7280) hash mismatch. Stored=dc64acf74fe819a7342a6c813f44d0a19fb9e6c7dcfc79c8903d7d12bb83d7bf, Computed=b4f41ff4186e4e335319d8ec15d75223fb27c753c2b1ae2a51c923221f109488",
+        "HASH_MISMATCH: Event seq 1 (evt-4f843fc34965) checksum mismatch. Stored=1d96cc0e609a35e79b248d43f235a08898944e7b7a1af7b388dc984cb83db9f3, Computed=55dfc9f9fd31bc77b3f34c7045ca29411ad70ed3c44c1c3c574daa1b45298ddc",
+        "HASH_MISMATCH: Event seq 1 (evt-4f843fc34965) hash mismatch. Stored=d17ad140117aed93b8afa83bebec67860502d113a1c4d587c2bcd2c28d29dcda, Computed=e86a0a6d842fe79549f84ce22ceea3ac3b36729ee7b43cb7a16e9b1794903ef7",
         "SCHEMA_DRIFT: Event seq 1 failed schema validation: 2 validation errors for CandidateProfile\ncandidate_id\n  Field required [type=missing, input_value={'corrupted': 'data'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/missing\nname\n  Field required [type=missing, input_value={'corrupted': 'data'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/missing",
         "SNAPSHOT_DIVERGENCE: Replayed state hash for seq 1 doesn't match checkpoint state_hash 9d0b1fad105fb242de9bdf23d4b7133814b827f3248f5d149b17da9ff07b298d"
     ]

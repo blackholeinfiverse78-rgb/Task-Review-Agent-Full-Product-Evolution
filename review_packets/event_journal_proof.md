@@ -1,16 +1,21 @@
-# Parikshak Event Journal Proof
+# Gov-OS Event Journal Proof
 
-Immutable event transaction logs extracted directly from SQLite database:
+Verifies that the append-only SQLite journal successfully recorded all state mutation transactions.
 
-### Event Chain Ledger
-| Sequence | Event ID | Trace ID | Schema | Actor | Event Type | Parent Hash | Current Hash |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **1** | `evt-073ff793a87a` | `trace-seed-63591d` | `v1.0` | `Akash` | `candidate_profiles` | `0000000000000000000000000000000000000000000000000000000000000000` | `ad29ffdae9ce6166d931784f1c3909115070c3e8a326f7d624ce004586a6b490` |
-| **2** | `evt-cffbbb884480` | `trace-ecosystem-proof-4cd84c2819f5` | `v1.0` | `Akash` | `review_history` | `ad29ffdae9ce6166d931784f1c3909115070c3e8a326f7d624ce004586a6b490` | `b3568e082b61bf47a3bc6be4dc240548b9b9e8b9bb622aabd972fdec663747ec` |
+### Event Row 1 (Genesis / Seed)
+- **Sequence**: `1`
+- **Event ID**: `evt-9c88cb95020f`
+- **Type**: `candidate_profiles`
+- **Actor**: `Akash`
+- **Parent Event Hash**: `0000000000000000000000000000000000000000000000000000000000000000`
+- **Event Hash**: `6b1bf74f2953f7ae94750f5d91087a7a7f3fdd8810cd3561a341f82856eb941f`
 
-### Snapshot Integrity Proof
-```json
-"storage/backups\\snapshot_seq_2_20260611_061304.json"
-```
+### Event Row 2 (Review Approved)
+- **Sequence**: `2`
+- **Event ID**: `evt-b0a97401f3d0`
+- **Type**: `review_history`
+- **Actor**: `Akash`
+- **Parent Event Hash**: `6b1bf74f2953f7ae94750f5d91087a7a7f3fdd8810cd3561a341f82856eb941f`
+- **Event Hash**: `5989c04cc07cbcb421f8b622a31922a54e7086a239a2a23af2f36dc5dd8c1f5e`
 
-*Verified: 2026-06-11T06:13:04.546503Z UTC*
+*Verification Verdict: SHA-256 chain is intact and validates monotonically from Sequence 1.*

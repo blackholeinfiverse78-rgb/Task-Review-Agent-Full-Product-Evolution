@@ -4,7 +4,7 @@
         "schema_version": "v1.0",
         "actor": "operator-1",
         "actor_role": "operator",
-        "timestamp": "2026-06-13T10:55:07.529428Z",
+        "timestamp": "2026-06-15T11:03:28.429336Z",
         "lineage_reference": "lineage-proof",
         "event_type": "candidate_profiles",
         "payload": {

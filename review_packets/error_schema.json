@@ -1,6 +1,6 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "APIErrorResponse",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ErrorResponse",
   "type": "object",
   "properties": {
     "detail": {
@@ -15,8 +15,6 @@
     }
   },
   "required": [
-    "detail",
-    "error_code",
-    "timestamp"
+    "detail"
   ]
 }

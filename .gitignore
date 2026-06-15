@@ -130,3 +130,6 @@ yarn-error.log*
 storage/backups/*
 storage/checkpoints/*
 
+# Assistant scratch space
+scratch/
+

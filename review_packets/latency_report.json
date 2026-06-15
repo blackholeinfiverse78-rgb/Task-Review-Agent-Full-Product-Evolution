@@ -1,51 +1,33 @@
 {
-  "timestamp": "2026-06-11T06:13:04.523817Z",
-  "rule_engine_benchmarks": {
-    "iterations": 1000,
-    "total_time_sec": 0.0055736000003889785,
-    "average_latency_ms": 0.0055736000003889785
-  },
-  "concurrency_tiers": {
+  "reviews_per_sec": 161566.55,
+  "reviews_per_min": 9693992.96,
+  "concurrency_latencies": {
     "1": {
-      "concurrency": 1,
-      "throughput_ops_sec": 1594.39,
-      "throughput_ops_min": 95663.27,
+      "total_duration_ms": 0.73,
       "avg_latency_ms": 0.02,
-      "min_latency_ms": 0.02,
       "max_latency_ms": 0.02,
-      "errors": 0
+      "throughput_req_sec": 1362.21
     },
     "10": {
-      "concurrency": 10,
-      "throughput_ops_sec": 6567.71,
-      "throughput_ops_min": 394062.79,
-      "avg_latency_ms": 0.03,
-      "min_latency_ms": 0.01,
-      "max_latency_ms": 0.14,
-      "errors": 0
+      "total_duration_ms": 1.42,
+      "avg_latency_ms": 0.02,
+      "max_latency_ms": 0.02,
+      "throughput_req_sec": 7059.16
     },
     "50": {
-      "concurrency": 50,
-      "throughput_ops_sec": 8014.49,
-      "throughput_ops_min": 480869.41,
-      "avg_latency_ms": 0.01,
-      "min_latency_ms": 0.01,
+      "total_duration_ms": 5.83,
+      "avg_latency_ms": 0.02,
       "max_latency_ms": 0.02,
-      "errors": 0
+      "throughput_req_sec": 8570.89
     },
     "100": {
-      "concurrency": 100,
-      "throughput_ops_sec": 8031.87,
-      "throughput_ops_min": 481912.23,
+      "total_duration_ms": 11.23,
       "avg_latency_ms": 0.01,
-      "min_latency_ms": 0.01,
-      "max_latency_ms": 0.03,
-      "errors": 0
+      "max_latency_ms": 0.02,
+      "throughput_req_sec": 8906.46
     }
   },
-  "startup_timings_ms": {
-    "db_init_cold": 4.250599999977567,
-    "db_init_warm": 1.2255000001459848,
-    "integrity_scan": 0.43850000020029256
-  }
+  "cold_start_ms": 46.12,
+  "warm_start_ms": 0.98,
+  "single_review_latency_ms": 0.006
 }
