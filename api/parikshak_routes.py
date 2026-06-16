@@ -34,7 +34,9 @@ async def parikshak_review(request: Request):
                     content={
                         "detail": f"Invalid JSON payload format: {str(e)}",
                         "error_code": "BAD_REQUEST",
-                        "timestamp": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+                        "timestamp": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+                        "status": "FAIL",
+                        "review": f"Invalid JSON payload format: {str(e)}"
                     }
                 )
         else:

@@ -354,3 +354,21 @@ async def get_sample_evaluation():
     except Exception as e:
         logger.error(f"[PRODUCTION API] Sample evaluation failed: {e}")
         raise HTTPException(status_code=500, detail=f"Sample evaluation failed: {str(e)}")
+
+@router.get("/constitutional-review/{trace_id}")
+async def get_constitutional_readiness(trace_id: str):
+    """
+    Independently verify trace readiness (READY, NEEDS_REVIEW, REJECTED)
+    using persisted artifacts in storage/traces/{trace_id}/
+    """
+    try:
+        from constitutional_readiness_engine import ConstitutionalReadinessEngine
+        engine = ConstitutionalReadinessEngine()
+        result = engine.evaluate_readiness(trace_id)
+        return result
+    except Exception as e:
+        logger.error(f"[PRODUCTION API] Constitutional review query failed: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Constitutional review failed: {str(e)}"
+        )

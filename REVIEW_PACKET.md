@@ -83,3 +83,20 @@ Parikshak does not compile code, run tests, or maintain candidate skill portfoli
   "schema_version": "v1.0"
 }
 ```
+
+---
+
+## CONSTITUTIONAL REVIEW LAYER (TANTRA Readiness Layer)
+
+**Endpoint**: `GET /api/v1/production/constitutional-review/{trace_id}`
+
+**Components**:
+*   `trace_reconstruction_validator.py` - Verifies presence of all 10 artifacts across Execution, Evidence, Governance, Consumption, Actions, Lineage, Replay, and Convergence.
+*   `artifact_validation_engine.py` - Validates the actual integrity and content (hashes, signatures, status fields).
+*   `constitutional_readiness_engine.py` - Orchestrates validation and classifies states (`READY`, `NEEDS_REVIEW`, `REJECTED`).
+
+**Rules & Decision States**:
+1.  **READY**: All 10 files present, evidence integrity verification passes (hashes and checksum match), replay is successful, governance is approved by authorized human governor, and convergence status is converged.
+2.  **NEEDS_REVIEW**: Reconstructable trace with warnings, partial lineage or replay, or minor governance warnings.
+3.  **REJECTED**: Missing critical files, integrity hash corruption, replay failure, governance rejection, lineage break, or convergence failure.
+

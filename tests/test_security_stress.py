@@ -38,7 +38,7 @@ def test_max_length_enforcement():
 def test_sql_injection_simulation():
     # Since we use in-memory dict, it's safe, but we check if it breaks the system
     payload = {
-        "task_id": "test-task-3",
+        "task_id": "T-GOV-001",
         "task_title": "SELECT * FROM users; --",
         "task_description": "DROP TABLE tasks; CASCADE; ' OR '1'='1 description long enough",
         "submitted_by": "Hacker",
@@ -50,7 +50,7 @@ def test_sql_injection_simulation():
 
 def test_xss_simulation():
     payload = {
-        "task_id": "test-task-4",
+        "task_id": "T-GOV-001",
         "task_title": "<script>alert('xss')</script>",
         "task_description": "Check XSS: <img src=x onerror=alert(1)> and more words to make it long enough",
         "submitted_by": "Hacker",
