@@ -1,5 +1,5 @@
 {
-    "timestamp": "2026-06-15T11:03:28.488345Z",
+    "timestamp": "2026-06-17T09:08:38.119935Z",
     "release_blocked": true,
     "error_message": "AutonomousReleaseBlocked: Actor 'AI_Orchestrator_Agent' is not authorized to sign-off on governance events.",
     "exception_type": "AutonomousReleaseBlocked"

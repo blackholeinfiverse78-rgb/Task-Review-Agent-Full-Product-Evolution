@@ -1,12 +1,12 @@
 {
   "submissions": {
-    "sub-730867379140-5b75ce68": {
-      "submission_id": "sub-730867379140-5b75ce68",
-      "task_id": "test-001",
-      "task_title": "Test Task for History Verification",
-      "task_description": "Objective: Verify that submitted tasks appear in history\n        \n        Deliverables:\n        - Task submission functionality\n        - History display functionality\n        - Proper data flow\n        \n        Timeline: Immediate testing\n        \n        Scope: End-to-end verification",
-      "submitted_by": "Test User",
-      "submitted_at": "2026-06-16T14:03:52.120755",
+    "sub-d989ccc5a3cf-85829d08": {
+      "submission_id": "sub-d989ccc5a3cf-85829d08",
+      "task_id": "ishan-registry-002",
+      "task_title": "Registry-Aware Task Review Agent with Deterministic Evaluation Pipeline and API Integration",
+      "task_description": "This repository implements a deterministic Task Review Agent that evaluates task submissions by aligning task title, description, and repository content with system-defined architectural rules. The system is a production-oriented evaluation pipeline, not a probabilistic AI reviewer, ensuring consistent, reproducible, and verifiable scoring outcomes.\n\n## System Overview\n\nThe core enhancement is the integration of a Registry-Aware Validation Layer. Before any scoring occurs, each submission is validated against a Blueprint Registry, enforcing structural discipline. The architecture follows strict separation of concerns: validator.py handles validation, evaluation_engine.py orchestrates scoring, and review_orchestrator.py manages the full lifecycle.\n\n## API Contract\n\nThe REST API exposes the following endpoints with strict Pydantic schema validation:\n\n```\nPOST /api/v1/lifecycle/submit\n  Request:  { task_title, task_description, module_id, schema_version, github_repo_link }\n  Response: { submission_id, score, status, next_task }\n\nGET /api/v1/lifecycle/review/{submission_id}\n  Response: { score, status, title_analysis, description_analysis, repository_analysis }\n```\n\nAll API contracts are enforced via Pydantic schema validation. Invalid payloads return HTTP 422 with deterministic error messages. The service layer adheres to a strict interface defined in review_engine_interface.py.\n\n## Evaluation Pipeline Stages\n\nThe pipeline follows a strict five-stage execution flow:\n\n1. Registry Validation — validate module_id, lifecycle_stage, schema_version against Blueprint Registry\n2. Title Analysis — technical keyword detection, clarity scoring, alignment with description (weight: 20 pts)\n3. Description Analysis — content depth, structure quality, technical density, requirement completeness (weight: 40 pts)\n4. Repository Analysis — GitHub API assessment of code quality, architecture, documentation, file structure (weight: 40 pts)\n5. Score Combination — deterministic formula: total = title_score + description_score + repository_score\n\nScoring formula applied by ScoringEngine:\n\n```python\ntotal_score = title_score + description_score + repository_score  # max 100\nstatus = \"pass\" if total_score >= 80 else \"borderline\" if total_score >= 50 else \"fail\"\n```\n\n## Component Integration\n\nComponents integrate through explicit dependency injection. ReviewOrchestrator receives a ReviewEngineInterface instance at construction, decoupling orchestration from evaluation implementation:\n\n```python\norchestrator = ReviewOrchestrator(ReviewEngine())\nresult = orchestrator.process_submission(task)\n```\n\nEvaluationEngine composes TitleAnalyzer, DescriptionAnalyzer, RepositoryAnalyzer, and ScoringEngine as injected services. Each service is independently testable and replaceable without modifying the pipeline. The ReviewEngine bridges EvaluationEngine output to the ReviewOutput Pydantic schema consumed by the API layer.\n\n## Registry Validation Layer\n\nThe registry validation layer enforces structural discipline before any evaluation occurs:\n- module_id must exist in the Blueprint Registry\n- module lifecycle_stage must be production or development (not deprecated, not planning)\n- schema_version must match the registered module version\n- deprecated modules are rejected with deterministic error messages\n\nIf validation fails, the system returns a rejection response with score 0 and a corrective next task. No evaluation engine cycles are consumed on invalid submissions.\n\n## Acceptance Criteria and Test Coverage\n\nThe system meets the following acceptance criteria:\n- Valid module submission proceeds to full evaluation pipeline and returns score with next task\n- Deprecated module submission returns rejection with reason before scoring begins\n- Schema version mismatch returns INVALID status with specific mismatch details\n- Same inputs always produce identical scores across repeated runs (determinism constraint)\n- GitHub API timeout falls back gracefully to title and description scoring only (max 60 pts)\n\nTest scenarios covered:\n\n```\ntest_registry_validation.py   — valid, invalid, deprecated, schema-mismatch cases\ntest_scoring_engine.py        — deterministic score verification across 3 input tiers\ntest_review_orchestrator.py  — full lifecycle integration from submit to next task\ntest_review_engine.py         — evaluation engine unit tests with mock repository data\n```\n\n## Architecture and Scalability\n\nThe system is designed for production deployment with the following characteristics:\n- Deterministic evaluation engine with no LLM-based reasoning or probabilistic scoring\n- Modular service architecture enabling independent scaling of each pipeline stage\n- In-memory storage layer with explicit lifecycle tracking via TaskSubmission, ReviewRecord, NextTaskRecord\n- Registry-driven enforcement ensuring all evaluated work aligns with declared system modules\n- Pydantic validation on all input and output schemas for strict API contract adherence\n- CORS configuration for frontend integration with the React client at localhost:3000\n\nThis implementation transforms the Task Review Agent from a quality-based evaluator into a structure-aware enforcement system that guarantees structural correctness before scoring, consistent scoring behavior, and full alignment with system design principles.",
+      "submitted_by": "Ishan",
+      "submitted_at": "2026-06-17T14:43:44.983477",
       "status": "submitted",
       "previous_task_id": null,
       "pdf_file_path": null,
@@ -17,17 +17,34 @@
       "registry_validation_reason": "Validation Passed",
       "review_state": "PENDING_REVIEW"
     },
-    "sub-53b98bd54d7c-777ddf68": {
-      "submission_id": "sub-53b98bd54d7c-777ddf68",
-      "task_id": "test-002",
-      "task_title": "Second Test Task",
-      "task_description": "Testing multiple submissions in history",
-      "submitted_by": "Test User 2",
-      "submitted_at": "2026-06-16T14:03:52.917242",
+    "sub-39b72f3084b5-88c7f48d": {
+      "submission_id": "sub-39b72f3084b5-88c7f48d",
+      "task_id": "task-1781690776.751679",
+      "task_title": "Build a Secure Async API Gateway for User Authentication",
+      "task_description": "Create a comprehensive async REST API gateway with JWT authorization and Pydantic schema validation. Includes Docker compose configuration and full documentation.",
+      "submitted_by": "Ishan Shirode",
+      "submitted_at": "2026-06-17T15:36:16.751679",
       "status": "submitted",
       "previous_task_id": null,
       "pdf_file_path": null,
-      "pdf_extracted_text": null,
+      "pdf_extracted_text": "",
+      "module_id": "task-review-agent",
+      "schema_version": "v1.0",
+      "registry_validation_status": "VALID",
+      "registry_validation_reason": "Validation Passed",
+      "review_state": "PENDING_REVIEW"
+    },
+    "sub-39b72f3084b5-2d2cd28f": {
+      "submission_id": "sub-39b72f3084b5-2d2cd28f",
+      "task_id": "task-1781764377.815848",
+      "task_title": "Build a Secure Async API Gateway for User Authentication",
+      "task_description": "Create a comprehensive async REST API gateway with JWT authorization and Pydantic schema validation. Includes Docker compose configuration and full documentation.",
+      "submitted_by": "Ishan Shirode",
+      "submitted_at": "2026-06-18T12:02:57.815848",
+      "status": "submitted",
+      "previous_task_id": null,
+      "pdf_file_path": null,
+      "pdf_extracted_text": "",
       "module_id": "task-review-agent",
       "schema_version": "v1.0",
       "registry_validation_status": "VALID",
@@ -36,79 +53,103 @@
     }
   },
   "reviews": {
-    "rev-sub-730867379140-5b75ce68": {
-      "review_id": "rev-sub-730867379140-5b75ce68",
-      "submission_id": "sub-730867379140-5b75ce68",
+    "rev-sub-d989ccc5a3cf-85829d08": {
+      "review_id": "rev-sub-d989ccc5a3cf-85829d08",
+      "submission_id": "sub-d989ccc5a3cf-85829d08",
       "trace_id": "trace-test-default-123456",
-      "evaluation_result": "FAIL",
-      "failure_type": "schema_violation",
-      "decision": "REJECTED",
-      "failure_reasons": [
-        "schema_violation"
-      ],
+      "evaluation_result": "PASS",
+      "failure_type": null,
+      "decision": "APPROVED",
+      "failure_reasons": [],
       "improvement_hints": [],
       "analysis": {
-        "technical_quality": 49,
-        "clarity": 49,
-        "discipline_signals": 49
+        "technical_quality": 92,
+        "clarity": 92,
+        "discipline_signals": 92
       },
-      "reviewed_at": "2026-06-16T14:03:52.120755",
+      "reviewed_at": "2026-06-17T14:43:44.983477",
       "evaluation_time_ms": 0,
       "missing_features": [],
-      "evaluation_summary": "Parikshak Evaluation: FAIL",
-      "selected_task_id": "T-GOV-F01",
-      "selection_reason": "FAIL(schema_violation) → failure_tasks['schema_violation'][0] = T-GOV-F01",
+      "evaluation_summary": "Parikshak Evaluation: PASS",
+      "selected_task_id": "T-GOV-002",
+      "selection_reason": "PASS → next_tasks[0] = T-GOV-002",
       "review_state": "PENDING_REVIEW",
       "version": 1,
-      "score": 40,
-      "readiness_percent": 40,
-      "status": "fail",
-      "candidate_name": "Test User",
-      "task_title": "Test Task for History Verification"
+      "score": 100,
+      "readiness_percent": 100,
+      "status": "pass",
+      "candidate_name": "Ishan",
+      "task_title": "Registry-Aware Task Review Agent with Deterministic Evaluation Pipeline and API Integration"
     },
-    "rev-sub-53b98bd54d7c-777ddf68": {
-      "review_id": "rev-sub-53b98bd54d7c-777ddf68",
-      "submission_id": "sub-53b98bd54d7c-777ddf68",
-      "trace_id": "trace-test-default-123456",
-      "evaluation_result": "FAIL",
-      "failure_type": "schema_violation",
-      "decision": "REJECTED",
-      "failure_reasons": [
-        "schema_violation"
-      ],
+    "rev-sub-39b72f3084b5-88c7f48d": {
+      "review_id": "rev-sub-39b72f3084b5-88c7f48d",
+      "submission_id": "sub-39b72f3084b5-88c7f48d",
+      "trace_id": "trace-ui-20260617153616-2268e14f",
+      "evaluation_result": "PASS",
+      "failure_type": null,
+      "decision": "APPROVED",
+      "failure_reasons": [],
       "improvement_hints": [],
       "analysis": {
-        "technical_quality": 11,
-        "clarity": 11,
-        "discipline_signals": 11
+        "technical_quality": 100,
+        "clarity": 100,
+        "discipline_signals": 100
       },
-      "reviewed_at": "2026-06-16T14:03:52.917242",
+      "reviewed_at": "2026-06-17T15:36:16.751679",
       "evaluation_time_ms": 0,
       "missing_features": [],
-      "evaluation_summary": "Parikshak Evaluation: FAIL",
-      "selected_task_id": "T-GOV-F01",
-      "selection_reason": "FAIL(schema_violation) → failure_tasks['schema_violation'][0] = T-GOV-F01",
+      "evaluation_summary": "Parikshak Evaluation: PASS",
+      "selected_task_id": "T-GOV-002",
+      "selection_reason": "PASS → next_tasks[0] = T-GOV-002",
       "review_state": "PENDING_REVIEW",
       "version": 1,
-      "score": 40,
-      "readiness_percent": 40,
-      "status": "fail",
-      "candidate_name": "Test User 2",
-      "task_title": "Second Test Task"
+      "score": 100,
+      "readiness_percent": 100,
+      "status": "pass",
+      "candidate_name": "Ishan Shirode",
+      "task_title": "Build a Secure Async API Gateway for User Authentication"
+    },
+    "rev-sub-39b72f3084b5-2d2cd28f": {
+      "review_id": "rev-sub-39b72f3084b5-2d2cd28f",
+      "submission_id": "sub-39b72f3084b5-2d2cd28f",
+      "trace_id": "trace-ui-20260618120257-2268e14f",
+      "evaluation_result": "PASS",
+      "failure_type": null,
+      "decision": "APPROVED",
+      "failure_reasons": [],
+      "improvement_hints": [],
+      "analysis": {
+        "technical_quality": 100,
+        "clarity": 100,
+        "discipline_signals": 100
+      },
+      "reviewed_at": "2026-06-18T12:02:57.815848",
+      "evaluation_time_ms": 0,
+      "missing_features": [],
+      "evaluation_summary": "Parikshak Evaluation: PASS",
+      "selected_task_id": "T-GOV-002",
+      "selection_reason": "PASS → next_tasks[0] = T-GOV-002",
+      "review_state": "APPROVED",
+      "version": 2,
+      "score": 100,
+      "readiness_percent": 100,
+      "status": "pass",
+      "candidate_name": "Ishan Shirode",
+      "task_title": "Build a Secure Async API Gateway for User Authentication"
     }
   },
   "next_tasks": {
-    "T-GOV-F01": {
-      "next_task_id": "T-GOV-F01",
-      "review_id": "rev-sub-53b98bd54d7c-777ddf68",
-      "previous_submission_id": "sub-53b98bd54d7c-777ddf68",
-      "task_type": "correction",
-      "title": "Next Task T-GOV-F01",
-      "objective": "Complete task T-GOV-F01",
+    "T-GOV-002": {
+      "next_task_id": "T-GOV-002",
+      "review_id": "rev-sub-39b72f3084b5-2d2cd28f",
+      "previous_submission_id": "sub-39b72f3084b5-2d2cd28f",
+      "task_type": "advancement",
+      "title": "Next Task T-GOV-002",
+      "objective": "Complete task T-GOV-002",
       "focus_area": "general",
       "difficulty": "beginner",
-      "reason": "FAIL(schema_violation) → failure_tasks['schema_violation'][0] = T-GOV-F01 correction",
-      "assigned_at": "2026-06-16T14:03:52.917242"
+      "reason": "PASS → next_tasks[0] = T-GOV-002",
+      "assigned_at": "2026-06-18T12:02:57.815848"
     }
   }
 }

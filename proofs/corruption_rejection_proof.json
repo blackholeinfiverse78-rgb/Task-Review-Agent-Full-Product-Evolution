@@ -1,9 +1,9 @@
 {
-    "timestamp": "2026-06-15T11:03:28.481325Z",
+    "timestamp": "2026-06-17T09:08:38.115612Z",
     "valid": false,
     "errors": [
-        "HASH_MISMATCH: Event seq 1 (evt-4f843fc34965) checksum mismatch. Stored=1d96cc0e609a35e79b248d43f235a08898944e7b7a1af7b388dc984cb83db9f3, Computed=55dfc9f9fd31bc77b3f34c7045ca29411ad70ed3c44c1c3c574daa1b45298ddc",
-        "HASH_MISMATCH: Event seq 1 (evt-4f843fc34965) hash mismatch. Stored=d17ad140117aed93b8afa83bebec67860502d113a1c4d587c2bcd2c28d29dcda, Computed=e86a0a6d842fe79549f84ce22ceea3ac3b36729ee7b43cb7a16e9b1794903ef7",
+        "HASH_MISMATCH: Event seq 1 (evt-a0769ec894f3) checksum mismatch. Stored=1d96cc0e609a35e79b248d43f235a08898944e7b7a1af7b388dc984cb83db9f3, Computed=55dfc9f9fd31bc77b3f34c7045ca29411ad70ed3c44c1c3c574daa1b45298ddc",
+        "HASH_MISMATCH: Event seq 1 (evt-a0769ec894f3) hash mismatch. Stored=4344cc177b23d39cba6e7e90212efb10a4c1b961b8fb4f75380ddb20c9825083, Computed=f206cab7928329b12239051c98f7299e64fd0a9ea0494f6c1b0f291ca4bc0dd9",
         "SCHEMA_DRIFT: Event seq 1 failed schema validation: 2 validation errors for CandidateProfile\ncandidate_id\n  Field required [type=missing, input_value={'corrupted': 'data'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/missing\nname\n  Field required [type=missing, input_value={'corrupted': 'data'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/missing",
         "SNAPSHOT_DIVERGENCE: Replayed state hash for seq 1 doesn't match checkpoint state_hash 9d0b1fad105fb242de9bdf23d4b7133814b827f3248f5d149b17da9ff07b298d"
     ]
