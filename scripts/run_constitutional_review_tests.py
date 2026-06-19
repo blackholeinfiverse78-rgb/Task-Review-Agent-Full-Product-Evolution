@@ -199,6 +199,12 @@ def run_evaluation_suite() -> Dict[str, Any]:
     })
     results["REJECTED_CONV"] = engine.evaluate_readiness("trace-rejected-conv-case")
 
+    # 8. REJECTED: Missing Evidence Bundle
+    create_base_files("trace-rejected-evidence-case", {
+        "evidence_bundle.json": None
+    })
+    results["REJECTED_EVIDENCE"] = engine.evaluate_readiness("trace-rejected-evidence-case")
+
     return results
 
 def generate_adversarial_report(results: Dict[str, Any]):
@@ -213,7 +219,7 @@ Adversarial test cases were simulated to verify that any compromised, corrupted,
 
 | Test Case | Simulated Adversary | Expected Verdict | Actual Verdict | Safety Check Met |
 | :--- | :--- | :---: | :---: | :---: |
-| **Missing Evidence** | Core task execution context files deleted. | **REJECTED** | {results["REJECTED_LINEAGE"]["verdict"]} | Yes (Reconstruction Fails) |
+| **Missing Evidence** | Core task execution context files deleted. | **REJECTED** | {results["REJECTED_EVIDENCE"]["verdict"]} | Yes (Reconstruction Fails) |
 | **Broken Lineage** | Lineage bundle metadata file removed. | **REJECTED** | {results["REJECTED_LINEAGE"]["verdict"]} | Yes (Reconstruction Fails) |
 | **Replay Failure** | Replay runner returns compilation/runtime error. | **REJECTED** | {results["REJECTED_REPLAY"]["verdict"]} | Yes (Integrity Fail) |
 | **Governance Rejection** | Actor decision explicitly flagged as rejected. | **REJECTED** | {results["REJECTED_GOV"]["verdict"]} | Yes (Governance Gate Fail) |
