@@ -1,7 +1,7 @@
 # Constitutional Review Contract (Parikshak – TANTRA Readiness Layer)
 
 - **Version**: 1.0.0
-- **Status**: FROZEN
+- **Status**: FROZEN / CORE-LOCKED
 - **Context**: Evolving Parikshak into the Constitutional Review Layer for TANTRA.
 
 ---
