@@ -2331,6 +2331,50 @@
         "failure_type": "schema_violation",
         "message": "Evaluation: FAIL → T-GOV-F01"
       }
+    },
+    {
+      "event_type": "SUBMISSION",
+      "trace_id": "trace-stress-test-3",
+      "timestamp": "2026-06-19T06:04:04.437Z",
+      "severity": "INFO",
+      "details": {
+        "submission_id": "sub-5f989550b67b-s-test-3",
+        "message": "Submission received: sub-5f989550b67b-s-test-3"
+      }
+    },
+    {
+      "event_type": "EVALUATION",
+      "trace_id": "trace-stress-test-3",
+      "timestamp": "2026-06-19T06:04:04.440Z",
+      "severity": "INFO",
+      "details": {
+        "evaluation_result": "FAIL",
+        "selected_task_id": "T-GOV-F01",
+        "failure_type": "schema_violation",
+        "message": "Evaluation: FAIL → T-GOV-F01"
+      }
+    },
+    {
+      "event_type": "SUBMISSION",
+      "trace_id": "trace-stress-test-4",
+      "timestamp": "2026-06-19T06:04:05.265Z",
+      "severity": "INFO",
+      "details": {
+        "submission_id": "sub-092566a92ef2-s-test-4",
+        "message": "Submission received: sub-092566a92ef2-s-test-4"
+      }
+    },
+    {
+      "event_type": "EVALUATION",
+      "trace_id": "trace-stress-test-4",
+      "timestamp": "2026-06-19T06:04:05.269Z",
+      "severity": "INFO",
+      "details": {
+        "evaluation_result": "FAIL",
+        "selected_task_id": "T-GOV-F01",
+        "failure_type": "schema_violation",
+        "message": "Evaluation: FAIL → T-GOV-F01"
+      }
     }
   ]
 }
