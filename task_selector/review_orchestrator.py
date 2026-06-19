@@ -405,8 +405,8 @@ class ReviewOrchestrator:
             sys.path.insert(0, vaani_path)
             
         try:
-            from tts_service import text_to_speech_stream
-            from prosody_mapper import generate_prosody_hint
+            from tts_service import text_to_speech_stream  # type: ignore
+            from prosody_mapper import generate_prosody_hint  # type: ignore
             
             # Generate prosody logging info
             try:
