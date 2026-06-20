@@ -1,0 +1,6 @@
+{
+    "trace_id": "trace-prod-ready",
+    "governor": "Akash",
+    "authority_level": "Level_3_Governor",
+    "valid_authority": true
+}

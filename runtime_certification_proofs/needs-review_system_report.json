@@ -1,0 +1,30 @@
+{
+    "system_information": {
+        "trace_id": "trace-prod-needs-review",
+        "certified_at": "2026-06-20T05:42:36.176624Z",
+        "verifier": "Parikshak Production Certification Engine v1.0"
+    },
+    "dimensions": {
+        "Runtime": "PASS",
+        "Observability": "PASS",
+        "Replayability": "PASS",
+        "Governance": "UNKNOWN",
+        "Provenance": "PASS",
+        "Security": "PASS",
+        "Versioning": "PASS",
+        "Recovery": "UNKNOWN",
+        "Human Approval": "UNKNOWN",
+        "Layer Placement": "PASS",
+        "Dependency Integrity": "PASS",
+        "Ecosystem Participation": "PASS"
+    },
+    "production_score": 75,
+    "certification_decision": "NEEDS REVIEW",
+    "critical_failures": [],
+    "warnings": [
+        "Dimension 'Governance' status is UNKNOWN (missing evidence).",
+        "Dimension 'Recovery' status is UNKNOWN (missing evidence).",
+        "Dimension 'Human Approval' status is UNKNOWN (missing evidence)."
+    ],
+    "risk_summary": "System lacks critical runtime evidence (e.g. missing security reports or human approval records) and must be manually evaluated."
+}

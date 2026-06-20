@@ -1,102 +1,83 @@
-# REVIEW PACKET — Parikshak v7.0.0 (Common Core Integrated)
+# REVIEW PACKET — Parikshak v8.0.0 (Production Readiness Certification Service)
 
 ## ENTRY POINT
 
-**Primary File**: `main.py`  
-**Secondary Files**: `api/production.py`, `api/review_routes.py`, `api/gov_os_routes.py`
+The primary execution entry point of the Parikshak Production Readiness Certification Service is located in [main.py](file:///d:/ISHAN/Live%20Task%20Review%20Agent%20-%202/Live%20Task%20Review%20Agent%20-%202/main.py). 
+The FastAPI routes are defined inside [api/production.py](file:///d:/ISHAN/Live%20Task%20Review%20Agent%20-%202/Live%20Task%20Review%20Agent%20-%202/api/production.py). 
 
-**Routes**:
-*   `POST /api/v1/production/niyantran/submit` → `api/production.py` — Intake endpoint for submissions (external or internal).
-*   `GET /api/v1/production/niyantran/health` → `api/production.py`
-*   `GET /api/v1/review/pending` → `api/review_routes.py`
-*   `POST /api/v1/review/approve` → `api/review_routes.py`
-*   `POST /api/v1/review/reject` → `api/review_routes.py`
-*   `POST /api/v1/gov-os/mutate` → `api/gov_os_routes.py`
-
-*Note on trace_id discipline*: Ingests raw task execution events. The `trace_id` must come from upstream (Niyantran/Saarthi) and is preserved across all pipeline and governance steps.
-
----
+The key API endpoints exposed are:
+*   `GET /api/v1/production/certification/{trace_id}`: Standard HTTP endpoint to execute production certification.
+*   `GET /api/v1/production/ecosystem-participation/{trace_id}`: Standard HTTP endpoint to validate topological ecosystem roles.
+*   `GET /api/v1/production/constitutional-review/{trace_id}`: Legacy readiness lookup.
 
 ## CORE FLOW
 
-Parikshak does not compile code, run tests, or maintain candidate skill portfolios. The Common Core consumes raw signals from the BHIV ecosystem and runs a deterministic recommendation pipeline.
-
-[Step 0] REVIEW_PACKET Hard Gate (Validate markdown structure)
-[Step 1] Ingest Ecosystem data (Niyantran runs, Gurukul skills)
-[Step 2] Signal Engine (Collate repository and test metrics)
-[Step 3] Sri Satya Rule Engine (4 binary checks in order):
-         Check 1: schema_violation
-         Check 4: integration_fail
-[Step 4] Confidence & Escalation Engine
-         Calculate: (proof + arch + code + rubric) / 4
-         Threshold: confidence < 0.98 -> Escalate
-[Step 5] Recommendation Engine
-         approved -> next task in Graph (TMS prerequisites)
-         rejected -> remediation task / course (Gurukul)
-[Step 6] Output Contract Enforcement (Enforce 8-field JSON)
-[Step 7] In-Memory Staging (review_state = PENDING_REVIEW)
-[Step 8] Gov-OS Approval (Signed mutation by Governor)
-[Step 9] Event Journal Commit (SQLite immutable SHA-256 chain)
-
----
+The certification pipeline executes a sequence of deterministic steps:
+1.  **Ingestion Gate**: The system fetches execution traces and artifact files from `storage/traces/{trace_id}/`.
+2.  **Evidence Validation**: Runs checks on Pratham outputs (evidence, replay, lineage, and handover bundles) to verify integrity and correctness.
+3.  **Governance Gate**: Shakti validations verify that a validation decision exists, is approved, and contains an authorized signature.
+4.  **Ecosystem Validation**: Runs checks on layer placement, boundaries, dependencies, and registrations.
+5.  **Readiness Score Computation**: Calculates the score using a strict weighted model of the 12 production dimensions.
+6.  **Decision Mapping**: Evaluates the decision tree to output the final verdict: `READY`, `READY WITH OBSERVATIONS`, `NEEDS REVIEW`, `NOT PRODUCTION READY`, or `UNKNOWN`.
+7.  **Standard Report Export**: Writes the standard dashboard JSON conforming to the schema and returns the output packet.
 
 ## LIVE FLOW
 
-**Endpoint**: `POST /api/v1/production/niyantran/submit`
+To certify a system, send an HTTP GET request to the Parikshak certification endpoint:
+`GET /api/v1/production/certification/{trace_id}`
 
-**Request**:
-```json
-{
-  "task_id": "T-GOV-001",
-  "task_title": "REST API Service with Layered Architecture",
-  "task_description": "Objective: Build a production-ready REST API service. Requirements: Implement service, controller, and data layers.",
-  "submitted_by": "Akash Dev",
-  "repository_url": "https://github.com/developer/sec-auth",
-  "module_id": "task-review-agent",
-  "schema_version": "v1.0",
-  "trace_id": "trace-a3f2c1d48b9e4f2a"
-}
-```
-
-**Sequential Processing**:
-1.  `review_packet_parser.enforce_packet_requirement(".")` → valid=True.
-2.  `registry_validator.validate_complete(...)` → validates schema and actor.
-3.  **Ecosystem Fetch**: Fetch unit test results from **Niyantran** and skills profile from **Gurukul**.
-4.  `rule_engine.evaluate(signals)` → runs Sri Satya logic.
-5.  `human_in_loop.process_with_human_loop(...)` → escalates if confidence < 0.98.
-6.  `task_graph_engine.traverse(...)` → selects next task based on outcomes and prerequisites.
-7.  `execution_pipeline._enforce_boundary(...)` → verifies exactly 8 fields in the output JSON.
-
----
+The intake processing sequence is:
+1.  **Request Handler**: Receives `trace_id` and forwards it to the `ProductionCertificationEngine`.
+2.  **File Loading**: Scans `storage/traces/{trace_id}/` for all Pratham, Shakti, MDU, and TMS bundles.
+3.  **Dimension checks**: Evaluates the 12 mandatory production dimensions (Runtime, Replayability, Governance, Security, versioning, recovery, etc.) and records reasons.
+4.  **Ecosystem check**: Checks layer boundaries, dependencies, and registrations.
+5.  **Score calculation**: Computes the readiness percentage and formats the final status.
+6.  **JSON Response**: Returns the report conforming exactly to the standard dashboard schema.
 
 ## OUTPUT SAMPLE
 
+Here is a sample response payload returned by the Parikshak certification service:
+
 ```json
 {
-  "trace_id": "trace-a3f2c1d48b9e4f2a",
-  "submission_id": "sub-eb2e07e7c652-d42768ed",
+  "system_information": {
+    "trace_id": "trace-prod-ready",
+    "certified_at": "2026-06-20T06:00:00Z",
+    "verifier": "Parikshak Production Certification Engine v1.0"
+  },
+  "dimensions": {
+    "Runtime": "PASS",
+    "Observability": "PASS",
+    "Replayability": "PASS",
+    "Governance": "PASS",
+    "Provenance": "PASS",
+    "Security": "PASS",
+    "Versioning": "PASS",
+    "Recovery": "PASS",
+    "Human Approval": "PASS",
+    "Layer Placement": "PASS",
+    "Dependency Integrity": "PASS",
+    "Ecosystem Participation": "PASS"
+  },
+  "production_score": 100,
+  "certification_decision": "READY",
+  "critical_failures": [],
+  "warnings": [],
+  "risk_summary": "System demonstrates compliant architectural boundaries, verified replay safety, and full ecosystem integration. Approved for governed TANTRA production.",
+  "evidence_summary": {
+    "evidence_bundle.json": "PRESENT",
+    "handover_bundle.json": "PRESENT"
+  },
+  "replay_status": "PASS",
+  "governance_status": "PASS",
+  "observability_status": "PASS",
+  "security_status": "PASS",
+  "recovery_status": "PASS",
+  "dependencies": {
+    "status": "PASS"
+  },
   "evaluation_result": "PASS",
   "failure_type": null,
-  "selected_task_id": "T-GOV-002",
-  "selection_reason": "PASS -> next_tasks[0] = T-GOV-002",
-  "source": "task_graph",
-  "schema_version": "v1.0"
+  "trace_id": "trace-prod-ready"
 }
 ```
-
----
-
-## CONSTITUTIONAL REVIEW LAYER (TANTRA Readiness Layer)
-
-**Endpoint**: `GET /api/v1/production/constitutional-review/{trace_id}`
-
-**Components**:
-*   `trace_reconstruction_validator.py` - Verifies presence of all 10 artifacts across Execution, Evidence, Governance, Consumption, Actions, Lineage, Replay, and Convergence.
-*   `artifact_validation_engine.py` - Validates the actual integrity and content (hashes, signatures, status fields).
-*   `constitutional_readiness_engine.py` - Orchestrates validation and classifies states (`READY`, `NEEDS_REVIEW`, `REJECTED`).
-
-**Rules & Decision States**:
-1.  **READY**: All 10 files present, evidence integrity verification passes (hashes and checksum match), replay is successful, governance is approved by authorized human governor, and convergence status is converged.
-2.  **NEEDS_REVIEW**: Reconstructable trace with warnings, partial lineage or replay, or minor governance warnings.
-3.  **REJECTED**: Missing critical files, integrity hash corruption, replay failure, governance rejection, lineage break, or convergence failure.
-

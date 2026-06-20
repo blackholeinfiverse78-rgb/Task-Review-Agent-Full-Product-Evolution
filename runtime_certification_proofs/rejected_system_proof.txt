@@ -1,0 +1,18 @@
+Trace ID: trace-prod-rejected
+=============================================
+Runtime ....................... PASS
+Observability ................. PASS
+Replayability ................. PASS
+Governance .................... PASS
+Provenance .................... PASS
+Security ...................... FAIL
+Versioning .................... PASS
+Recovery ...................... PASS
+Human Approval ................ PASS
+Layer Placement ............... PASS
+Dependency Integrity .......... FAIL
+Ecosystem Participation ....... PASS
+=============================================
+Production Score: 85%
+Final Verdict:    NOT PRODUCTION READY
+Risk Summary:     Production readiness certification rejected. Found 2 critical dimension failures.

@@ -371,4 +371,42 @@ async def get_constitutional_readiness(trace_id: str):
         raise HTTPException(
             status_code=500,
             detail=f"Constitutional review failed: {str(e)}"
+        )
+
+@router.get("/certification/{trace_id}")
+async def get_production_certification(trace_id: str):
+    """
+    Independently verify production readiness (READY, READY WITH OBSERVATIONS, NEEDS_REVIEW, NOT PRODUCTION READY, UNKNOWN)
+    using persisted artifacts in storage/traces/{trace_id}/
+    """
+    try:
+        from production_certification_engine import ProductionCertificationEngine
+        engine = ProductionCertificationEngine()
+        result = engine.certify_system(trace_id)
+        if "system_information" in result:
+            result["system_information"]["certified_at"] = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+        return result
+    except Exception as e:
+        logger.error(f"[PRODUCTION API] Production certification query failed: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Production readiness certification failed: {str(e)}"
+        )
+
+@router.get("/ecosystem-participation/{trace_id}")
+async def get_ecosystem_participation(trace_id: str):
+    """
+    Independently verify ecosystem participation role and compliance
+    using persisted artifacts in storage/traces/{trace_id}/
+    """
+    try:
+        from ecosystem_participation_validator import EcosystemParticipationValidator
+        val = EcosystemParticipationValidator()
+        result = val.generate_participation_report(trace_id)
+        return result
+    except Exception as e:
+        logger.error(f"[PRODUCTION API] Ecosystem participation query failed: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Ecosystem participation verification failed: {str(e)}"
         )

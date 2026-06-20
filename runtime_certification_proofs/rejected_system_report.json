@@ -1,0 +1,29 @@
+{
+    "system_information": {
+        "trace_id": "trace-prod-rejected",
+        "certified_at": "2026-06-20T05:42:36.179799Z",
+        "verifier": "Parikshak Production Certification Engine v1.0"
+    },
+    "dimensions": {
+        "Runtime": "PASS",
+        "Observability": "PASS",
+        "Replayability": "PASS",
+        "Governance": "PASS",
+        "Provenance": "PASS",
+        "Security": "FAIL",
+        "Versioning": "PASS",
+        "Recovery": "PASS",
+        "Human Approval": "PASS",
+        "Layer Placement": "PASS",
+        "Dependency Integrity": "FAIL",
+        "Ecosystem Participation": "PASS"
+    },
+    "production_score": 85,
+    "certification_decision": "NOT PRODUCTION READY",
+    "critical_failures": [
+        "Critical failure in dimension 'Security'.",
+        "Critical failure in dimension 'Dependency Integrity'."
+    ],
+    "warnings": [],
+    "risk_summary": "Production readiness certification rejected. Found 2 critical dimension failures."
+}
