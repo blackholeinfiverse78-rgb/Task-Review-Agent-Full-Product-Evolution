@@ -8,7 +8,7 @@ import os
 from fastapi import FastAPI, Request, status, HTTPException
 from fastapi.responses import JSONResponse, FileResponse
 from fastapi.exceptions import RequestValidationError
-from api import lifecycle, tts, production, review_routes, task_review, gov_os_routes, parikshak_routes
+from api import lifecycle, tts, production, review_routes, task_review, gov_os_routes, parikshak_routes, dashboard_routes
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 import logging
@@ -80,10 +80,12 @@ async def global_exception_handler(request: Request, exc: Exception):
 app.include_router(lifecycle.router, prefix="/api/v1", tags=["Lifecycle"])
 app.include_router(tts.router, prefix="/api/v1", tags=["TTS"])
 app.include_router(production.router, prefix="/api/v1", tags=["Production"])
+app.include_router(dashboard_routes.router, prefix="/api/v1", tags=["Dashboard"])
 app.include_router(review_routes.router)
 app.include_router(task_review.router)
 app.include_router(gov_os_routes.router)
 app.include_router(parikshak_routes.router)
+
 
 
 @app.get("/health")

@@ -133,3 +133,6 @@ storage/checkpoints/*
 # Assistant scratch space
 scratch/
 
+# Local backup directory
+backup_untracked_files/
+

@@ -16,7 +16,7 @@ This packet provides verifiable, reproducible performance evidence for the Parik
 
 ## 2. Methodology
 
-The benchmarks are executed via [tests/runtime_benchmarks.py](file:///d:/ISHAN/Live%20Task%20Review%20Agent%20-%202/Live%20Task%20Review%20Agent%20-%202/tests/runtime_benchmarks.py) and [scripts/generate_validation_packet.py](file:///d:/ISHAN/Live%20Task%20Review%20Agent%20-%202/Live%20Task%20Review%20Agent%20-%202/scripts/generate_validation_packet.py).
+The benchmarks are executed via [tests/runtime_benchmarks.py](file:///g:/Live%20Task%20Review%20Agent%20-%202/tests/runtime_benchmarks.py) and [scripts/generate_validation_packet.py](file:///g:/Live%20Task%20Review%20Agent%20-%202/scripts/generate_validation_packet.py).
 1. **Rule Engine Throughput**: 2,000 continuous evaluations of a standard engineering task signals payload.
 2. **Concurrency Scaling**: Spawning parallel worker threads (1, 10, 50, 100 concurrent requests) hitting the rule evaluation loop.
 3. **Startup Overhead**: Tracking connection time for SQLite (cold start vs. warm start) and running cryptographic event journal scans.

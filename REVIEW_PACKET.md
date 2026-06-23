@@ -2,8 +2,8 @@
 
 ## ENTRY POINT
 
-The primary execution entry point of the Parikshak Production Readiness Certification Service is located in [main.py](file:///d:/ISHAN/Live%20Task%20Review%20Agent%20-%202/Live%20Task%20Review%20Agent%20-%202/main.py). 
-The FastAPI routes are defined inside [api/production.py](file:///d:/ISHAN/Live%20Task%20Review%20Agent%20-%202/Live%20Task%20Review%20Agent%20-%202/api/production.py). 
+The primary execution entry point of the Parikshak Production Readiness Certification Service is located in [main.py](file:///g:/Live%20Task%20Review%20Agent%20-%202/main.py). 
+The FastAPI routes are defined inside [api/production.py](file:///g:/Live%20Task%20Review%20Agent%20-%202/api/production.py). 
 
 The key API endpoints exposed are:
 *   `GET /api/v1/production/certification/{trace_id}`: Standard HTTP endpoint to execute production certification.
@@ -81,3 +81,171 @@ Here is a sample response payload returned by the Parikshak certification servic
   "trace_id": "trace-prod-ready"
 }
 ```
+
+---
+
+## ARCHITECTURE & SYSTEM DESIGN
+
+Parikshak has been evolved from a file-bound verification engine into a canonical Production Engineering Platform using the following layout:
+
+```mermaid
+graph TD
+    Ingestion[Trace & Ingestion Gate] --> Engine[Production Certification Engine]
+    Engine --> DB[Parikshak Database Layer]
+    Engine --> Fallback[JSON File Sync System]
+    Engine --> Assignment[Automatic Assignment Engine]
+    Assignment --> DB
+    DB --> Dashboard[Executive Dashboard APIs]
+    DB --> Legacy[Backward Compatibility API Queries]
+```
+
+### Flow Sequence of Trace Ingestion & Task Generation
+
+```mermaid
+sequenceLineage
+    actor Builder as Builder/CI
+    participant API as Ingestion API (api/production.py)
+    participant Engine as Certification Engine
+    participant DB as SQL Database Layer
+    participant AE as Automatic Assignment Engine
+    
+    Builder ->> API: GET /api/v1/production/certification/{trace_id}
+    API ->> Engine: load_trace_and_run_dimensions(trace_id)
+    Engine ->> Engine: Calculate production score & checks (12 dimensions)
+    Engine ->> DB: store_certification() & store_review()
+    Engine ->> AE: trigger_assessment(failed_dimensions)
+    AE ->> AE: Calculate Priority, Difficulty, AI Effort
+    AE ->> DB: store_assignments()
+    Engine ->> API: return evaluation report
+    API ->> Builder: HTTP 200 JSON Receipt
+```
+
+---
+
+## DATABASE DOCUMENTATION
+
+Parikshak DB is built on top of SQLAlchemy with an Alembic-backed migration path. Below is the Entity-Relationship (ER) layout of the database:
+
+```mermaid
+erDiagram
+    BUILDERS ||--o{ ASSIGNMENTS : receives
+    PRODUCTS ||--o{ REPOSITORIES : maps
+    PRODUCTS ||--o{ CERTIFICATIONS : certifies
+    PRODUCTS ||--o{ HISTORICAL_METRICS : aggregates
+    REVIEWS ||--o{ EVIDENCE : links
+    REVIEWS ||--o{ ARTIFACTS : stores
+    REVIEWS ||--o{ DIMENSION_RESULTS : scores
+    REVIEWS ||--o{ ASSIGNMENTS : triggers
+    REVIEWS ||--o{ RISK_REGISTER : registers
+    TASK_SUBMISSIONS }|--|| REVIEWS : reviews
+    TRACE_SESSIONS }|--|| REVIEWS : traces
+```
+
+### Table Mappings & Schema Descriptions
+All models are structured inside [models.py](file:///g:/Live%20Task%20Review%20Agent%20-%202/db/models.py). The key columns and constraints are detailed below:
+1. **`builders`**: Uniquely tracks registered builder engineers (`id` PRIMARY KEY, `name`, `email`, `deleted_at`).
+2. **`products`**: Uniquely tracks certified software modules (`id` PRIMARY KEY, `name`, `description`).
+3. **`repositories`**: Maps repository URLs and branches to products (`id` PRIMARY KEY, `product_id` FOREIGN KEY, `repo_url`, `branch`).
+4. **`task_submissions`**: Stores ingested pipeline task payloads (`submission_id` PRIMARY KEY, `task_id`, `task_title`, `submitted_by`).
+5. **`reviews`**: Stores detailed grading decisions (`review_id` PRIMARY KEY, `score`, `evaluation_result` PASS/FAIL, `status`, `decision`).
+6. **`evidence`**: Stores files and URLs extracted from runtime traces (`id` PRIMARY KEY, `review_id` FOREIGN KEY, `file_path`).
+7. **`assignments`**: Tracks corrective training and tasks generated dynamically by Parikshak (`id` PRIMARY KEY, `builder_id` FOREIGN KEY, `review_id` FOREIGN KEY, `next_task_id`, `priority`, `difficulty`, `est_ai_effort`).
+8. **`risk_register`**: Live tracking table for critical risks identified during verification (`id` PRIMARY KEY, `review_id` FOREIGN KEY, `risk_type`, `severity`, `status`).
+
+---
+
+## EXECUTIVE DASHBOARD API SPECIFICATION
+
+The new dashboard router is mounted in [main.py](file:///g:/Live%20Task%20Review%20Agent%20-%202/main.py) and exposes the endpoints listed below under `/api/v1`:
+
+### 1. Builder Quality
+* **Route**: `GET /api/v1/dashboard/builder-quality`
+* **Response Sample**:
+  ```json
+  {
+    "builders": [
+      {
+        "builder_name": "Test_Builder",
+        "total_reviews": 4,
+        "passed_reviews": 3,
+        "failed_reviews": 1,
+        "average_score": 82.5,
+        "pass_rate_percent": 75.0
+      }
+    ],
+    "timestamp": "2026-06-23T12:00:00Z"
+  }
+  ```
+
+### 2. Product Readiness
+* **Route**: `GET /api/v1/dashboard/product-readiness`
+* **Response Sample**:
+  ```json
+  {
+    "products": [
+      {
+        "product_id": "prod-tantra",
+        "product_name": "TANTRA Core",
+        "certification_status": "READY",
+        "readiness_score": 95,
+        "certified_at": "2026-06-23T11:45:00Z"
+      }
+    ],
+    "timestamp": "2026-06-23T12:00:00Z"
+  }
+  ```
+
+### 3. Ecosystem Health
+* **Route**: `GET /api/v1/dashboard/ecosystem-health`
+* **Response Sample**:
+  ```json
+  {
+    "status": "HEALTHY",
+    "total_products": 12,
+    "certified_products": 10,
+    "certification_ratio": 83.33,
+    "compliance_ratio_percent": 90.0,
+    "active_tasks_count": 3,
+    "unresolved_risks_count": 1,
+    "timestamp": "2026-06-23T12:00:00Z"
+  }
+  ```
+
+---
+
+## ENVIRONMENT SETUP & DEPLOYMENT GUIDE
+
+### Prerequisites
+- Python 3.11+
+- PostgreSQL database (or local file system for SQLite fallback)
+- Dev packages defined in [requirements.txt](file:///g:/Live%20Task%20Review%20Agent%20-%202/requirements.txt)
+
+### Environment Variables
+Configure the following inside `.env`:
+```env
+# Database Configuration
+DATABASE_URL=postgresql://user:password@localhost:5432/parikshak_db
+# (Fallback to sqlite:///storage/parikshak.db if DATABASE_URL is not set)
+```
+
+### Database Migration Guide
+To initialize or migrate the database schemas:
+1. Run Alembic upgrade to apply migrations:
+   ```bash
+   alembic upgrade head
+   ```
+2. For testing, schema auto-creation will invoke programmatically if SQLite fallback is used.
+
+### Execution Instructions
+To start the FastAPI production server locally:
+```bash
+python main.py
+```
+
+---
+
+## ROADMAP & KNOWN LIMITATIONS
+
+1. **SQLite Concurrency**: When fallback mode is active, parallel writes might trigger minor sequential delays due to SQLite single-writer locking constraints. Use PostgreSQL in production environments.
+2. **Hardcoded User Roles**: Corrective assignments default to assignee names defined in trace files. A mapping service should be integrated with an external IAM identity database in the next major update.
+

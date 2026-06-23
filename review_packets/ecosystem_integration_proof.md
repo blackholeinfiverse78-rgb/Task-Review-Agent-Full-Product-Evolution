@@ -8,10 +8,10 @@ This document records the end-to-end evidence of Parikshak's downstream integrat
 
 | Downstream Target | Event Type | Target Output Ledger | Integration Status |
 | :--- | :--- | :--- | :--- |
-| **Gov-OS Event Journal** | `review_history` | `D:\ISHAN\Live Task Review Agent - 2\Live Task Review Agent - 2\scratch\temp_integration_db.sqlite` | **PASSED** (Appended at Seq 2) |
-| **Saarthi Ledger** | `downstream_visibility` | `D:\ISHAN\Live Task Review Agent - 2\Live Task Review Agent - 2\scratch\temp_saarthi_visibility.jsonl` | **PASSED** (Line appended) |
-| **Niyantran Ledger** | `assignment_dispatch` | `D:\ISHAN\Live Task Review Agent - 2\Live Task Review Agent - 2\scratch\temp_niyantran_assignments.jsonl` | **PASSED** (Assignment created) |
-| **Bucket Service** | `task_review_evaluation` | `D:\ISHAN\Live Task Review Agent - 2\Live Task Review Agent - 2\scratch\temp_bucket_logs` | **PASSED** (Bucket index updated) |
+| **Gov-OS Event Journal** | `review_history` | `G:\Live Task Review Agent - 2\scratch\temp_integration_db.sqlite` | **PASSED** (Appended at Seq 2) |
+| **Saarthi Ledger** | `downstream_visibility` | `G:\Live Task Review Agent - 2\scratch\temp_saarthi_visibility.jsonl` | **PASSED** (Line appended) |
+| **Niyantran Ledger** | `assignment_dispatch` | `G:\Live Task Review Agent - 2\scratch\temp_niyantran_assignments.jsonl` | **PASSED** (Assignment created) |
+| **Bucket Service** | `task_review_evaluation` | `G:\Live Task Review Agent - 2\scratch\temp_bucket_logs` | **PASSED** (Bucket index updated) |
 
 ---
 
@@ -39,7 +39,7 @@ This document records the end-to-end evidence of Parikshak's downstream integrat
       "discipline_signals": 95
     },
     "reviewed_by": "Akash",
-    "reviewed_at": "2026-06-19T05:49:19.333591Z",
+    "reviewed_at": "2026-06-23T07:08:38.341177Z",
     "evaluation_time_ms": 15,
     "missing_features": [],
     "evaluation_summary": "Passed evaluation requirements.",
@@ -52,7 +52,7 @@ This document records the end-to-end evidence of Parikshak's downstream integrat
     "candidate_name": "Akash",
     "task_title": "Implement Niyantran Connection Proof"
   },
-  "timestamp": "2026-06-19T05:49:19.348080Z"
+  "timestamp": "2026-06-23T07:08:38.532977Z"
 }
 ```
 
@@ -64,7 +64,7 @@ This document records the end-to-end evidence of Parikshak's downstream integrat
   "task_id": "T-GOV-003",
   "candidate_id": "Akash",
   "assigned_by": "Akash",
-  "timestamp": "2026-06-19T05:49:19.348080Z"
+  "timestamp": "2026-06-23T07:08:38.533466Z"
 }
 ```
 
@@ -72,7 +72,7 @@ This document records the end-to-end evidence of Parikshak's downstream integrat
 ```json
 {
   "trace_id": "trace-ecosystem-proof-999",
-  "timestamp": "2026-06-19T11:19:19.345506",
+  "timestamp": "2026-06-23T12:38:38.453494",
   "type": "task_review",
   "candidate_id": "Akash",
   "task_id": "T-GOV-002",
@@ -83,4 +83,4 @@ This document records the end-to-end evidence of Parikshak's downstream integrat
 }
 ```
 
-*Verification timestamp: 2026-06-19T05:49:19.352368Z UTC*
+*Verification timestamp: 2026-06-23T07:08:38.536707Z UTC*

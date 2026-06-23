@@ -18,7 +18,7 @@ To survive as a long-term ecosystem service, Parikshak enforces a strict **No-Fo
 We have successfully run simulated submissions for multiple consumers. The resulting logs show identical response formats and standard next-task mapping.
 
 ### 2.1 Consumer 1: HackaVerse
-- **Input Record**: [hackaverse_integration.json](file:///d:/ISHAN/Live%20Task%20Review%20Agent%20-%202/Live%20Task%20Review%20Agent%20-%202/integration_proofs/hackaverse_integration.json)
+- **Input Record**: [hackaverse_integration.json](file:///g:/Live%20Task%20Review%20Agent%20-%202/integration_proofs/hackaverse_integration.json)
 - **Ingestion Receipt**:
   ```json
   {
@@ -33,7 +33,7 @@ We have successfully run simulated submissions for multiple consumers. The resul
   ```
 
 ### 2.2 Consumer 2: Niyantran
-- **Input Record**: [niyantran_integration.json](file:///d:/ISHAN/Live%20Task%20Review%20Agent%20-%202/Live%20Task%20Review%20Agent%20-%202/integration_proofs/niyantran_integration.json)
+- **Input Record**: [niyantran_integration.json](file:///g:/Live%20Task%20Review%20Agent%20-%202/integration_proofs/niyantran_integration.json)
 - **Ingestion Receipt**:
   ```json
   {
@@ -48,7 +48,7 @@ We have successfully run simulated submissions for multiple consumers. The resul
   ```
 
 ### 2.3 Consumer 3: Generic External Consumer
-- **Input Record**: [generic_external_consumer_integration.json](file:///d:/ISHAN/Live%20Task%20Review%20Agent%20-%202/Live%20Task%20Review%20Agent%20-%202/integration_proofs/generic_external_consumer_integration.json)
+- **Input Record**: [generic_external_consumer_integration.json](file:///g:/Live%20Task%20Review%20Agent%20-%202/integration_proofs/generic_external_consumer_integration.json)
 - **Ingestion Receipt**:
   ```json
   {

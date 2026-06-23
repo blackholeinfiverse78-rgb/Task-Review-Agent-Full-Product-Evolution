@@ -5,6 +5,7 @@ Determines whether a system is ready to become a governed participant inside the
 import os
 import json
 import logging
+from datetime import datetime
 from typing import Dict, Any, List, Tuple, Optional
 from ecosystem_participation_validator import EcosystemParticipationValidator
 
@@ -303,6 +304,71 @@ class ProductionCertificationEngine:
             report["risk_summary"] = "System lacks critical runtime evidence (e.g. missing security reports or human approval records) and must be manually evaluated."
         else:
             report["risk_summary"] = f"Production readiness certification rejected. Found {len(report['critical_failures'])} critical dimension failures."
+
+        # PERSIST TO DATABASE
+        try:
+            from db.db_config import SessionLocal
+            from db.models import CertificationModel, DimensionResultModel, Product
+            import uuid
+
+            db = SessionLocal()
+            
+            # Find or create product associated with this trace (default to prod-tantra)
+            product_id = "prod-tantra"
+            product_obj = db.query(Product).filter(Product.id == product_id).first()
+            if not product_obj:
+                product_obj = Product(id=product_id, name="TANTRA Core", description="Primary Governance and Consensus Layer")
+                db.add(product_obj)
+                db.commit()
+
+            cert_id = f"cert-{uuid.uuid4().hex[:12]}"
+            db_cert = CertificationModel(
+                id=cert_id,
+                trace_id=trace_id,
+                product_id=product_id,
+                certification_type="Production Readiness",
+                status=decision,
+                score=production_score_pct,
+                certified_at=datetime.utcnow()
+            )
+            db.add(db_cert)
+
+            # Persist Dimension results
+            for dim, status in report["dimensions"].items():
+                dim_id = f"dim-{uuid.uuid4().hex[:12]}"
+                passed_bool = (status == "PASS")
+                
+                # Check for matching review record
+                from db.models import ReviewModel
+                review_id = f"rev-{trace_id}"
+                rev_rec = db.query(ReviewModel).filter(ReviewModel.trace_id == trace_id).first()
+                if rev_rec:
+                    review_id = rev_rec.review_id
+
+                db_dim = DimensionResultModel(
+                    id=dim_id,
+                    review_id=review_id,
+                    dimension_name=dim,
+                    score=1.0 if status == "PASS" else (0.5 if status == "WARNING" else 0.0),
+                    detail=f"Status: {status}",
+                    passed=passed_bool
+                )
+                db.add(db_dim)
+            
+            db.commit()
+            
+            # Automatically generate assignments if failed/degraded
+            if decision in ("NEEDS_REVIEW", "NOT PRODUCTION READY"):
+                from task_selector.assignment_generator import automatic_assignment_engine
+                rev_id = None
+                rev_rec = db.query(ReviewModel).filter(ReviewModel.trace_id == trace_id).first()
+                if rev_rec:
+                    rev_id = rev_rec.review_id
+                automatic_assignment_engine.generate_assignments(report, review_id=rev_id)
+
+            db.close()
+        except Exception as e:
+            logger.error(f"Failed to persist certification in DB: {e}", exc_info=True)
 
         return report
 

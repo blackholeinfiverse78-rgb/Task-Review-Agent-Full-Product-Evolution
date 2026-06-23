@@ -11,11 +11,11 @@ This registry records the specifications and repository paths of the five frozen
 
 | Contract Name | Path | Target Interfaces | Key Operations |
 | :--- | :--- | :--- | :--- |
-| **Review Contract** | [review_contract.md](file:///d:/ISHAN/Live%20Task%20Review%20Agent%20-%202/Live%20Task%20Review%20Agent%20-%202/contracts/review_contract.md) | Niyantran Ingestion Queue | `POST /niyantran/submit` |
-| **Assignment Contract** | [assignment_contract.md](file:///d:/ISHAN/Live%20Task%20Review%20Agent%20-%202/Live%20Task%20Review%20Agent%20-%202/contracts/assignment_contract.md) | Task Graph Traversal | `select_next_task()` |
-| **Escalation Contract** | [escalation_contract.md](file:///d:/ISHAN/Live%20Task%20Review%20Agent%20-%202/Live%20Task%20Review%20Agent%20-%202/contracts/escalation_contract.md) | Confidence Calculation | `calculate_confidence()` |
-| **Governance Contract** | [governance_contract.md](file:///d:/ISHAN/Live%20Task%20Review%20Agent%20-%202/Live%20Task%20Review%20Agent%20-%202/contracts/governance_contract.md) | Gov-OS Immutable Mutate | `POST /gov-os/mutate` |
-| **Export Contract** | [export_contract.md](file:///d:/ISHAN/Live%20Task%20Review%20Agent%20-%202/Live%20Task%20Review%20Agent%20-%202/contracts/export_contract.md) | Downstream Ledgers | `propagate_governed_approval()` |
+| **Review Contract** | [review_contract.md](file:///g:/Live%20Task%20Review%20Agent%20-%202/contracts/review_contract.md) | Niyantran Ingestion Queue | `POST /niyantran/submit` |
+| **Assignment Contract** | [assignment_contract.md](file:///g:/Live%20Task%20Review%20Agent%20-%202/contracts/assignment_contract.md) | Task Graph Traversal | `select_next_task()` |
+| **Escalation Contract** | [escalation_contract.md](file:///g:/Live%20Task%20Review%20Agent%20-%202/contracts/escalation_contract.md) | Confidence Calculation | `calculate_confidence()` |
+| **Governance Contract** | [governance_contract.md](file:///g:/Live%20Task%20Review%20Agent%20-%202/contracts/governance_contract.md) | Gov-OS Immutable Mutate | `POST /gov-os/mutate` |
+| **Export Contract** | [export_contract.md](file:///g:/Live%20Task%20Review%20Agent%20-%202/contracts/export_contract.md) | Downstream Ledgers | `propagate_governed_approval()` |
 
 ---
 
