@@ -218,11 +218,14 @@ class ProductStorage:
         self._file_lock = FileLock(self.lock_file)
         os.makedirs(os.path.dirname(self.persistence_file), exist_ok=True)
         
+        self.use_db = (persistence_file == "storage/product_state.json")
+        
         # Initalize schema on boot
-        try:
-            init_db()
-        except Exception as e:
-            logger.warning(f"Database initialization failed: {e}")
+        if self.use_db:
+            try:
+                init_db()
+            except Exception as e:
+                logger.warning(f"Database initialization failed: {e}")
             
         self._load()
 
@@ -299,39 +302,40 @@ class ProductStorage:
             self._save_nolock()
 
         # Save to DB
-        try:
-            db = SessionLocal()
-            db_obj = db.query(TaskSubmissionModel).filter(TaskSubmissionModel.submission_id == submission.submission_id).first()
-            if not db_obj:
-                db_obj = TaskSubmissionModel(submission_id=submission.submission_id)
-            
-            db_obj.task_id = submission.task_id
-            db_obj.task_title = submission.task_title
-            db_obj.task_description = submission.task_description
-            db_obj.submitted_by = submission.submitted_by
-            db_obj.submitted_at = submission.submitted_at
-            db_obj.status = submission.status
-            db_obj.previous_task_id = submission.previous_task_id
-            db_obj.pdf_file_path = submission.pdf_file_path
-            db_obj.pdf_extracted_text = submission.pdf_extracted_text
-            db_obj.module_id = submission.module_id
-            db_obj.schema_version = submission.schema_version
-            db_obj.registry_validation_status = submission.registry_validation_status
-            db_obj.registry_validation_reason = submission.registry_validation_reason
-            db_obj.review_state = submission.review_state
+        if self.use_db:
+            try:
+                db = SessionLocal()
+                db_obj = db.query(TaskSubmissionModel).filter(TaskSubmissionModel.submission_id == submission.submission_id).first()
+                if not db_obj:
+                    db_obj = TaskSubmissionModel(submission_id=submission.submission_id)
+                
+                db_obj.task_id = submission.task_id
+                db_obj.task_title = submission.task_title
+                db_obj.task_description = submission.task_description
+                db_obj.submitted_by = submission.submitted_by
+                db_obj.submitted_at = submission.submitted_at
+                db_obj.status = submission.status
+                db_obj.previous_task_id = submission.previous_task_id
+                db_obj.pdf_file_path = submission.pdf_file_path
+                db_obj.pdf_extracted_text = submission.pdf_extracted_text
+                db_obj.module_id = submission.module_id
+                db_obj.schema_version = submission.schema_version
+                db_obj.registry_validation_status = submission.registry_validation_status
+                db_obj.registry_validation_reason = submission.registry_validation_reason
+                db_obj.review_state = submission.review_state
 
-            db.add(db_obj)
-            
-            # Auto-register builder in database
-            builder_obj = db.query(Builder).filter(Builder.id == submission.submitted_by).first()
-            if not builder_obj:
-                builder_obj = Builder(id=submission.submitted_by, name=submission.submitted_by)
-                db.add(builder_obj)
+                db.add(db_obj)
+                
+                # Auto-register builder in database
+                builder_obj = db.query(Builder).filter(Builder.id == submission.submitted_by).first()
+                if not builder_obj:
+                    builder_obj = Builder(id=submission.submitted_by, name=submission.submitted_by)
+                    db.add(builder_obj)
 
-            db.commit()
-            db.close()
-        except Exception as e:
-            logger.error(f"Failed to store submission in DB: {e}")
+                db.commit()
+                db.close()
+            except Exception as e:
+                logger.error(f"Failed to store submission in DB: {e}")
     
     def store_review(self, review: ReviewRecord) -> None:
         """Store review record"""
@@ -340,39 +344,40 @@ class ProductStorage:
             self.reviews[review.review_id] = review
             self._save_nolock()
 
-        try:
-            db = SessionLocal()
-            db_obj = db.query(ReviewModel).filter(ReviewModel.review_id == review.review_id).first()
-            if not db_obj:
-                db_obj = ReviewModel(review_id=review.review_id)
-            
-            db_obj.submission_id = review.submission_id
-            db_obj.trace_id = review.trace_id
-            db_obj.evaluation_result = review.evaluation_result
-            db_obj.score = review.score
-            db_obj.readiness_percent = review.readiness_percent
-            db_obj.status = review.status
-            db_obj.decision = review.decision
-            db_obj.reviewed_by = getattr(review, "reviewed_by", "system")
-            db_obj.reviewed_at = review.reviewed_at
-            db_obj.evaluation_time_ms = review.evaluation_time_ms
-            db_obj.evaluation_summary = review.evaluation_summary
-            db_obj.review_state = review.review_state
-            db_obj.version = review.version
-            db_obj.candidate_name = review.candidate_name
-            db_obj.task_title = review.task_title
+        if self.use_db:
+            try:
+                db = SessionLocal()
+                db_obj = db.query(ReviewModel).filter(ReviewModel.review_id == review.review_id).first()
+                if not db_obj:
+                    db_obj = ReviewModel(review_id=review.review_id)
+                
+                db_obj.submission_id = review.submission_id
+                db_obj.trace_id = review.trace_id
+                db_obj.evaluation_result = review.evaluation_result
+                db_obj.score = review.score
+                db_obj.readiness_percent = review.readiness_percent
+                db_obj.status = review.status
+                db_obj.decision = review.decision
+                db_obj.reviewed_by = getattr(review, "reviewed_by", "system")
+                db_obj.reviewed_at = review.reviewed_at
+                db_obj.evaluation_time_ms = review.evaluation_time_ms
+                db_obj.evaluation_summary = review.evaluation_summary
+                db_obj.review_state = review.review_state
+                db_obj.version = review.version
+                db_obj.candidate_name = review.candidate_name
+                db_obj.task_title = review.task_title
 
-            # Serialize lists and dicts
-            db_obj.failure_reasons = json.dumps(review.failure_reasons)
-            db_obj.improvement_hints = json.dumps(review.improvement_hints)
-            db_obj.analysis = json.dumps(review.analysis)
-            db_obj.missing_features = json.dumps(review.missing_features)
+                # Serialize lists and dicts
+                db_obj.failure_reasons = json.dumps(review.failure_reasons)
+                db_obj.improvement_hints = json.dumps(review.improvement_hints)
+                db_obj.analysis = json.dumps(review.analysis)
+                db_obj.missing_features = json.dumps(review.missing_features)
 
-            db.add(db_obj)
-            db.commit()
-            db.close()
-        except Exception as e:
-            logger.error(f"Failed to store review in DB: {e}")
+                db.add(db_obj)
+                db.commit()
+                db.close()
+            except Exception as e:
+                logger.error(f"Failed to store review in DB: {e}")
     
     def store_next_task(self, next_task: NextTaskRecord) -> None:
         """Store next task record"""
@@ -381,61 +386,63 @@ class ProductStorage:
             self.next_tasks[next_task.next_task_id] = next_task
             self._save_nolock()
 
-        try:
-            db = SessionLocal()
-            db_obj = db.query(AssignmentModel).filter(AssignmentModel.id == next_task.next_task_id).first()
-            if not db_obj:
-                db_obj = AssignmentModel(id=next_task.next_task_id)
-            
-            db_obj.next_task_id = next_task.next_task_id
-            db_obj.review_id = next_task.review_id
-            db_obj.previous_submission_id = next_task.previous_submission_id
-            db_obj.task_type = next_task.task_type
-            db_obj.title = next_task.title
-            db_obj.objective = next_task.objective
-            db_obj.focus_area = next_task.focus_area
-            db_obj.difficulty = next_task.difficulty
-            db_obj.reason = next_task.reason
-            db_obj.assigned_at = next_task.assigned_at
-            db_obj.status = "assigned"
+        if self.use_db:
+            try:
+                db = SessionLocal()
+                db_obj = db.query(AssignmentModel).filter(AssignmentModel.id == next_task.next_task_id).first()
+                if not db_obj:
+                    db_obj = AssignmentModel(id=next_task.next_task_id)
+                
+                db_obj.next_task_id = next_task.next_task_id
+                db_obj.review_id = next_task.review_id
+                db_obj.previous_submission_id = next_task.previous_submission_id
+                db_obj.task_type = next_task.task_type
+                db_obj.title = next_task.title
+                db_obj.objective = next_task.objective
+                db_obj.focus_area = next_task.focus_area
+                db_obj.difficulty = next_task.difficulty
+                db_obj.reason = next_task.reason
+                db_obj.assigned_at = next_task.assigned_at
+                db_obj.status = "assigned"
 
-            db.add(db_obj)
-            db.commit()
-            db.close()
-        except Exception as e:
-            logger.error(f"Failed to store next task in DB: {e}")
+                db.add(db_obj)
+                db.commit()
+                db.close()
+            except Exception as e:
+                logger.error(f"Failed to store next task in DB: {e}")
     
     def get_submission(self, submission_id: str) -> Optional[TaskSubmission]:
         """Retrieve submission by ID"""
-        try:
-            db = SessionLocal()
-            row = db.query(TaskSubmissionModel).filter(TaskSubmissionModel.submission_id == submission_id).first()
-            if row:
-                if row.deleted_at is not None:
+        if self.use_db:
+            try:
+                db = SessionLocal()
+                row = db.query(TaskSubmissionModel).filter(TaskSubmissionModel.submission_id == submission_id).first()
+                if row:
+                    if row.deleted_at is not None:
+                        db.close()
+                        return None
+                    res = TaskSubmission(
+                        submission_id=row.submission_id,
+                        task_id=row.task_id,
+                        task_title=row.task_title,
+                        task_description=row.task_description,
+                        submitted_by=row.submitted_by,
+                        submitted_at=row.submitted_at,
+                        status=row.status,
+                        previous_task_id=row.previous_task_id,
+                        pdf_file_path=row.pdf_file_path,
+                        pdf_extracted_text=row.pdf_extracted_text,
+                        module_id=row.module_id,
+                        schema_version=row.schema_version,
+                        registry_validation_status=row.registry_validation_status,
+                        registry_validation_reason=row.registry_validation_reason,
+                        review_state=row.review_state
+                    )
                     db.close()
-                    return None
-                res = TaskSubmission(
-                    submission_id=row.submission_id,
-                    task_id=row.task_id,
-                    task_title=row.task_title,
-                    task_description=row.task_description,
-                    submitted_by=row.submitted_by,
-                    submitted_at=row.submitted_at,
-                    status=row.status,
-                    previous_task_id=row.previous_task_id,
-                    pdf_file_path=row.pdf_file_path,
-                    pdf_extracted_text=row.pdf_extracted_text,
-                    module_id=row.module_id,
-                    schema_version=row.schema_version,
-                    registry_validation_status=row.registry_validation_status,
-                    registry_validation_reason=row.registry_validation_reason,
-                    review_state=row.review_state
-                )
+                    return res
                 db.close()
-                return res
-            db.close()
-        except Exception as e:
-            logger.error(f"Failed to read submission from DB: {e}")
+            except Exception as e:
+                logger.error(f"Failed to read submission from DB: {e}")
 
         with self._file_lock:
             self._load_nolock()
@@ -443,42 +450,43 @@ class ProductStorage:
     
     def get_review(self, review_id: str) -> Optional[ReviewRecord]:
         """Retrieve review by ID"""
-        try:
-            db = SessionLocal()
-            row = db.query(ReviewModel).filter(ReviewModel.review_id == review_id).first()
-            if row:
-                if row.deleted_at is not None:
+        if self.use_db:
+            try:
+                db = SessionLocal()
+                row = db.query(ReviewModel).filter(ReviewModel.review_id == review_id).first()
+                if row:
+                    if row.deleted_at is not None:
+                        db.close()
+                        return None
+                    res = ReviewRecord(
+                        review_id=row.review_id,
+                        submission_id=row.submission_id,
+                        trace_id=row.trace_id or "",
+                        evaluation_result=row.evaluation_result,
+                        failure_type=row.failure_type,
+                        decision=row.decision,
+                        failure_reasons=json.loads(row.failure_reasons) if row.failure_reasons else [],
+                        improvement_hints=json.loads(row.improvement_hints) if row.improvement_hints else [],
+                        analysis=json.loads(row.analysis) if row.analysis else {},
+                        reviewed_at=row.reviewed_at,
+                        evaluation_time_ms=row.evaluation_time_ms or 0,
+                        missing_features=json.loads(row.missing_features) if row.missing_features else [],
+                        evaluation_summary=row.evaluation_summary or "",
+                        selected_task_id=row.selected_task_id or "",
+                        selection_reason=row.selection_reason or "",
+                        review_state=row.review_state or "PENDING_REVIEW",
+                        version=row.version or 1,
+                        score=row.score or 0,
+                        readiness_percent=row.readiness_percent or 0,
+                        status=row.status or "fail",
+                        candidate_name=row.candidate_name or "",
+                        task_title=row.task_title or ""
+                    )
                     db.close()
-                    return None
-                res = ReviewRecord(
-                    review_id=row.review_id,
-                    submission_id=row.submission_id,
-                    trace_id=row.trace_id or "",
-                    evaluation_result=row.evaluation_result,
-                    failure_type=row.failure_type,
-                    decision=row.decision,
-                    failure_reasons=json.loads(row.failure_reasons) if row.failure_reasons else [],
-                    improvement_hints=json.loads(row.improvement_hints) if row.improvement_hints else [],
-                    analysis=json.loads(row.analysis) if row.analysis else {},
-                    reviewed_at=row.reviewed_at,
-                    evaluation_time_ms=row.evaluation_time_ms or 0,
-                    missing_features=json.loads(row.missing_features) if row.missing_features else [],
-                    evaluation_summary=row.evaluation_summary or "",
-                    selected_task_id=row.selected_task_id or "",
-                    selection_reason=row.selection_reason or "",
-                    review_state=row.review_state or "PENDING_REVIEW",
-                    version=row.version or 1,
-                    score=row.score or 0,
-                    readiness_percent=row.readiness_percent or 0,
-                    status=row.status or "fail",
-                    candidate_name=row.candidate_name or "",
-                    task_title=row.task_title or ""
-                )
+                    return res
                 db.close()
-                return res
-            db.close()
-        except Exception as e:
-            logger.error(f"Failed to read review from DB: {e}")
+            except Exception as e:
+                logger.error(f"Failed to read review from DB: {e}")
 
         with self._file_lock:
             self._load_nolock()
@@ -486,30 +494,31 @@ class ProductStorage:
     
     def get_next_task(self, next_task_id: str) -> Optional[NextTaskRecord]:
         """Retrieve next task by ID"""
-        try:
-            db = SessionLocal()
-            row = db.query(AssignmentModel).filter(AssignmentModel.id == next_task_id).first()
-            if row:
-                if row.deleted_at is not None:
+        if self.use_db:
+            try:
+                db = SessionLocal()
+                row = db.query(AssignmentModel).filter(AssignmentModel.id == next_task_id).first()
+                if row:
+                    if row.deleted_at is not None:
+                        db.close()
+                        return None
+                    res = NextTaskRecord(
+                        next_task_id=row.next_task_id,
+                        review_id=row.review_id or "",
+                        previous_submission_id=row.previous_submission_id or "",
+                        task_type=row.task_type,
+                        title=row.title,
+                        objective=row.objective,
+                        focus_area=row.focus_area,
+                        difficulty=row.difficulty,
+                        reason=row.reason or "",
+                        assigned_at=row.assigned_at
+                    )
                     db.close()
-                    return None
-                res = NextTaskRecord(
-                    next_task_id=row.next_task_id,
-                    review_id=row.review_id or "",
-                    previous_submission_id=row.previous_submission_id or "",
-                    task_type=row.task_type,
-                    title=row.title,
-                    objective=row.objective,
-                    focus_area=row.focus_area,
-                    difficulty=row.difficulty,
-                    reason=row.reason or "",
-                    assigned_at=row.assigned_at
-                )
+                    return res
                 db.close()
-                return res
-            db.close()
-        except Exception as e:
-            logger.error(f"Failed to read next task from DB: {e}")
+            except Exception as e:
+                logger.error(f"Failed to read next task from DB: {e}")
 
         with self._file_lock:
             self._load_nolock()
@@ -517,42 +526,43 @@ class ProductStorage:
     
     def get_review_by_submission(self, submission_id: str) -> Optional[ReviewRecord]:
         """Find review linked to submission"""
-        try:
-            db = SessionLocal()
-            row = db.query(ReviewModel).filter(ReviewModel.submission_id == submission_id).first()
-            if row:
-                if row.deleted_at is not None:
+        if self.use_db:
+            try:
+                db = SessionLocal()
+                row = db.query(ReviewModel).filter(ReviewModel.submission_id == submission_id).first()
+                if row:
+                    if row.deleted_at is not None:
+                        db.close()
+                        return None
+                    res = ReviewRecord(
+                        review_id=row.review_id,
+                        submission_id=row.submission_id,
+                        trace_id=row.trace_id or "",
+                        evaluation_result=row.evaluation_result,
+                        failure_type=row.failure_type,
+                        decision=row.decision,
+                        failure_reasons=json.loads(row.failure_reasons) if row.failure_reasons else [],
+                        improvement_hints=json.loads(row.improvement_hints) if row.improvement_hints else [],
+                        analysis=json.loads(row.analysis) if row.analysis else {},
+                        reviewed_at=row.reviewed_at,
+                        evaluation_time_ms=row.evaluation_time_ms or 0,
+                        missing_features=json.loads(row.missing_features) if row.missing_features else [],
+                        evaluation_summary=row.evaluation_summary or "",
+                        selected_task_id=row.selected_task_id or "",
+                        selection_reason=row.selection_reason or "",
+                        review_state=row.review_state or "PENDING_REVIEW",
+                        version=row.version or 1,
+                        score=row.score or 0,
+                        readiness_percent=row.readiness_percent or 0,
+                        status=row.status or "fail",
+                        candidate_name=row.candidate_name or "",
+                        task_title=row.task_title or ""
+                    )
                     db.close()
-                    return None
-                res = ReviewRecord(
-                    review_id=row.review_id,
-                    submission_id=row.submission_id,
-                    trace_id=row.trace_id or "",
-                    evaluation_result=row.evaluation_result,
-                    failure_type=row.failure_type,
-                    decision=row.decision,
-                    failure_reasons=json.loads(row.failure_reasons) if row.failure_reasons else [],
-                    improvement_hints=json.loads(row.improvement_hints) if row.improvement_hints else [],
-                    analysis=json.loads(row.analysis) if row.analysis else {},
-                    reviewed_at=row.reviewed_at,
-                    evaluation_time_ms=row.evaluation_time_ms or 0,
-                    missing_features=json.loads(row.missing_features) if row.missing_features else [],
-                    evaluation_summary=row.evaluation_summary or "",
-                    selected_task_id=row.selected_task_id or "",
-                    selection_reason=row.selection_reason or "",
-                    review_state=row.review_state or "PENDING_REVIEW",
-                    version=row.version or 1,
-                    score=row.score or 0,
-                    readiness_percent=row.readiness_percent or 0,
-                    status=row.status or "fail",
-                    candidate_name=row.candidate_name or "",
-                    task_title=row.task_title or ""
-                )
+                    return res
                 db.close()
-                return res
-            db.close()
-        except Exception as e:
-            logger.error(f"Failed to find review by submission in DB: {e}")
+            except Exception as e:
+                logger.error(f"Failed to find review by submission in DB: {e}")
 
         with self._file_lock:
             self._load_nolock()
@@ -563,30 +573,31 @@ class ProductStorage:
     
     def get_next_task_by_submission(self, submission_id: str) -> Optional[NextTaskRecord]:
         """Find next task assigned after submission"""
-        try:
-            db = SessionLocal()
-            row = db.query(AssignmentModel).filter(AssignmentModel.previous_submission_id == submission_id).first()
-            if row:
-                if row.deleted_at is not None:
+        if self.use_db:
+            try:
+                db = SessionLocal()
+                row = db.query(AssignmentModel).filter(AssignmentModel.previous_submission_id == submission_id).first()
+                if row:
+                    if row.deleted_at is not None:
+                        db.close()
+                        return None
+                    res = NextTaskRecord(
+                        next_task_id=row.next_task_id,
+                        review_id=row.review_id or "",
+                        previous_submission_id=row.previous_submission_id or "",
+                        task_type=row.task_type,
+                        title=row.title,
+                        objective=row.objective,
+                        focus_area=row.focus_area,
+                        difficulty=row.difficulty,
+                        reason=row.reason or "",
+                        assigned_at=row.assigned_at
+                    )
                     db.close()
-                    return None
-                res = NextTaskRecord(
-                    next_task_id=row.next_task_id,
-                    review_id=row.review_id or "",
-                    previous_submission_id=row.previous_submission_id or "",
-                    task_type=row.task_type,
-                    title=row.title,
-                    objective=row.objective,
-                    focus_area=row.focus_area,
-                    difficulty=row.difficulty,
-                    reason=row.reason or "",
-                    assigned_at=row.assigned_at
-                )
+                    return res
                 db.close()
-                return res
-            db.close()
-        except Exception as e:
-            logger.error(f"Failed to find next task by submission in DB: {e}")
+            except Exception as e:
+                logger.error(f"Failed to find next task by submission in DB: {e}")
 
         with self._file_lock:
             self._load_nolock()
@@ -624,42 +635,43 @@ class ProductStorage:
             except Exception:
                 pass
 
-        try:
-            db = SessionLocal()
-            from db.models import (
-                EvidenceModel, ArtifactModel, DimensionResultModel, RiskRegisterModel,
-                AssignmentModel, Repository, CertificationModel, HistoricalMetricModel,
-                ProductParticipationModel, TraceSessionModel, ReplayRecordModel,
-                AuditLogModel, GovernanceRecordModel, DecisionLedgerModel,
-                ReviewModel, TaskSubmissionModel, Builder, Product
-            )
-            
-            # Delete child/referencing tables first
-            db.query(EvidenceModel).delete()
-            db.query(ArtifactModel).delete()
-            db.query(DimensionResultModel).delete()
-            db.query(RiskRegisterModel).delete()
-            db.query(AssignmentModel).delete()
-            db.query(Repository).delete()
-            db.query(CertificationModel).delete()
-            db.query(HistoricalMetricModel).delete()
-            db.query(ProductParticipationModel).delete()
-            db.query(TraceSessionModel).delete()
-            db.query(ReplayRecordModel).delete()
-            db.query(AuditLogModel).delete()
-            db.query(GovernanceRecordModel).delete()
-            db.query(DecisionLedgerModel).delete()
-            
-            # Delete parent tables
-            db.query(ReviewModel).delete()
-            db.query(TaskSubmissionModel).delete()
-            db.query(Builder).delete()
-            db.query(Product).delete()
-            
-            db.commit()
-            db.close()
-        except Exception as e:
-            logger.error(f"Failed to clear all tables in DB: {e}")
+        if self.use_db:
+            try:
+                db = SessionLocal()
+                from db.models import (
+                    EvidenceModel, ArtifactModel, DimensionResultModel, RiskRegisterModel,
+                    AssignmentModel, Repository, CertificationModel, HistoricalMetricModel,
+                    ProductParticipationModel, TraceSessionModel, ReplayRecordModel,
+                    AuditLogModel, GovernanceRecordModel, DecisionLedgerModel,
+                    ReviewModel, TaskSubmissionModel, Builder, Product
+                )
+                
+                # Delete child/referencing tables first
+                db.query(EvidenceModel).delete()
+                db.query(ArtifactModel).delete()
+                db.query(DimensionResultModel).delete()
+                db.query(RiskRegisterModel).delete()
+                db.query(AssignmentModel).delete()
+                db.query(Repository).delete()
+                db.query(CertificationModel).delete()
+                db.query(HistoricalMetricModel).delete()
+                db.query(ProductParticipationModel).delete()
+                db.query(TraceSessionModel).delete()
+                db.query(ReplayRecordModel).delete()
+                db.query(AuditLogModel).delete()
+                db.query(GovernanceRecordModel).delete()
+                db.query(DecisionLedgerModel).delete()
+                
+                # Delete parent tables
+                db.query(ReviewModel).delete()
+                db.query(TaskSubmissionModel).delete()
+                db.query(Builder).delete()
+                db.query(Product).delete()
+                
+                db.commit()
+                db.close()
+            except Exception as e:
+                logger.error(f"Failed to clear all tables in DB: {e}")
 
 
 # Global storage instance

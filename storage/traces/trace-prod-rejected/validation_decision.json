@@ -1,0 +1,6 @@
+{
+    "trace_id": "trace-prod-rejected",
+    "decision": "APPROVED",
+    "signed_by": "Akash",
+    "signature": "sig-governor-akash-approved-789"
+}

@@ -1,0 +1,11 @@
+{
+    "trace_id": "trace-prod-rejected",
+    "dependencies": {
+        "accounts-api": [
+            "db-lib"
+        ],
+        "db-lib": [
+            "accounts-api"
+        ]
+    }
+}

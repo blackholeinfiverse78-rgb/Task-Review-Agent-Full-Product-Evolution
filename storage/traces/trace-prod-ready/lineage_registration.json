@@ -1,0 +1,5 @@
+{
+    "trace_id": "trace-prod-ready",
+    "lineage_root": "trace-parent-111",
+    "registered": true
+}
