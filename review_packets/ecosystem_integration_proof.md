@@ -39,7 +39,7 @@ This document records the end-to-end evidence of Parikshak's downstream integrat
       "discipline_signals": 95
     },
     "reviewed_by": "Akash",
-    "reviewed_at": "2026-06-23T12:17:08.371413Z",
+    "reviewed_at": "2026-06-23T12:21:27.841125Z",
     "evaluation_time_ms": 15,
     "missing_features": [],
     "evaluation_summary": "Passed evaluation requirements.",
@@ -52,7 +52,7 @@ This document records the end-to-end evidence of Parikshak's downstream integrat
     "candidate_name": "Akash",
     "task_title": "Implement Niyantran Connection Proof"
   },
-  "timestamp": "2026-06-23T12:17:08.563005Z"
+  "timestamp": "2026-06-23T12:21:28.080164Z"
 }
 ```
 
@@ -64,7 +64,7 @@ This document records the end-to-end evidence of Parikshak's downstream integrat
   "task_id": "T-GOV-003",
   "candidate_id": "Akash",
   "assigned_by": "Akash",
-  "timestamp": "2026-06-23T12:17:08.563520Z"
+  "timestamp": "2026-06-23T12:21:28.080838Z"
 }
 ```
 
@@ -72,7 +72,7 @@ This document records the end-to-end evidence of Parikshak's downstream integrat
 ```json
 {
   "trace_id": "trace-ecosystem-proof-999",
-  "timestamp": "2026-06-23T17:47:08.484953",
+  "timestamp": "2026-06-23T17:51:27.992975",
   "type": "task_review",
   "candidate_id": "Akash",
   "task_id": "T-GOV-002",
@@ -83,4 +83,4 @@ This document records the end-to-end evidence of Parikshak's downstream integrat
 }
 ```
 
-*Verification timestamp: 2026-06-23T12:17:08.567899Z UTC*
+*Verification timestamp: 2026-06-23T12:21:28.084988Z UTC*
