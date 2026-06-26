@@ -6,8 +6,11 @@ from typing import Dict, Any, List
 from canonical_db.contracts import ENTITY_SCHEMAS
 
 class IntegrityValidator:
-    def __init__(self, db_path: str, backup_dir: str = "storage/backups"):
+    def __init__(self, db_path: str, backup_dir: str = None):
         self.db_path = db_path
+        if backup_dir is None:
+            db_name = os.path.splitext(os.path.basename(db_path))[0]
+            backup_dir = os.path.join("storage", "backups", db_name)
         self.backup_dir = backup_dir
 
     def run_full_scan(self) -> Dict[str, Any]:

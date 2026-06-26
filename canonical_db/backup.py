@@ -22,8 +22,11 @@ def _checkpoint_wal(db_path: str) -> None:
         conn.close()
 
 class BackupManager:
-    def __init__(self, db_path: str, backup_dir: str = "storage/backups"):
+    def __init__(self, db_path: str, backup_dir: str = None):
         self.db_path = db_path
+        if backup_dir is None:
+            db_name = os.path.splitext(os.path.basename(db_path))[0]
+            backup_dir = os.path.join("storage", "backups", db_name)
         self.backup_dir = backup_dir
         os.makedirs(self.backup_dir, exist_ok=True)
 

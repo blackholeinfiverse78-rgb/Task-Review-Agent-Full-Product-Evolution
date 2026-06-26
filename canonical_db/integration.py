@@ -138,17 +138,47 @@ class EcosystemIntegrator:
         with open(NIYANTRAN_ASSIGNMENTS_LEDGER, "a", encoding="utf-8") as f:
             f.write(json.dumps(niyantran_assignment) + "\n")
 
-        # 5. Observability
+        # 5. Pravah replay adapter
+        try:
+            from integrations.pravah_adapter import pravah_adapter
+            intake_payload = None
+            try:
+                trace_dir = os.path.join("storage", "traces", review_envelope.trace_id)
+                intake_path = os.path.join(trace_dir, "intake_packet.json")
+                if os.path.exists(intake_path):
+                    with open(intake_path, "r", encoding="utf-8") as f:
+                        intake_payload = json.load(f)
+            except Exception as intake_err:
+                observability.log_observability_event("warning", f"Could not load intake packet for Pravah: {intake_err}")
+
+            pravah_adapter.record_replay(
+                trace_id=review_envelope.trace_id,
+                event_id=commit_res["event_id"],
+                sequence=commit_res["sequence"],
+                parent_hash=review_envelope.parent_event_hash or "0"*64,
+                event_hash=commit_res["event_hash"],
+                intake_payload=intake_payload,
+                review_payload=payload
+            )
+        except Exception as pravah_err:
+            observability.log_observability_event("error", f"Pravah replay recording failed: {pravah_err}")
+            raise RuntimeError(f"PRAVAH_INTEGRATION_FAILURE: {pravah_err}")
+
+        # 6. Observability
         observability.log_observability_event("info", "[Ecosystem] Governed approval propagated.", {
             "trace_id": review_envelope.trace_id,
             "saarthi_status": "SENT",
             "niyantran_status": "SENT",
-            "bucket_status": "LOGGED"
+            "bucket_status": "LOGGED",
+            "pravah_status": "SENT"
         })
 
+        from integrations.pravah_adapter import PRAVAH_REPLAY_LEDGER
         return {
             "status": "PROPAGATED",
             "commit_details": commit_res,
             "saarthi_ledger": SAARTHI_VISIBILITY_LEDGER,
-            "niyantran_ledger": NIYANTRAN_ASSIGNMENTS_LEDGER
+            "niyantran_ledger": NIYANTRAN_ASSIGNMENTS_LEDGER,
+            "pravah_ledger": PRAVAH_REPLAY_LEDGER
         }
+

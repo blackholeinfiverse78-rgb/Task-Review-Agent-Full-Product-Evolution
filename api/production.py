@@ -13,6 +13,8 @@ from task_selector.niyantran_connection import niyantran_connection
 from task_selector.human_in_loop import human_in_loop
 from task_selector.bucket_integration import bucket_integration
 from evaluation_engine.review_packet_parser import review_packet_parser
+from evaluation_engine.dataset_intake import dataset_intake
+from evaluation_engine.bhiv_review_engine import bhiv_review_engine
 
 logger = logging.getLogger("production_api")
 
@@ -409,4 +411,136 @@ async def get_ecosystem_participation(trace_id: str):
         raise HTTPException(
             status_code=500,
             detail=f"Ecosystem participation verification failed: {str(e)}"
+        )
+
+# Pydantic schema for dataset intake request
+class IntakeRequestBody(BaseModel):
+    assigned_task: str = Field(..., min_length=1)
+    original_task_document: str = Field(..., min_length=1)
+    review_packet: str = Field(..., min_length=1)
+    repository_or_commit: str = Field(..., min_length=1)
+    submission_date: str = Field(..., min_length=1)
+    due_date: str = Field(..., min_length=1)
+    supporting_evidence: Optional[Dict[str, Any]] = Field(default_factory=dict)
+    additional_instructions: Optional[str] = Field(default="")
+    trace_id: str = Field(..., min_length=8)
+    assigned_task_id: Optional[str] = Field(default="T-GOV-001")
+
+@router.post("/intake")
+async def dataset_intake_endpoint(request: IntakeRequestBody):
+    """
+    Accept dataset intake, run evaluation and recommendation, stage for human review.
+    """
+    logger.info(f"[PRODUCTION API] Intake request received: trace_id={request.trace_id}")
+    try:
+        # 1. Run dataset intake ingestion & validation
+        intake_data = request.model_dump()
+        dataset_intake.validate_and_ingest(intake_data, request.trace_id)
+
+        # 2. Generate deterministic submission_id
+        import hashlib
+        content_hash = hashlib.md5(
+            f"{request.assigned_task}{request.original_task_document}".encode(), 
+            usedforsecurity=False
+        ).hexdigest()[:12]
+        submission_id = f"sub-{content_hash}-{request.trace_id[-8:]}"
+
+        # 3. Execute evaluation
+        eval_result = bhiv_review_engine.run_evaluation(intake_data, request.trace_id)
+
+        # 4. Persist to storage as PENDING_REVIEW
+        from db.persistent_storage import TaskSubmission, ReviewRecord, product_storage, TaskStatus
+        
+        submission = TaskSubmission(
+            submission_id=submission_id,
+            task_id=request.assigned_task_id or "T-GOV-001",
+            task_title=request.assigned_task,
+            task_description=request.original_task_document,
+            submitted_by="operator",
+            submitted_at=datetime.now(),
+            status=TaskStatus.SUBMITTED,
+            pdf_file_path=None,
+            pdf_extracted_text=None,
+            module_id="task-review-agent",
+            schema_version="v1.0",
+            registry_validation_status="VALID",
+            review_state="PENDING_REVIEW"
+        )
+        product_storage.store_submission(submission)
+
+        review_record = ReviewRecord(
+            review_id=f"rev-{submission_id}",
+            submission_id=submission_id,
+            trace_id=request.trace_id,
+            evaluation_result=eval_result["evaluation_result"],
+            failure_type=eval_result["failure_type"],
+            decision="PENDING",
+            failure_reasons=eval_result["failure_reasons"],
+            improvement_hints=eval_result["improvement_hints"],
+            analysis=eval_result,
+            reviewed_at=datetime.now(),
+            evaluation_time_ms=0,
+            missing_features=[],
+            evaluation_summary=eval_result["evaluation_summary"],
+            selected_task_id=eval_result["selected_task_id"],
+            selection_reason=eval_result["selection_reason"],
+            review_state="PENDING_REVIEW",
+            score=eval_result["score"],
+            readiness_percent=eval_result["readiness_percent"],
+            status=eval_result["status"],
+            candidate_name="Ishan Shirode",
+            task_title=request.assigned_task
+        )
+        product_storage.store_review(review_record)
+
+        # 5. Stage in human_in_loop review queue
+        try:
+            from task_selector.human_in_loop import human_in_loop, ConfidenceMetrics
+            decision_dict = {"decision": "APPROVED" if eval_result["evaluation_result"] == "PASS" else "REJECTED"}
+            signals_dict = {"repository_available": True, "domain": "engineering"}
+            metrics = ConfidenceMetrics(
+                base_confidence=0.5,
+                quality_adjustment=0.0,
+                pac_adjustment=0.0,
+                evidence_adjustment=0.0,
+                consistency_adjustment=0.0,
+                final_confidence=0.5,
+                proof_consistency=1.0,
+                signal_alignment=1.0,
+                decision_clarity=1.0,
+                evidence_strength=0.5,
+                requires_escalation=True,
+                escalation_reasons=["low_confidence"]
+            )
+            human_in_loop._create_escalation_case(
+                evaluation_result=eval_result,
+                decision_result=decision_dict,
+                supporting_signals=signals_dict,
+                confidence_metrics=metrics,
+                trace_id=request.trace_id
+            )
+        except Exception as hil_err:
+            logger.warning(f"Could not stage human loop case (non-fatal): {hil_err}")
+
+        # Return structured receipt
+        return {
+            "trace_id": request.trace_id,
+            "submission_id": submission_id,
+            "review_state": "PENDING_REVIEW",
+            "status": "QUEUED",
+            "message": "Intake valid. Candidate review completed and queued for human approval.",
+            "review": eval_result
+        }
+
+    except ValueError as val_err:
+        logger.error(f"[PRODUCTION API] Intake validation/execution failed: {val_err}")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(val_err)
+        )
+    except Exception as e:
+        logger.error(f"[PRODUCTION API] Intake endpoint error: {e}", exc_info=True)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Intake processing encountered an error: {str(e)}"
         )

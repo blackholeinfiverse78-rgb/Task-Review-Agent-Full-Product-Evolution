@@ -1,0 +1,6 @@
+{
+    "trace_id": "trace-prod-rejected",
+    "critical_vulnerabilities": 3,
+    "high_vulnerabilities": 0,
+    "signature_verified": true
+}

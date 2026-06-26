@@ -104,6 +104,92 @@ async def approve_submission(request: GovernanceRequest):
     review.version += 1
     product_storage._save()
 
+    # Propagate governed approval downstream to ecosystem
+    try:
+        from canonical_db.integration import EcosystemIntegrator
+        from canonical_db.contracts import GovernanceEnvelope
+        from datetime import timezone
+        
+        review_payload = {
+            "review_id": getattr(review, "review_id", f"rev-{request.submission_id}"),
+            "submission_id": request.submission_id,
+            "trace_id": request.trace_id,
+            "evaluation_result": getattr(review, "evaluation_result", "FAIL"),
+            "failure_type": getattr(review, "failure_type", None),
+            "decision": "APPROVED",
+            "failure_reasons": getattr(review, "failure_reasons", []),
+            "improvement_hints": getattr(review, "improvement_hints", []),
+            "analysis": getattr(review, "analysis", {}) or {},
+            "reviewed_by": request.operator_id,
+            "reviewed_at": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+            "evaluation_summary": getattr(review, "evaluation_summary", ""),
+            "selected_task_id": getattr(review, "selected_task_id", ""),
+            "selection_reason": getattr(review, "selection_reason", ""),
+            "review_state": "APPROVED",
+            "score": getattr(review, "score", 0),
+            "readiness_percent": getattr(review, "readiness_percent", 0),
+            "status": getattr(review, "status", "fail"),
+            "candidate_name": getattr(review, "candidate_name", ""),
+            "task_title": getattr(review, "task_title", "")
+        }
+        
+        envelope = GovernanceEnvelope(
+            trace_id=request.trace_id,
+            schema_version="v1.0",
+            actor=request.operator_id,
+            actor_role=request.operator_role,
+            timestamp=datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+            lineage_reference="genesis",
+            event_type="review_history",
+            payload=review_payload,
+            authorized_by=request.operator_id,
+            approval_token="token-default-123"
+        )
+        
+        submission = product_storage.get_submission(request.submission_id)
+        task_details = {
+            "task_id": submission.task_id if submission else "T-GOV-001",
+            "task_title": submission.task_title if submission else getattr(review, "task_title", ""),
+            "submitted_by": submission.submitted_by if submission else "operator"
+        }
+        
+        graph_res = {
+            "selected_task_id": getattr(review, "selected_task_id", ""),
+            "task_type": "advancement" if getattr(review, "evaluation_result", "FAIL") == "PASS" else "correction",
+            "title": f"Next Task {getattr(review, 'selected_task_id', '')}",
+            "difficulty": "intermediate"
+        }
+        
+        supporting_sigs = {
+            "domain": "engineering",
+            "repository_available": True,
+            "expected_vs_delivered_evidence": {"delivery_ratio": 1.0},
+            "expected_features": [],
+            "implemented_features": [],
+            "missing_features": []
+        }
+        
+        integrator = EcosystemIntegrator()
+        propagation_res = integrator.propagate_governed_approval(
+            review_envelope=envelope,
+            governor=request.operator_id,
+            eval_output={
+                "evaluation_result": getattr(review, "evaluation_result", "FAIL"),
+                "failure_type": getattr(review, "failure_type", None),
+                "canonical_authority": True
+            },
+            supporting_signals=supporting_sigs,
+            graph_result=graph_res,
+            task_data=task_details
+        )
+        event_id = propagation_res["commit_details"]["event_id"]
+    except Exception as prop_err:
+        logger.error(f"[REVIEW] Failed to propagate governed approval downstream: {prop_err}", exc_info=True)
+        raise HTTPException(
+            status_code=500,
+            detail=f"Downstream ecosystem propagation failed: {str(prop_err)}"
+        )
+
     try:
         from task_selector.human_in_loop import human_in_loop
         human_in_loop.resolve_escalation_by_trace(request.trace_id, request.operator_id, "approved")
@@ -111,7 +197,6 @@ async def approve_submission(request: GovernanceRequest):
         logger.warning(f"Failed to auto-resolve escalation (non-fatal): {e}")
 
     # Replay checkpoint
-    event_id = f"evt-{uuid.uuid4().hex[:12]}"
     checkpoint_id = write_replay_checkpoint(request.trace_id, {
         "event_id":      event_id,
         "action":        "approve",

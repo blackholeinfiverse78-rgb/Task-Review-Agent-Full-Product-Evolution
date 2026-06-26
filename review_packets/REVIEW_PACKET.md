@@ -60,13 +60,14 @@ The integration verification test successfully executed a live end-to-end traver
 
 ## 4. What Changed
 
-We added four comprehensive validation suites under `tests/`:
-- `tests/runtime_benchmarks.py`
-- `tests/ecosystem_integration_test.py`
-- `tests/adversarial_attack_suite.py`
-- `tests/historical_calibration_replay.py`
+We added the following core features and validation suites:
+- **Dataset Intake validation** (`evaluation_engine/dataset_intake.py`): Validates required intake fields and serializes to `storage/traces/{trace_id}/intake_packet.json`.
+- **BHIV Candidate Review Engine** (`evaluation_engine/bhiv_review_engine.py`): Run local repository analyses and passes code context to llama-3.3-70b-versatile via Groq to produce structured reports with the 8 mandatory review fields, with a deterministic rule-based fallback.
+- **Ecosystem Integration** (`canonical_db/integration.py`): Appends trace replay evidence to Pravah ledger (`storage/pravah_replay.jsonl`) and propagates approval events on human sign-off via `/api/v1/review/approve`.
+- **Executive Comparison** (`scripts/compare_reviews.py`): Compares Parikshak automated reviews against executive reviews in `review_packets/final_gc_review.md` and outputs comparison report.
+- **Backup & Validation Isolation** (`canonical_db/integrity.py` and `canonical_db/backup.py`): Dynamically resolves isolated backup subfolders `storage/backups/{db_name}` by DB file name to prevent validation checkpoint mismatch safety blocks.
 
-These suites measure metrics, verify security barriers, trace transactions, and replay BHIV history.
+We also added comprehensive validation suite `tests/test_candidate_review_pipeline.py`.
 
 ---
 
@@ -88,5 +89,21 @@ The system enforces hard errors under the following failure modes:
 
 ### Fresh Developer Onboarding
 - Run all checks: `python -m pytest tests/`
-- Run diagnostic tests: `python scratch/test_operating_system.py`
+- Run candidate reviewer checks: `python -m pytest tests/test_candidate_review_pipeline.py`
+- Run comparison script: `python scripts/compare_reviews.py`
 - DB journal logic is located in `canonical_db/db.py`, integrations in `canonical_db/integration.py`, and rule sets in `evaluation_engine/rule_engine.py`.
+
+---
+
+## 7. BHIV Candidate Submission Validation (First-Stage Reviewer)
+
+Parikshak has been evolved into the default first-stage reviewer for BHIV candidate submissions.
+
+### Core Modules
+1. **Dataset Intake Module** (`evaluation_engine/dataset_intake.py`): Validates and ensures all evaluation inputs are available before starting evaluation.
+2. **Production Review Engine** (`evaluation_engine/bhiv_review_engine.py`): Executes the evaluation pipeline. Generates the structured executive review format (What's Done Well, Missing/Incomplete, Required Fixes, Score/10, Readiness %, Timeline, Evidence, Verdict). Every finding references supporting codebase evidence.
+3. **Next-Task Dispatch** (`task_selector/task_graph_engine.py`): Traverse graph to determine the next task and includes a short justification.
+4. **Ecosystem Propagation** (`canonical_db/integration.py` & `/api/v1/review/approve`): Commits approved reviews to Gov-OS DB, dispatches to Niyantran assignments ledger, exposes visibility to Saarthi visibility ledger, and writes trace replay evidence to Pravah ledger (`storage/pravah_replay.jsonl`) verifying complete trace continuity.
+5. **Executive Comparison Report** (`scripts/compare_reviews.py`): Compares automated review against human executive review. Measures agreements, differences, missed findings, false positives, and calculates alignment confidence score. Output saved in `review_packets/executive_comparison_report.md`.
+6. **Isolated Safety Gates**: Dynamically computes backup path by database basename (e.g. `storage/backups/canonical_db`) to resolve test vs. prod snapshot mismatch errors.
+

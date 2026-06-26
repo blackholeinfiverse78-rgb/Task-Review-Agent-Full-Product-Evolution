@@ -249,3 +249,17 @@ python main.py
 1. **SQLite Concurrency**: When fallback mode is active, parallel writes might trigger minor sequential delays due to SQLite single-writer locking constraints. Use PostgreSQL in production environments.
 2. **Hardcoded User Roles**: Corrective assignments default to assignee names defined in trace files. A mapping service should be integrated with an external IAM identity database in the next major update.
 
+---
+
+## BHIV CANDIDATE SUBMISSION VALIDATION
+
+Parikshak has been evolved into the default first-stage reviewer for BHIV candidate submissions, handling end-to-end dataset intake, real automated evaluations, next-task recommendations, and ecosystem integration:
+
+1. **Dataset Intake Module** ([dataset_intake.py](file:///g:/Live%20Task%20Review%20Agent%20-%202/evaluation_engine/dataset_intake.py)): Handles validation of required intake fields (assigned task, task document, review packet, repository/commit, dates, and evidence) and serializes the validated packets to `storage/traces/{trace_id}/intake_packet.json`.
+2. **Production Review Pipeline** ([bhiv_review_engine.py](file:///g:/Live%20Task%20Review%20Agent%20-%202/evaluation_engine/bhiv_review_engine.py)): Executes the evaluation pipeline. Uses the Groq LLM API (`llama-3.3-70b-versatile`) to generate a structured executive-quality report with 8 mandatory fields. A deterministic rule-based fallback is implemented if the LLM API is rate-limited or unavailable.
+3. **Next-Task Recommendation Engine** ([task_graph_engine.py](file:///g:/Live%20Task%20Review%20Agent%20-%202/task_selector/task_graph_engine.py)): Dynamically determines the next assignment using the state graph and provides architectural, ecosystem, and readiness justifications.
+4. **Ecosystem Integrations** ([integration.py](file:///g:/Live%20Task%20Review%20Agent%20-%202/canonical_db/integration.py)): When reviews are human-approved through `/api/v1/review/approve`, the transaction is committed to the Gov-OS event journal, and propagated to the Saarthi visibility ledger, Niyantran assignments ledger, and the Pravah replay ledger ([pravah_replay.jsonl](file:///g:/Live%20Task%20Review%20Agent%20-%202/storage/pravah_replay.jsonl)) with full trace continuity.
+5. **Executive Review Comparison** ([compare_reviews.py](file:///g:/Live%20Task%20Review%20Agent%20-%202/scripts/compare_reviews.py)): Automatically compares Parikshak automated reviews against manual human reviews ([final_gc_review.md](file:///g:/Live%20Task%20Review%20Agent%20-%202/review_packets/final_gc_review.md)) and writes the comparison to the report ([executive_comparison_report.md](file:///g:/Live%20Task%20Review%20Agent%20-%202/review_packets/executive_comparison_report.md)) detailing agreements, differences, and alignment score.
+6. **Safety Gate Isolation**: Both `IntegrityValidator` and `BackupManager` now dynamically calculate their backup directories based on the SQLite file basename (e.g., `storage/backups/canonical_db`) if no path is provided. This isolates test environments from production backups and prevents `STARTUP_SAFETY_GATE_BLOCKED` validation errors.
+
+
