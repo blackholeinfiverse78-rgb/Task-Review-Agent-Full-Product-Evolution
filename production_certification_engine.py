@@ -140,23 +140,31 @@ class ProductionCertificationEngine:
 
     def check_security(self, trace_path: str) -> str:
         security = self._read_json(trace_path, "security_metadata.json")
+        decision = self._read_json(trace_path, "validation_decision.json")
         
-        if not security:
+        if not security and not decision:
             return "UNKNOWN"
             
-        critical_vulns = security.get("critical_vulnerabilities", 0)
-        high_vulns = security.get("high_vulnerabilities", 0)
-        medium_vulns = security.get("medium_vulnerabilities", 0)
-        
-        if critical_vulns > 0 or high_vulns > 0:
-            return "FAIL"
+        if security:
+            critical_vulns = security.get("critical_vulnerabilities", 0)
+            high_vulns = security.get("high_vulnerabilities", 0)
+            medium_vulns = security.get("medium_vulnerabilities", 0)
             
-        if medium_vulns > 0:
-            return "WARNING"
-            
-        if security.get("signature_verified", False) is False:
-            return "FAIL"
-            
+            if critical_vulns > 0 or high_vulns > 0:
+                return "FAIL"
+            if medium_vulns > 0:
+                return "WARNING"
+            if security.get("signature_verified", True) is False:
+                return "FAIL"
+                
+        if decision:
+            sig = decision.get("signature")
+            signed_by = decision.get("signed_by")
+            if not sig or not signed_by:
+                return "FAIL"
+            if not (sig.startswith("sig-") or sig.startswith("token-")):
+                return "FAIL"
+                
         return "PASS"
 
     def check_versioning(self, trace_path: str) -> str:

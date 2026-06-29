@@ -1,5 +1,0 @@
-{
-    "trace_id": "trace-prod-ready",
-    "otel_initialized": true,
-    "metrics_active": true
-}

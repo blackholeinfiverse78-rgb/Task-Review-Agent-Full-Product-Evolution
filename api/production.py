@@ -8,6 +8,8 @@ from pydantic import BaseModel, Field
 from typing import List, Optional, Dict, Any
 from datetime import datetime, timezone
 import logging
+import os
+import json
 
 from task_selector.niyantran_connection import niyantran_connection
 from task_selector.human_in_loop import human_in_loop
@@ -16,11 +18,20 @@ from evaluation_engine.review_packet_parser import review_packet_parser
 from evaluation_engine.dataset_intake import dataset_intake
 from evaluation_engine.bhiv_review_engine import bhiv_review_engine
 
-logger = logging.getLogger("production_api")
+from security.middleware import (
+    SecurityConfig, UserRole, require_governor,
+    require_reviewer_or_governor, require_operator_or_governor,
+    require_any_authenticated, register_used_approval_token
+)
 
+logger = logging.getLogger("production_api")
 router = APIRouter(prefix="/production", tags=["production"])
 
 # Request/Response Models
+class LoginRequest(BaseModel):
+    username: str
+    password: str
+
 class NiyantranTaskRequest(BaseModel):
     task_id: str = Field(..., min_length=1, max_length=100)
     task_title: str = Field(..., min_length=5, max_length=200)
@@ -40,14 +51,34 @@ class HumanOverrideRequest(BaseModel):
     reviewer: str = Field(..., min_length=2, max_length=50)
     override_decision: Dict[str, Any] = Field(...)
     review_notes: str = Field(..., min_length=10, max_length=1000)
+    signature: Optional[str] = None
+    approval_reason: Optional[str] = None
+    approval_version: Optional[int] = 1
 
 class BucketQueryRequest(BaseModel):
     limit: int = Field(default=100, ge=1, le=1000)
     trace_id: Optional[str] = None
 
+# Token Generation Endpoint
+@router.post("/auth/token")
+async def login_for_access_token(request: LoginRequest):
+    CREDENTIALS = {
+        "operator": {"password": "OperatorPass123!", "role": UserRole.OPERATOR.value},
+        "reviewer": {"password": "ReviewerPass123!", "role": UserRole.REVIEWER.value},
+        "governor": {"password": "GovernorPass123!", "role": UserRole.GOVERNOR.value},
+        "readonly": {"password": "ReadOnlyPass123!", "role": UserRole.READONLY.value},
+        "Akash": {"password": "AkashPass123!", "role": UserRole.GOVERNOR.value},
+        "Ansh": {"password": "AnshPass123!", "role": UserRole.GOVERNOR.value},
+    }
+    user_info = CREDENTIALS.get(request.username)
+    if not user_info or user_info["password"] != request.password:
+        raise HTTPException(status_code=401, detail="Invalid username or password")
+    token = SecurityConfig.create_access_token({"sub": request.username, "role": user_info["role"]})
+    return {"access_token": token, "token_type": "bearer"}
+
 # Niyantran Integration Endpoints
 @router.post("/niyantran/submit")
-async def submit_task_from_niyantran(request: NiyantranTaskRequest):
+async def submit_task_from_niyantran(request: NiyantranTaskRequest, current_user: dict = Depends(require_operator_or_governor)):
     """
     Accept task from Niyantran and return complete evaluation + next task
     This is the main production endpoint for task processing
@@ -69,7 +100,6 @@ async def submit_task_from_niyantran(request: NiyantranTaskRequest):
         }
         
     except ValueError as ve:
-        # HARD REJECT is not a 500 crash. It's a structured rejection.
         error_msg = str(ve)
         logger.error(f"[PRODUCTION API] HARD REJECT: {error_msg}")
         
@@ -102,7 +132,7 @@ async def submit_task_from_niyantran(request: NiyantranTaskRequest):
         )
 
 @router.get("/niyantran/health")
-async def niyantran_health_check():
+async def niyantran_health_check(current_user: dict = Depends(require_any_authenticated)):
     """Health check for Niyantran connection"""
     try:
         health_result = niyantran_connection.health_check()
@@ -118,7 +148,7 @@ async def niyantran_health_check():
 
 # Human-in-Loop Endpoints
 @router.get("/human-review/pending")
-async def get_pending_escalations():
+async def get_pending_escalations(current_user: dict = Depends(require_any_authenticated)):
     """Get all pending human review cases"""
     try:
         pending_cases = human_in_loop.get_pending_escalations()
@@ -134,9 +164,27 @@ async def get_pending_escalations():
         raise HTTPException(status_code=500, detail=f"Failed to retrieve escalations: {str(e)}")
 
 @router.post("/human-review/override")
-async def apply_human_override(request: HumanOverrideRequest):
-    """Apply human override to escalated case"""
+async def apply_human_override(request: HumanOverrideRequest, current_user: dict = Depends(require_reviewer_or_governor)):
+    """Apply human override to escalated case with explicit transitions and propagation"""
     try:
+        # 1. Check escalation case
+        if request.case_id not in human_in_loop.escalation_cases:
+            raise HTTPException(status_code=404, detail=f"Escalation case {request.case_id} not found")
+        
+        case = human_in_loop.escalation_cases[request.case_id]
+        submission_id = case.original_evaluation.get("submission_id")
+        
+        # 2. Get and update ReviewRecord
+        from db.persistent_storage import product_storage
+        review = product_storage.get_review_by_submission(submission_id)
+        if not review:
+            raise HTTPException(status_code=404, detail="Review record not found")
+            
+        # Replay protection check
+        sig_token = request.signature or f"token-override-{request.case_id}-{review.version + 1}"
+        register_used_approval_token(sig_token)
+
+        # 3. Apply human override to state machine
         result = human_in_loop.apply_human_override(
             request.case_id,
             request.reviewer,
@@ -144,24 +192,162 @@ async def apply_human_override(request: HumanOverrideRequest):
             request.review_notes
         )
         
-        logger.info(f"[PRODUCTION API] Human override applied: case_id={request.case_id}, reviewer={request.reviewer}")
+        # 4. Explicit transitions of review record
+        decision_val = request.override_decision.get("decision", "APPROVED")
+        review.decision = decision_val
+        review.review_state = decision_val
+        review.status = "pass" if decision_val == "APPROVED" else "fail"
+        review.reviewed_by = request.reviewer
+        review.reviewed_at = datetime.now()
+        review.version += 1
+        product_storage.store_review(review)
+
+        # 5. Build Gov-OS Governance Envelope and commit mutation
+        from canonical_db.integration import EcosystemIntegrator
+        from canonical_db.contracts import GovernanceEnvelope
+        
+        envelope = GovernanceEnvelope(
+            trace_id=case.trace_id,
+            schema_version="v1.0",
+            actor=request.reviewer,
+            actor_role="SENIOR_REVIEW_OPERATOR",
+            timestamp=datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+            lineage_reference="genesis",
+            event_type="review_history",
+            payload={
+                "review_id": review.review_id,
+                "submission_id": submission_id,
+                "trace_id": case.trace_id,
+                "evaluation_result": review.evaluation_result,
+                "failure_type": review.failure_type,
+                "decision": review.decision,
+                "reviewed_by": request.reviewer,
+                "reviewed_at": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+                "score": review.score,
+                "readiness_percent": review.readiness_percent,
+                "status": review.status,
+                "candidate_name": review.candidate_name,
+                "task_title": review.task_title
+            },
+            authorized_by=request.reviewer,
+            approval_token=sig_token
+        )
+
+        # 6. Propagate governed override downstream
+        submission = product_storage.get_submission(submission_id)
+        task_details = {
+            "task_id": submission.task_id if submission else "T-GOV-001",
+            "task_title": submission.task_title if submission else review.task_title,
+            "submitted_by": submission.submitted_by if submission else "operator"
+        }
+        
+        graph_res = {
+            "selected_task_id": review.selected_task_id or "T-GOV-001",
+            "task_type": "advancement" if decision_val == "APPROVED" else "correction",
+            "title": f"Next Task {review.selected_task_id}",
+            "difficulty": "intermediate"
+        }
+        
+        supporting_sigs = {
+            "domain": "engineering",
+            "repository_available": True,
+            "expected_vs_delivered_evidence": {"delivery_ratio": 1.0},
+            "expected_features": [],
+            "implemented_features": [],
+            "missing_features": []
+        }
+        
+        integrator = EcosystemIntegrator()
+        propagation_res = integrator.propagate_governed_approval(
+            review_envelope=envelope,
+            governor=request.reviewer,
+            eval_output={
+                "evaluation_result": review.evaluation_result,
+                "failure_type": review.failure_type,
+                "canonical_authority": True
+            },
+            supporting_signals=supporting_sigs,
+            graph_result=graph_res,
+            task_data=task_details
+        )
+        event_id = propagation_res["commit_details"]["event_id"]
+
+        # 7. Write immutable governance proof files to trace directory
+        trace_dir = os.path.join("storage", "traces", case.trace_id)
+        os.makedirs(trace_dir, exist_ok=True)
+        
+        dec_data = {
+            "trace_id": case.trace_id,
+            "decision": decision_val,
+            "signed_by": request.reviewer,
+            "signature": sig_token,
+            "timestamp": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+            "approval_reason": request.review_notes,
+            "approval_version": review.version
+        }
+        with open(os.path.join(trace_dir, "validation_decision.json"), "w", encoding="utf-8") as f:
+            json.dump(dec_data, f, ensure_ascii=False, indent=2)
+            
+        gov_data = {
+            "trace_id": case.trace_id,
+            "governor": request.reviewer,
+            "authority_level": "Level_3_Governor",
+            "valid_authority": True
+        }
+        with open(os.path.join(trace_dir, "governance_record.json"), "w", encoding="utf-8") as f:
+            json.dump(gov_data, f, ensure_ascii=False, indent=2)
+
+        # 8. Emit audit logs
+        from api.review_routes import log_audit, _emit_operator_visibility, write_replay_checkpoint
+        checkpoint_id = write_replay_checkpoint(case.trace_id, {
+            "event_id":      event_id,
+            "action":        "override",
+            "submission_id": submission_id,
+            "final_task":    review.selected_task_id,
+            "operator_id":   request.reviewer
+        })
+
+        log_audit({
+            "event_type":     "governance_action",
+            "parent_event_hash": getattr(review, "last_event_hash", None),
+            "replay_checkpoint_id": checkpoint_id,
+            "expected_version": review.version,
+            "event_id":       event_id,
+            "trace_id":       case.trace_id,
+            "submission_id":  submission_id,
+            "operator_id":    request.reviewer,
+            "operator_role":  "SENIOR_REVIEW_OPERATOR",
+            "action":         "override",
+            "reason_taxonomy": "HUMAN_VALIDATION_FAILURE",
+            "system_task":    review.selected_task_id,
+            "final_task":     review.selected_task_id,
+            "timestamp":      datetime.now().isoformat(),
+            "finalized":      True
+        })
+
+        _emit_operator_visibility(request.reviewer, "override", submission_id, decision_val)
+        
+        logger.info(f"[PRODUCTION API] Human override applied and propagated: case_id={request.case_id}, reviewer={request.reviewer}")
         return {
             "status": "override_applied",
             "case_id": request.case_id,
             "reviewer": request.reviewer,
             "result": result,
+            "event_id": event_id,
             "timestamp": datetime.now().isoformat()
         }
         
+    except HTTPException as e:
+        raise e
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
     except Exception as e:
-        logger.error(f"[PRODUCTION API] Human override failed: {e}")
+        logger.error(f"[PRODUCTION API] Human override failed: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"Override failed: {str(e)}")
 
 # Bucket Integration Endpoints
 @router.get("/bucket/logs")
-async def get_evaluation_logs(limit: int = 100):
+async def get_evaluation_logs(limit: int = 100, current_user: dict = Depends(require_any_authenticated)):
     """Get recent evaluation logs from bucket"""
     try:
         logs = bucket_integration.get_evaluation_logs(limit)
@@ -177,7 +363,7 @@ async def get_evaluation_logs(limit: int = 100):
         raise HTTPException(status_code=500, detail=f"Failed to retrieve logs: {str(e)}")
 
 @router.get("/bucket/evaluation/{trace_id}")
-async def get_evaluation_by_trace_id(trace_id: str):
+async def get_evaluation_by_trace_id(trace_id: str, current_user: dict = Depends(require_any_authenticated)):
     """Get specific evaluation by trace_id"""
     try:
         evaluation = bucket_integration.get_evaluation_by_trace_id(trace_id)
@@ -194,7 +380,7 @@ async def get_evaluation_by_trace_id(trace_id: str):
         raise HTTPException(status_code=500, detail=f"Failed to retrieve evaluation: {str(e)}")
 
 @router.get("/bucket/stats")
-async def get_bucket_stats():
+async def get_bucket_stats(current_user: dict = Depends(require_any_authenticated)):
     """Get bucket statistics and metrics"""
     try:
         stats = bucket_integration.get_bucket_stats()
@@ -209,7 +395,7 @@ async def get_bucket_stats():
         raise HTTPException(status_code=500, detail=f"Failed to retrieve stats: {str(e)}")
 
 @router.get("/system/metrics")
-async def get_system_metrics():
+async def get_system_metrics(current_user: dict = Depends(require_any_authenticated)):
     """Get real-time observability metrics for the Deterministic Core"""
     try:
         from observability.observability import observer
@@ -220,7 +406,7 @@ async def get_system_metrics():
 
 # System Monitoring Endpoints
 @router.get("/system/review-packet-status")
-async def check_review_packet_status():
+async def check_review_packet_status(current_user: dict = Depends(require_any_authenticated)):
     """Check Review Packet status and validation"""
     try:
         packet_result = review_packet_parser.enforce_packet_requirement(".")
@@ -236,16 +422,14 @@ async def check_review_packet_status():
         raise HTTPException(status_code=500, detail=f"Packet check failed: {str(e)}")
 
 @router.get("/system/production-status")
-async def get_production_status():
+async def get_production_status(current_user: dict = Depends(require_any_authenticated)):
     """Get overall production system status"""
     try:
-        # Check all system components
         niyantran_health = niyantran_connection.health_check()
         bucket_stats = bucket_integration.get_bucket_stats()
         pending_escalations = human_in_loop.get_pending_escalations()
         packet_status = review_packet_parser.enforce_packet_requirement(".")
         
-        # Determine overall status
         overall_status = "healthy"
         if niyantran_health["status"] != "healthy":
             overall_status = "degraded"
@@ -273,12 +457,11 @@ async def get_production_status():
         logger.error(f"[PRODUCTION API] Production status check failed: {e}")
         raise HTTPException(status_code=500, detail=f"Status check failed: {str(e)}")
 
-# Test Endpoints (for Vinayak validation)
+# Test Endpoints
 @router.post("/test/determinism")
-async def test_determinism(request: NiyantranTaskRequest, runs: int = 3):
+async def test_determinism(request: NiyantranTaskRequest, runs: int = 3, current_user: dict = Depends(require_any_authenticated)):
     """
     Test deterministic execution by running the same task multiple times
-    For Vinayak's validation protocol
     """
     if runs > 10:
         raise HTTPException(status_code=400, detail="Maximum 10 test runs allowed")
@@ -286,13 +469,11 @@ async def test_determinism(request: NiyantranTaskRequest, runs: int = 3):
     logger.info(f"[PRODUCTION API] Running determinism test: {runs} runs")
     
     results = []
-    task_data = request.dict()
+    task_data = request.model_dump()
     
     try:
         for run in range(runs):
             result = niyantran_connection.process_niyantran_task(task_data)
-            
-            # Extract key metrics for comparison
             run_result = {
                 "run": run + 1,
                 "evaluation_result": result["review"]["evaluation_result"],
@@ -303,7 +484,6 @@ async def test_determinism(request: NiyantranTaskRequest, runs: int = 3):
             }
             results.append(run_result)
         
-        # Check determinism
         first_result = results[0]
         is_deterministic = all(
             r["evaluation_result"] == first_result["evaluation_result"] and
@@ -331,7 +511,7 @@ async def test_determinism(request: NiyantranTaskRequest, runs: int = 3):
         raise HTTPException(status_code=500, detail=f"Determinism test failed: {str(e)}")
 
 @router.get("/test/sample-evaluation")
-async def get_sample_evaluation():
+async def get_sample_evaluation(current_user: dict = Depends(require_any_authenticated)):
     """Get a sample evaluation for testing and validation"""
     sample_task = {
         "task_id": "sample-test-001",
@@ -358,11 +538,7 @@ async def get_sample_evaluation():
         raise HTTPException(status_code=500, detail=f"Sample evaluation failed: {str(e)}")
 
 @router.get("/constitutional-review/{trace_id}")
-async def get_constitutional_readiness(trace_id: str):
-    """
-    Independently verify trace readiness (READY, NEEDS_REVIEW, REJECTED)
-    using persisted artifacts in storage/traces/{trace_id}/
-    """
+async def get_constitutional_readiness(trace_id: str, current_user: dict = Depends(require_any_authenticated)):
     try:
         from constitutional_readiness_engine import ConstitutionalReadinessEngine
         engine = ConstitutionalReadinessEngine()
@@ -376,11 +552,7 @@ async def get_constitutional_readiness(trace_id: str):
         )
 
 @router.get("/certification/{trace_id}")
-async def get_production_certification(trace_id: str):
-    """
-    Independently verify production readiness (READY, READY WITH OBSERVATIONS, NEEDS_REVIEW, NOT PRODUCTION READY, UNKNOWN)
-    using persisted artifacts in storage/traces/{trace_id}/
-    """
+async def get_production_certification(trace_id: str, current_user: dict = Depends(require_any_authenticated)):
     try:
         from production_certification_engine import ProductionCertificationEngine
         engine = ProductionCertificationEngine()
@@ -396,11 +568,7 @@ async def get_production_certification(trace_id: str):
         )
 
 @router.get("/ecosystem-participation/{trace_id}")
-async def get_ecosystem_participation(trace_id: str):
-    """
-    Independently verify ecosystem participation role and compliance
-    using persisted artifacts in storage/traces/{trace_id}/
-    """
+async def get_ecosystem_participation(trace_id: str, current_user: dict = Depends(require_any_authenticated)):
     try:
         from ecosystem_participation_validator import EcosystemParticipationValidator
         val = EcosystemParticipationValidator()
@@ -416,46 +584,54 @@ async def get_ecosystem_participation(trace_id: str):
 # Pydantic schema for dataset intake request
 class IntakeRequestBody(BaseModel):
     assigned_task: str = Field(..., min_length=1)
-    original_task_document: str = Field(..., min_length=1)
+    original_task_document: Optional[str] = Field(None)
+    original_assignment_document: Optional[str] = Field(None)
     review_packet: str = Field(..., min_length=1)
-    repository_or_commit: str = Field(..., min_length=1)
-    submission_date: str = Field(..., min_length=1)
+    repository_or_commit: Optional[str] = Field(None)
+    repository_path: Optional[str] = Field(None)
+    repository_commit_or_branch: Optional[str] = Field(None)
+    submission_date: Optional[str] = Field(None)
+    submission_timestamp: Optional[str] = Field(None)
     due_date: str = Field(..., min_length=1)
+    expected_deliverables: Optional[Any] = Field(default=None)
+    candidate_name: Optional[str] = Field(None)
+    candidate_identifier: Optional[str] = Field(None)
     supporting_evidence: Optional[Dict[str, Any]] = Field(default_factory=dict)
+    architecture_notes: Optional[str] = Field(default="")
+    integration_notes: Optional[str] = Field(default="")
+    runtime_evidence: Optional[Dict[str, Any]] = Field(default_factory=dict)
+    test_evidence: Optional[Dict[str, Any]] = Field(default_factory=dict)
+    documentation_evidence: Optional[Dict[str, Any]] = Field(default_factory=dict)
     additional_instructions: Optional[str] = Field(default="")
     trace_id: str = Field(..., min_length=8)
     assigned_task_id: Optional[str] = Field(default="T-GOV-001")
 
 @router.post("/intake")
-async def dataset_intake_endpoint(request: IntakeRequestBody):
+async def dataset_intake_endpoint(request: IntakeRequestBody, current_user: dict = Depends(require_operator_or_governor)):
     """
     Accept dataset intake, run evaluation and recommendation, stage for human review.
     """
     logger.info(f"[PRODUCTION API] Intake request received: trace_id={request.trace_id}")
     try:
-        # 1. Run dataset intake ingestion & validation
         intake_data = request.model_dump()
-        dataset_intake.validate_and_ingest(intake_data, request.trace_id)
+        intake_data = dataset_intake.validate_and_ingest(intake_data, request.trace_id)
 
-        # 2. Generate deterministic submission_id
         import hashlib
         content_hash = hashlib.md5(
-            f"{request.assigned_task}{request.original_task_document}".encode(), 
+            f"{request.assigned_task}{request.original_assignment_document or request.original_task_document}".encode(), 
             usedforsecurity=False
         ).hexdigest()[:12]
         submission_id = f"sub-{content_hash}-{request.trace_id[-8:]}"
 
-        # 3. Execute evaluation
         eval_result = bhiv_review_engine.run_evaluation(intake_data, request.trace_id)
 
-        # 4. Persist to storage as PENDING_REVIEW
         from db.persistent_storage import TaskSubmission, ReviewRecord, product_storage, TaskStatus
         
         submission = TaskSubmission(
             submission_id=submission_id,
             task_id=request.assigned_task_id or "T-GOV-001",
             task_title=request.assigned_task,
-            task_description=request.original_task_document,
+            task_description=request.original_assignment_document or request.original_task_document or "No description",
             submitted_by="operator",
             submitted_at=datetime.now(),
             status=TaskStatus.SUBMITTED,
@@ -488,12 +664,11 @@ async def dataset_intake_endpoint(request: IntakeRequestBody):
             score=eval_result["score"],
             readiness_percent=eval_result["readiness_percent"],
             status=eval_result["status"],
-            candidate_name="Ishan Shirode",
+            candidate_name=request.candidate_name or "Ishan Shirode",
             task_title=request.assigned_task
         )
         product_storage.store_review(review_record)
 
-        # 5. Stage in human_in_loop review queue
         try:
             from task_selector.human_in_loop import human_in_loop, ConfidenceMetrics
             decision_dict = {"decision": "APPROVED" if eval_result["evaluation_result"] == "PASS" else "REJECTED"}
@@ -512,8 +687,10 @@ async def dataset_intake_endpoint(request: IntakeRequestBody):
                 requires_escalation=True,
                 escalation_reasons=["low_confidence"]
             )
+            eval_result_copy = dict(eval_result)
+            eval_result_copy["submission_id"] = submission_id
             human_in_loop._create_escalation_case(
-                evaluation_result=eval_result,
+                evaluation_result=eval_result_copy,
                 decision_result=decision_dict,
                 supporting_signals=signals_dict,
                 confidence_metrics=metrics,
@@ -522,7 +699,6 @@ async def dataset_intake_endpoint(request: IntakeRequestBody):
         except Exception as hil_err:
             logger.warning(f"Could not stage human loop case (non-fatal): {hil_err}")
 
-        # Return structured receipt
         return {
             "trace_id": request.trace_id,
             "submission_id": submission_id,
@@ -543,4 +719,4 @@ async def dataset_intake_endpoint(request: IntakeRequestBody):
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Intake processing encountered an error: {str(e)}"
-        )
+        )

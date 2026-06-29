@@ -68,3 +68,7 @@
 {"operator_id": "Akash", "action": "approve", "submission_id": "sub-5caf4c3cf748-528d5bdf", "outcome": "APPROVED", "timestamp": "2026-06-26T14:36:27.907202", "_checksum": "3572ddbcadc50f8b"}
 {"operator_id": "Akash", "action": "approve", "submission_id": "sub-5caf4c3cf748-ec47074d", "outcome": "APPROVED", "timestamp": "2026-06-26T14:38:38.897820", "_checksum": "436419c4f94c4763"}
 {"operator_id": "Akash", "action": "approve", "submission_id": "sub-5caf4c3cf748-f9ad041f", "outcome": "APPROVED", "timestamp": "2026-06-26T14:39:26.595289", "_checksum": "669b1e6f451b8d0f"}
+{"operator_id": "Akash", "action": "override", "submission_id": "sub-5caf4c3cf748-aa4cfd3b", "outcome": "APPROVED", "timestamp": "2026-06-29T11:12:32.602767", "_checksum": "3e8ae0de788c15dc"}
+{"operator_id": "Akash", "action": "override", "submission_id": "sub-5caf4c3cf748-72191820", "outcome": "APPROVED", "timestamp": "2026-06-29T11:13:00.248631", "_checksum": "6126e6c23888d175"}
+{"operator_id": "Akash", "action": "override", "submission_id": "sub-5caf4c3cf748-5f6099a9", "outcome": "APPROVED", "timestamp": "2026-06-29T11:13:31.677526", "_checksum": "1e7fdc73f0ff4653"}
+{"operator_id": "Akash", "action": "override", "submission_id": "sub-5caf4c3cf748-0952d7ef", "outcome": "APPROVED", "timestamp": "2026-06-29T21:27:20.223590", "_checksum": "3735dd6441daa7a0"}

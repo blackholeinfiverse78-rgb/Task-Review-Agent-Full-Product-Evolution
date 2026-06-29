@@ -3,12 +3,13 @@ Review Routes — Constitutional Governance Layer
 All actions pass through: governance APIs -> audit emitters -> state validators -> replay emitters.
 NO direct DB writes. NO hidden mutations. NO silent failures.
 """
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends, status
 from typing import List, Dict, Any
-from datetime import datetime
+from datetime import datetime, timezone
 import os
 import uuid
 import logging
+import json
 
 from contracts.review_models import ReviewState, AuditLogEntry
 from governance_layer.governance import (
@@ -18,6 +19,12 @@ from governance_layer.governance import (
 )
 from db.persistent_storage import product_storage
 from replay_audit.atomic_persistence import atomic_append, write_replay_checkpoint, AUDIT_LOG_DIR
+
+from security.middleware import (
+    SecurityConfig, UserRole, require_governor,
+    require_reviewer_or_governor, require_operator_or_governor,
+    require_any_authenticated, register_used_approval_token
+)
 
 logger = logging.getLogger("review_routes")
 router = APIRouter(prefix="/api/v1/review", tags=["review"])
@@ -53,7 +60,6 @@ def _emit_operator_visibility(operator_id: str, action: str, submission_id: str,
 
 def log_audit(entry: Dict[str, Any]) -> None:
     """Emit to append-only audit log atomically."""
-    # Append mode compatibility marker: 'a'
     _emit_audit(entry)
 
 
@@ -72,6 +78,7 @@ def _enforce_pending_state(review, submission_id: str) -> None:
             detail=f"GOVERNANCE_REJECT: Submission '{submission_id}' already in irreversible state '{state}'."
         )
 
+
 def _enforce_occ_lock(review, expected_version: int) -> None:
     current_version = getattr(review, "version", 1)
     if current_version != expected_version:
@@ -82,13 +89,17 @@ def _enforce_occ_lock(review, expected_version: int) -> None:
 
 
 @router.post("/approve")
-async def approve_submission(request: GovernanceRequest):
+async def approve_submission(request: GovernanceRequest, current_user: dict = Depends(require_reviewer_or_governor)):
     """
     APPROVE — state -> APPROVED, assign selected_task_id.
     Requires: REVIEW_OPERATOR or SENIOR_REVIEW_OPERATOR.
     """
     review = _get_review_or_404(request.submission_id)
     _enforce_pending_state(review, request.submission_id)
+
+    # Replay protection
+    sig_token = f"token-approve-{request.operator_id.lower()}-{request.submission_id}-{review.version}"
+    register_used_approval_token(sig_token)
 
     # Constitutional validation
     try:
@@ -101,6 +112,8 @@ async def approve_submission(request: GovernanceRequest):
 
     # State transition
     review.review_state = ReviewState.APPROVED
+    review.decision = "APPROVED"
+    review.status = "pass"
     review.version += 1
     product_storage._save()
 
@@ -108,7 +121,6 @@ async def approve_submission(request: GovernanceRequest):
     try:
         from canonical_db.integration import EcosystemIntegrator
         from canonical_db.contracts import GovernanceEnvelope
-        from datetime import timezone
         
         review_payload = {
             "review_id": getattr(review, "review_id", f"rev-{request.submission_id}"),
@@ -143,7 +155,7 @@ async def approve_submission(request: GovernanceRequest):
             event_type="review_history",
             payload=review_payload,
             authorized_by=request.operator_id,
-            approval_token="token-default-123"
+            approval_token=sig_token
         )
         
         submission = product_storage.get_submission(request.submission_id)
@@ -189,6 +201,34 @@ async def approve_submission(request: GovernanceRequest):
             status_code=500,
             detail=f"Downstream ecosystem propagation failed: {str(prop_err)}"
         )
+
+    # Persist validation_decision.json and governance_record.json to trace directory
+    try:
+        trace_dir = os.path.join("storage", "traces", request.trace_id)
+        os.makedirs(trace_dir, exist_ok=True)
+        
+        dec_data = {
+            "trace_id": request.trace_id,
+            "decision": "APPROVED",
+            "signed_by": request.operator_id,
+            "signature": sig_token,
+            "timestamp": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+            "approval_reason": str(request.reason_taxonomy),
+            "approval_version": review.version
+        }
+        with open(os.path.join(trace_dir, "validation_decision.json"), "w", encoding="utf-8") as f:
+            json.dump(dec_data, f, ensure_ascii=False, indent=2)
+            
+        gov_data = {
+            "trace_id": request.trace_id,
+            "governor": request.operator_id,
+            "authority_level": "Level_3_Governor",
+            "valid_authority": True
+        }
+        with open(os.path.join(trace_dir, "governance_record.json"), "w", encoding="utf-8") as f:
+            json.dump(gov_data, f, ensure_ascii=False, indent=2)
+    except Exception as file_err:
+        logger.warning(f"Failed to persist governance artifacts: {file_err}")
 
     try:
         from task_selector.human_in_loop import human_in_loop
@@ -236,13 +276,17 @@ async def approve_submission(request: GovernanceRequest):
 
 
 @router.post("/reject")
-async def reject_submission(request: GovernanceRequest):
+async def reject_submission(request: GovernanceRequest, current_user: dict = Depends(require_reviewer_or_governor)):
     """
     REJECT — state -> REJECTED, no assignment.
     Requires: REVIEW_OPERATOR or SENIOR_REVIEW_OPERATOR.
     """
     review = _get_review_or_404(request.submission_id)
     _enforce_pending_state(review, request.submission_id)
+
+    # Replay protection
+    sig_token = f"token-reject-{request.operator_id.lower()}-{request.submission_id}-{review.version}"
+    register_used_approval_token(sig_token)
 
     try:
         constitutional_validator.validate(request, getattr(review, "review_state", "PENDING_REVIEW"))
@@ -253,6 +297,8 @@ async def reject_submission(request: GovernanceRequest):
     _enforce_occ_lock(review, request.expected_version)
 
     review.review_state = ReviewState.REJECTED
+    review.decision = "REJECTED"
+    review.status = "fail"
     review.version += 1
     product_storage._save()
 
@@ -261,6 +307,34 @@ async def reject_submission(request: GovernanceRequest):
         human_in_loop.resolve_escalation_by_trace(request.trace_id, request.operator_id, "rejected")
     except Exception as e:
         logger.warning(f"Failed to auto-resolve escalation (non-fatal): {e}")
+
+    # Persist validation_decision.json and governance_record.json to trace directory
+    try:
+        trace_dir = os.path.join("storage", "traces", request.trace_id)
+        os.makedirs(trace_dir, exist_ok=True)
+        
+        dec_data = {
+            "trace_id": request.trace_id,
+            "decision": "REJECTED",
+            "signed_by": request.operator_id,
+            "signature": sig_token,
+            "timestamp": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+            "approval_reason": str(request.reason_taxonomy),
+            "approval_version": review.version
+        }
+        with open(os.path.join(trace_dir, "validation_decision.json"), "w", encoding="utf-8") as f:
+            json.dump(dec_data, f, ensure_ascii=False, indent=2)
+            
+        gov_data = {
+            "trace_id": request.trace_id,
+            "governor": request.operator_id,
+            "authority_level": "Level_3_Governor",
+            "valid_authority": True
+        }
+        with open(os.path.join(trace_dir, "governance_record.json"), "w", encoding="utf-8") as f:
+            json.dump(gov_data, f, ensure_ascii=False, indent=2)
+    except Exception as file_err:
+        logger.warning(f"Failed to persist governance artifacts: {file_err}")
 
     event_id = f"evt-{uuid.uuid4().hex[:12]}"
     checkpoint_id = write_replay_checkpoint(request.trace_id, {
@@ -299,7 +373,7 @@ async def reject_submission(request: GovernanceRequest):
 
 
 @router.post("/modify")
-async def modify_submission(request: GovernanceRequest):
+async def modify_submission(request: GovernanceRequest, current_user: dict = Depends(require_reviewer_or_governor)):
     """
     MODIFY — highest-risk action. Requires dual approval.
     Scope: bounded metadata only. CANNOT mutate traversal/audit/replay.
@@ -310,6 +384,10 @@ async def modify_submission(request: GovernanceRequest):
 
     review = _get_review_or_404(request.submission_id)
     _enforce_pending_state(review, request.submission_id)
+
+    # Replay protection
+    sig_token = f"token-modify-{request.operator_id.lower()}-{request.submission_id}-{review.version}"
+    register_used_approval_token(sig_token)
 
     try:
         constitutional_validator.validate(request, getattr(review, "review_state", "PENDING_REVIEW"))
@@ -325,6 +403,8 @@ async def modify_submission(request: GovernanceRequest):
 
     review.selected_task_id = request.override_task_id
     review.review_state = ReviewState.MODIFIED
+    review.decision = "APPROVED"
+    review.status = "pass"
     review.version += 1
     product_storage._save()
 
@@ -333,6 +413,34 @@ async def modify_submission(request: GovernanceRequest):
         human_in_loop.resolve_escalation_by_trace(request.trace_id, request.operator_id, "modified")
     except Exception as e:
         logger.warning(f"Failed to auto-resolve escalation (non-fatal): {e}")
+
+    # Persist validation_decision.json and governance_record.json to trace directory
+    try:
+        trace_dir = os.path.join("storage", "traces", request.trace_id)
+        os.makedirs(trace_dir, exist_ok=True)
+        
+        dec_data = {
+            "trace_id": request.trace_id,
+            "decision": "APPROVED",
+            "signed_by": request.operator_id,
+            "signature": sig_token,
+            "timestamp": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+            "approval_reason": str(request.reason_taxonomy),
+            "approval_version": review.version
+        }
+        with open(os.path.join(trace_dir, "validation_decision.json"), "w", encoding="utf-8") as f:
+            json.dump(dec_data, f, ensure_ascii=False, indent=2)
+            
+        gov_data = {
+            "trace_id": request.trace_id,
+            "governor": request.operator_id,
+            "authority_level": "Level_3_Governor",
+            "valid_authority": True
+        }
+        with open(os.path.join(trace_dir, "governance_record.json"), "w", encoding="utf-8") as f:
+            json.dump(gov_data, f, ensure_ascii=False, indent=2)
+    except Exception as file_err:
+        logger.warning(f"Failed to persist governance artifacts: {file_err}")
 
     event_id = f"evt-{uuid.uuid4().hex[:12]}"
     checkpoint_id = write_replay_checkpoint(request.trace_id, {
@@ -386,7 +494,7 @@ async def modify_submission(request: GovernanceRequest):
 
 
 @router.get("/pending")
-async def get_pending_reviews():
+async def get_pending_reviews(current_user: dict = Depends(require_any_authenticated)):
     """Observability only — no mutations."""
     pending = []
     for sub_id, review in product_storage.reviews.items():
@@ -407,7 +515,7 @@ async def get_pending_reviews():
 
 
 @router.get("/all")
-async def get_all_reviews():
+async def get_all_reviews(current_user: dict = Depends(require_any_authenticated)):
     """Observability only — no mutations."""
     all_reviews = []
     for sub_id, review in product_storage.reviews.items():

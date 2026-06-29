@@ -178,6 +178,7 @@ class ReviewRecord(BaseModel):
     status: str = Field(default="fail", pattern="^(pass|borderline|fail)$", description="pass | fail | borderline")
     candidate_name: str = Field(default="")
     task_title: str = Field(default="")
+    reviewed_by: Optional[str] = Field(None)
 
     class Config:
         use_enum_values = True
@@ -358,7 +359,7 @@ class ProductStorage:
                 db_obj.readiness_percent = review.readiness_percent
                 db_obj.status = review.status
                 db_obj.decision = review.decision
-                db_obj.reviewed_by = getattr(review, "reviewed_by", "system")
+                db_obj.reviewed_by = getattr(review, "reviewed_by", None) or "system"
                 db_obj.reviewed_at = review.reviewed_at
                 db_obj.evaluation_time_ms = review.evaluation_time_ms
                 db_obj.evaluation_summary = review.evaluation_summary
@@ -450,6 +451,11 @@ class ProductStorage:
     
     def get_review(self, review_id: str) -> Optional[ReviewRecord]:
         """Retrieve review by ID"""
+        mem_review = None
+        with self._file_lock:
+            self._load_nolock()
+            mem_review = self.reviews.get(review_id)
+
         if self.use_db:
             try:
                 db = SessionLocal()
@@ -461,26 +467,27 @@ class ProductStorage:
                     res = ReviewRecord(
                         review_id=row.review_id,
                         submission_id=row.submission_id,
-                        trace_id=row.trace_id or "",
+                        trace_id=row.trace_id or (mem_review.trace_id if mem_review else ""),
                         evaluation_result=row.evaluation_result,
-                        failure_type=row.failure_type,
+                        failure_type=getattr(mem_review, "failure_type", None) if mem_review else None,
                         decision=row.decision,
-                        failure_reasons=json.loads(row.failure_reasons) if row.failure_reasons else [],
-                        improvement_hints=json.loads(row.improvement_hints) if row.improvement_hints else [],
-                        analysis=json.loads(row.analysis) if row.analysis else {},
+                        failure_reasons=getattr(mem_review, "failure_reasons", []) if mem_review else [],
+                        improvement_hints=getattr(mem_review, "improvement_hints", []) if mem_review else [],
+                        analysis=getattr(mem_review, "analysis", {}) if mem_review else {},
                         reviewed_at=row.reviewed_at,
                         evaluation_time_ms=row.evaluation_time_ms or 0,
-                        missing_features=json.loads(row.missing_features) if row.missing_features else [],
-                        evaluation_summary=row.evaluation_summary or "",
-                        selected_task_id=row.selected_task_id or "",
-                        selection_reason=row.selection_reason or "",
+                        missing_features=getattr(mem_review, "missing_features", []) if mem_review else [],
+                        evaluation_summary=row.evaluation_summary or (mem_review.evaluation_summary if mem_review else ""),
+                        selected_task_id=getattr(mem_review, "selected_task_id", "") if mem_review else "",
+                        selection_reason=getattr(mem_review, "selection_reason", "") if mem_review else "",
                         review_state=row.review_state or "PENDING_REVIEW",
                         version=row.version or 1,
                         score=row.score or 0,
                         readiness_percent=row.readiness_percent or 0,
                         status=row.status or "fail",
                         candidate_name=row.candidate_name or "",
-                        task_title=row.task_title or ""
+                        task_title=row.task_title or "",
+                        reviewed_by=row.reviewed_by or "system"
                     )
                     db.close()
                     return res
@@ -525,7 +532,15 @@ class ProductStorage:
             return self.next_tasks.get(next_task_id)
     
     def get_review_by_submission(self, submission_id: str) -> Optional[ReviewRecord]:
-        """Find review linked to submission"""
+        """Retrieve review by submission ID"""
+        mem_review = None
+        with self._file_lock:
+            self._load_nolock()
+            for r in self.reviews.values():
+                if r.submission_id == submission_id:
+                    mem_review = r
+                    break
+
         if self.use_db:
             try:
                 db = SessionLocal()
@@ -537,26 +552,27 @@ class ProductStorage:
                     res = ReviewRecord(
                         review_id=row.review_id,
                         submission_id=row.submission_id,
-                        trace_id=row.trace_id or "",
+                        trace_id=row.trace_id or (mem_review.trace_id if mem_review else ""),
                         evaluation_result=row.evaluation_result,
-                        failure_type=row.failure_type,
+                        failure_type=getattr(mem_review, "failure_type", None) if mem_review else None,
                         decision=row.decision,
-                        failure_reasons=json.loads(row.failure_reasons) if row.failure_reasons else [],
-                        improvement_hints=json.loads(row.improvement_hints) if row.improvement_hints else [],
-                        analysis=json.loads(row.analysis) if row.analysis else {},
+                        failure_reasons=getattr(mem_review, "failure_reasons", []) if mem_review else [],
+                        improvement_hints=getattr(mem_review, "improvement_hints", []) if mem_review else [],
+                        analysis=getattr(mem_review, "analysis", {}) if mem_review else {},
                         reviewed_at=row.reviewed_at,
                         evaluation_time_ms=row.evaluation_time_ms or 0,
-                        missing_features=json.loads(row.missing_features) if row.missing_features else [],
-                        evaluation_summary=row.evaluation_summary or "",
-                        selected_task_id=row.selected_task_id or "",
-                        selection_reason=row.selection_reason or "",
+                        missing_features=getattr(mem_review, "missing_features", []) if mem_review else [],
+                        evaluation_summary=row.evaluation_summary or (mem_review.evaluation_summary if mem_review else ""),
+                        selected_task_id=getattr(mem_review, "selected_task_id", "") if mem_review else "",
+                        selection_reason=getattr(mem_review, "selection_reason", "") if mem_review else "",
                         review_state=row.review_state or "PENDING_REVIEW",
                         version=row.version or 1,
                         score=row.score or 0,
                         readiness_percent=row.readiness_percent or 0,
                         status=row.status or "fail",
                         candidate_name=row.candidate_name or "",
-                        task_title=row.task_title or ""
+                        task_title=row.task_title or "",
+                        reviewed_by=row.reviewed_by or "system"
                     )
                     db.close()
                     return res

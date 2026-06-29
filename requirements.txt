@@ -1,8 +1,8 @@
 fastapi==0.115.8
 uvicorn[standard]==0.34.0
 python-dotenv==1.0.1
-pydantic>=2.8.2
-pydantic-core>=2.20.1
+pydantic==2.13.3
+pydantic-core==2.46.3
 requests==2.32.3
 python-multipart==0.0.9
 pdfplumber==0.11.9
@@ -11,4 +11,5 @@ gtts==2.5.3
 pyttsx3==2.90
 sqlalchemy==2.0.51
 alembic==1.18.4
-
+python-jose==3.5.0
+cryptography==46.0.7

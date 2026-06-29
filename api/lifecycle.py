@@ -2,13 +2,16 @@
 Product Core v1 - Lifecycle API
 Stable API contracts for complete task lifecycle management.
 """
-from fastapi import APIRouter, HTTPException, File, UploadFile, Form
+from fastapi import APIRouter, HTTPException, File, UploadFile, Form, Depends
 from pydantic import BaseModel, Field
 from typing import List, Optional
 from datetime import datetime
 import re
 import logging
 import hashlib
+
+from security.middleware import require_any_authenticated
+
 
 logger = logging.getLogger("lifecycle")
 
@@ -108,7 +111,8 @@ async def submit_task(
     module_id: str = Form(default="task-review-agent"),
     schema_version: str = Form(default="v1.0"),
     previous_task_id: Optional[str] = Form(None),
-    pdf_file: Optional[UploadFile] = File(None)
+    pdf_file: Optional[UploadFile] = File(None),
+    current_user: dict = Depends(require_any_authenticated)
 ):
     """
     Submit task for review with optional PDF support.
@@ -187,7 +191,7 @@ async def submit_task(
         raise HTTPException(status_code=500, detail="Internal server error.")
 
 @router.get("/history", response_model=List[SubmissionHistoryItem])
-def get_history():
+def get_history(current_user: dict = Depends(require_any_authenticated)):
     """
     Get ordered list of all submissions.
     Deterministic sorting: by submitted_at ascending.
@@ -216,7 +220,7 @@ def get_history():
     return history
 
 @router.get("/review/{submission_id}", response_model=ReviewDetailResponse)
-def get_review(submission_id: str):
+def get_review(submission_id: str, current_user: dict = Depends(require_any_authenticated)):
     """
     Get stored review output by submission ID.
     Stable contract: Always returns complete review details.
@@ -262,7 +266,7 @@ def get_review(submission_id: str):
     )
 
 @router.get("/next/{submission_id}", response_model=NextTaskDetailResponse)
-def get_next_task(submission_id: str):
+def get_next_task(submission_id: str, current_user: dict = Depends(require_any_authenticated)):
     """
     Get stored next task by submission ID.
     Stable contract: Always returns complete next task details.

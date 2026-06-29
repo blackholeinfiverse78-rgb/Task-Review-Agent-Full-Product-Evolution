@@ -262,4 +262,29 @@ Parikshak has been evolved into the default first-stage reviewer for BHIV candid
 5. **Executive Review Comparison** ([compare_reviews.py](file:///g:/Live%20Task%20Review%20Agent%20-%202/scripts/compare_reviews.py)): Automatically compares Parikshak automated reviews against manual human reviews ([final_gc_review.md](file:///g:/Live%20Task%20Review%20Agent%20-%202/review_packets/final_gc_review.md)) and writes the comparison to the report ([executive_comparison_report.md](file:///g:/Live%20Task%20Review%20Agent%20-%202/review_packets/executive_comparison_report.md)) detailing agreements, differences, and alignment score.
 6. **Safety Gate Isolation**: Both `IntegrityValidator` and `BackupManager` now dynamically calculate their backup directories based on the SQLite file basename (e.g., `storage/backups/canonical_db`) if no path is provided. This isolates test environments from production backups and prevents `STARTUP_SAFETY_GATE_BLOCKED` validation errors.
 
+---
+
+## PHASE IV HARDENED PRODUCTION CERTIFICATION
+
+In Phase IV, Parikshak has been hardened for production certification. The following mechanisms have been introduced:
+
+### 1. Close Security Gate (Role-Based Access Control)
+- **Role Enforcement**: Enforces strictly defined roles (`Governor`, `Reviewer`, `Operator`, `Read Only`) across all endpoints.
+- **JWT Middleware**: Validates signatures, expiration (`Expired credentials` error), and role permissions.
+- **Replay Attack Protection**: An in-memory token registry rejects duplicate approval token hashes with `409 Conflict` (`REPLAY_REJECT`).
+- **Startup Secrets Validation**: Executes `validate_startup_secrets()` at boot time to block execution if insecure or default secret keys are configured.
+- **Signed Governance Proofs**: Every override action persists `validation_decision.json` (signature, timestamp, version, signer details) and `governance_record.json` to the trace directory.
+
+### 2. Executable Dependency Verification
+- **Dynamic Scanner**: Resolves packages dynamically from the active runtime environment rather than static files.
+- **Pinning & Normalization**: Verifies strict `==` pinning, checks version compatibility, detects circular dependencies, and filters out forbidden packages (`unverified_lib`, `unsafe_bridge_plugin`, `backdoor`). Normalizes package name hyphens and underscores (e.g., `pydantic-core` / `pydantic_core`).
+- **SBOM Export**: Dynamically generates and writes a CycloneDX v1.5 compliant `sbom.json` containing version metadata and package checksums to the trace folder.
+- **Verdict Enforcement**: Fails production certification if dependency validation fails.
+
+### 3. Dataset Intake & Self-Certification
+- **17 production fields**: Expanded dataset intake pipeline to support: *Assigned Task, Original Assignment Document, Repository Path, Repository Commit / Branch, Review Packet, Expected Deliverables, Candidate Name, Candidate Identifier, Submission Timestamp, Due Date, Supporting Evidence, Architecture Notes, Integration Notes, Runtime Evidence, Test Evidence, Documentation Evidence, and Additional Instructions*.
+- **Backward Compatibility**: A custom Pydantic `@model_validator` maps older payloads cleanly without data loss.
+- **Self-Certification Loop**: Full pipeline runs deterministically: Intake -> Evaluation -> Human Review Escalate -> human Override -> Gov-OS Commit -> Saarthi -> Bucket -> Pravah Replay -> Production Certification -> Evidence Export.
+
+
 

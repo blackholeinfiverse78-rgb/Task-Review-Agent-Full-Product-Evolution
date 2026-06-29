@@ -11,6 +11,7 @@ sys.path.append(os.getcwd())
 
 from production_certification_engine import ProductionCertificationEngine
 from ecosystem_participation_validator import EcosystemParticipationValidator
+from security.middleware import SecurityConfig
 from main import app
 
 class TestProductionCertification(unittest.TestCase):
@@ -20,6 +21,9 @@ class TestProductionCertification(unittest.TestCase):
         cls.engine = ProductionCertificationEngine(cls.traces_dir)
         cls.validator = EcosystemParticipationValidator(cls.traces_dir)
         cls.client = TestClient(app)
+        # Generate token and inject header
+        token = SecurityConfig.create_access_token({"sub": "Akash", "role": "Governor"})
+        cls.client.headers = {"Authorization": f"Bearer {token}"}
 
     def test_ready_system(self):
         """Test a fully ready system has a score of 100% and verdict READY"""

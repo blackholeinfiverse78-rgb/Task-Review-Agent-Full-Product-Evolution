@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, status, Depends
 from typing import Dict, Any, Optional
 from canonical_db.contracts import GovernanceEnvelope
 from canonical_db.pipeline import GovernedPipeline
@@ -7,12 +7,16 @@ from canonical_db.strategic_approval import StrategicApprovalEngine
 from canonical_db.integration import EcosystemIntegrator
 from canonical_db.recovery import RecoveryTool
 
+from security.middleware import (
+    require_governor, require_any_authenticated
+)
+
 router = APIRouter(prefix="/api/v1/gov-os", tags=["gov-os"])
 
 db_path = "storage/canonical_db.sqlite"
 
 @router.get("/export")
-async def export_state():
+async def export_state(current_user: dict = Depends(require_any_authenticated)):
     bridge = GPTBridge(db_path)
     try:
         return bridge.export_state_for_gpt()
@@ -20,7 +24,7 @@ async def export_state():
         raise HTTPException(status_code=500, detail=f"Export failed: {str(e)}")
 
 @router.post("/scaffold")
-async def prepare_scaffold(request: Dict[str, Any]):
+async def prepare_scaffold(request: Dict[str, Any], current_user: dict = Depends(require_governor)):
     bridge = GPTBridge(db_path)
     try:
         gpt_scaffold = request.get("payload", {})
@@ -34,7 +38,7 @@ async def prepare_scaffold(request: Dict[str, Any]):
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.post("/mutate")
-async def commit_mutation(request: Dict[str, Any]):
+async def commit_mutation(request: Dict[str, Any], current_user: dict = Depends(require_governor)):
     pipeline = GovernedPipeline(db_path)
     try:
         envelope = GovernanceEnvelope(**request.get("envelope", {}))
@@ -49,7 +53,7 @@ async def commit_mutation(request: Dict[str, Any]):
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.post("/recommend")
-async def get_recommendation(request: Dict[str, Any]):
+async def get_recommendation(request: Dict[str, Any], current_user: dict = Depends(require_any_authenticated)):
     try:
         name = request.get("candidate_name", "Unknown")
         score = request.get("score", 0.0)
@@ -61,7 +65,7 @@ async def get_recommendation(request: Dict[str, Any]):
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.post("/rollback")
-async def rollback(request: Dict[str, Any]):
+async def rollback(request: Dict[str, Any], current_user: dict = Depends(require_governor)):
     tool = RecoveryTool(db_path)
     try:
         target_seq = request.get("target_seq", 1)
@@ -71,7 +75,7 @@ async def rollback(request: Dict[str, Any]):
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.post("/reconstruct")
-async def reconstruct(request: Dict[str, Any]):
+async def reconstruct(request: Dict[str, Any], current_user: dict = Depends(require_governor)):
     tool = RecoveryTool(db_path)
     try:
         jsonl_path = request.get("jsonl_path", "")
@@ -84,7 +88,7 @@ async def reconstruct(request: Dict[str, Any]):
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.post("/integrate")
-async def integrate_flow(request: Dict[str, Any]):
+async def integrate_flow(request: Dict[str, Any], current_user: dict = Depends(require_governor)):
     integrator = EcosystemIntegrator(db_path)
     try:
         task_payload = request.get("task_payload", {})

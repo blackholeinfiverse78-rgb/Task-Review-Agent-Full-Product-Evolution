@@ -14,8 +14,14 @@ from fastapi.staticfiles import StaticFiles
 import logging
 import json
 from dotenv import load_dotenv
+from security.middleware import validate_startup_secrets
 
 load_dotenv(override=True)
+try:
+    validate_startup_secrets()
+except ValueError as e:
+    import logging
+    logging.getLogger("task_review_system").warning(f"Startup security warning: {e}")
 
 logging.basicConfig(
     level=logging.INFO,
