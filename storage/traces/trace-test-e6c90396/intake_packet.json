@@ -1,0 +1,27 @@
+{
+  "assigned_task": "Implement Secure REST API Authentication",
+  "original_task_document": "Objective: Build JWT auth. Deliverables: login, register endpoints.",
+  "original_assignment_document": "Objective: Build JWT auth. Deliverables: login, register endpoints.",
+  "review_packet": "Check endpoints and JWT RS256 validation.",
+  "repository_or_commit": "G:\\Live Task Review Agent - 2",
+  "repository_path": "G:\\Live Task Review Agent - 2",
+  "repository_commit_or_branch": "G:\\Live Task Review Agent - 2",
+  "submission_date": "2026-06-30T07:05:29.955551+00:00",
+  "submission_timestamp": "2026-06-30T07:05:29.955551+00:00",
+  "due_date": "2026-06-30T07:05:29.955563+00:00",
+  "expected_deliverables": null,
+  "candidate_name": null,
+  "candidate_identifier": null,
+  "supporting_evidence": {
+    "evidence_files": [
+      "api/production.py"
+    ]
+  },
+  "architecture_notes": "",
+  "integration_notes": "",
+  "runtime_evidence": {},
+  "test_evidence": {},
+  "documentation_evidence": {},
+  "additional_instructions": "Check for docstrings.",
+  "trace_id": "trace-test-e6c90396"
+}

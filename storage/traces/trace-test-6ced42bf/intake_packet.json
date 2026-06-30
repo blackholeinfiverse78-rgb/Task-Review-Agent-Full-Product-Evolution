@@ -1,0 +1,27 @@
+{
+  "assigned_task": "Gov-OS Integration Validation",
+  "original_task_document": "Implement Gov-OS journal and Pravah replay adapters.",
+  "original_assignment_document": "Implement Gov-OS journal and Pravah replay adapters.",
+  "review_packet": "Verify all adapters.",
+  "repository_or_commit": "G:\\Live Task Review Agent - 2",
+  "repository_path": "G:\\Live Task Review Agent - 2",
+  "repository_commit_or_branch": "G:\\Live Task Review Agent - 2",
+  "submission_date": "2026-06-30T07:06:10.748957+00:00",
+  "submission_timestamp": "2026-06-30T07:06:10.748957+00:00",
+  "due_date": "2026-06-30T07:06:10.748971+00:00",
+  "expected_deliverables": null,
+  "candidate_name": null,
+  "candidate_identifier": null,
+  "supporting_evidence": {
+    "evidence_files": [
+      "canonical_db/integration.py"
+    ]
+  },
+  "architecture_notes": "",
+  "integration_notes": "",
+  "runtime_evidence": {},
+  "test_evidence": {},
+  "documentation_evidence": {},
+  "additional_instructions": "",
+  "trace_id": "trace-test-6ced42bf"
+}

@@ -1,0 +1,8 @@
+{
+    "trace_id": "trace-prod-rejected",
+    "layer": "Core",
+    "authority_boundary": "bhiv.core.accounts",
+    "ownership_declaration": {
+        "owner_team": "account-devs"
+    }
+}

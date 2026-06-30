@@ -1,0 +1,102 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.5",
+  "serialNumber": "urn:uuid:3de2d922-770b-4db1-b4b8-82aa6b99d5d1",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-06-30T10:42:14.130828Z",
+    "manifest_checksum": "e38a9a91bd1b4839f902647c3280a15563f1fec95133161ac5ca2ae0f891aaab"
+  },
+  "components": [
+    {
+      "name": "fastapi",
+      "version": "0.115.8",
+      "expected_version": "0.115.8",
+      "status": "VALID"
+    },
+    {
+      "name": "uvicorn",
+      "version": "0.34.0",
+      "expected_version": "0.34.0",
+      "status": "VALID"
+    },
+    {
+      "name": "python-dotenv",
+      "version": "1.0.1",
+      "expected_version": "1.0.1",
+      "status": "VALID"
+    },
+    {
+      "name": "pydantic",
+      "version": "2.13.3",
+      "expected_version": "2.13.3",
+      "status": "VALID"
+    },
+    {
+      "name": "pydantic-core",
+      "version": "2.46.3",
+      "expected_version": "2.46.3",
+      "status": "VALID"
+    },
+    {
+      "name": "requests",
+      "version": "2.32.3",
+      "expected_version": "2.32.3",
+      "status": "VALID"
+    },
+    {
+      "name": "python-multipart",
+      "version": "0.0.9",
+      "expected_version": "0.0.9",
+      "status": "VALID"
+    },
+    {
+      "name": "pdfplumber",
+      "version": "0.11.9",
+      "expected_version": "0.11.9",
+      "status": "VALID"
+    },
+    {
+      "name": "urllib3",
+      "version": "2.2.3",
+      "expected_version": "2.2.3",
+      "status": "VALID"
+    },
+    {
+      "name": "gtts",
+      "version": "2.5.3",
+      "expected_version": "2.5.3",
+      "status": "VALID"
+    },
+    {
+      "name": "pyttsx3",
+      "version": "2.90",
+      "expected_version": "2.90",
+      "status": "VALID"
+    },
+    {
+      "name": "sqlalchemy",
+      "version": "2.0.51",
+      "expected_version": "2.0.51",
+      "status": "VALID"
+    },
+    {
+      "name": "alembic",
+      "version": "1.18.4",
+      "expected_version": "1.18.4",
+      "status": "VALID"
+    },
+    {
+      "name": "python-jose",
+      "version": "3.5.0",
+      "expected_version": "3.5.0",
+      "status": "VALID"
+    },
+    {
+      "name": "cryptography",
+      "version": "46.0.7",
+      "expected_version": "46.0.7",
+      "status": "VALID"
+    }
+  ]
+}

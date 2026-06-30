@@ -1,0 +1,9 @@
+{
+  "trace_id": "trace-self-cert-6419aa93",
+  "decision": "APPROVED",
+  "signed_by": "Akash",
+  "signature": "sig-gov-akash-trace-self-cert-6419aa93",
+  "timestamp": "2026-06-30T10:40:25.386451Z",
+  "approval_reason": "Authoritative review of self-repository validation checks successfully finalized.",
+  "approval_version": 2
+}

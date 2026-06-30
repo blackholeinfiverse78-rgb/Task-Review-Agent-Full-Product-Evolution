@@ -1,0 +1,5 @@
+{
+    "trace_id": "trace-prod-needs-review",
+    "otel_initialized": true,
+    "metrics_active": true
+}

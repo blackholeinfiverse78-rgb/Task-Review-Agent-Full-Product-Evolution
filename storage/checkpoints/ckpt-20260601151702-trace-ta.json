@@ -1,1 +1,0 @@
-{"checkpoint_id": "ckpt-20260601151702-trace-ta", "trace_id": "trace-tamper-001", "timestamp": "2026-06-01T15:17:02.045534", "state_hash": "3b05084ea18725cd", "state": {"evaluation_result": "FAIL"}, "lineage_marker": true}

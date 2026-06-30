@@ -1,0 +1,9 @@
+{
+  "trace_id": "trace-test-527c7526",
+  "decision": "APPROVED",
+  "signed_by": "Akash",
+  "signature": "token-approve-akash-sub-5caf4c3cf748-527c7526-1",
+  "timestamp": "2026-06-30T07:09:14.781998Z",
+  "approval_reason": "OverrideReason.HUMAN_VALIDATION_FAILURE",
+  "approval_version": 2
+}

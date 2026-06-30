@@ -1,0 +1,6 @@
+{
+    "trace_id": "trace-prod-ready",
+    "recovery_tested": true,
+    "rollback_anchors_count": 3,
+    "recovery_status": "SUCCESS"
+}
