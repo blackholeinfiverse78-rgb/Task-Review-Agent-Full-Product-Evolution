@@ -258,3 +258,10 @@ class AuditLogModel(Base):
     timestamp = Column(DateTime, default=datetime.utcnow)
     action_taken = Column(Text, nullable=False)
     details = Column(Text, nullable=True)
+
+
+class SpentTokenModel(Base):
+    __tablename__ = 'spent_tokens'
+    token_hash = Column(String(64), primary_key=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+

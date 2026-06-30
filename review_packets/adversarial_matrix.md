@@ -1,26 +1,19 @@
 # Parikshak Adversarial Validation Matrix
 
-This matrix maps adversarial/cheat attempts against the Parikshak rule engine.
+This matrix details system evaluation performance against malicious gaming submissions.
 
-| ID | Attack Vector | Description | Target | Actual | Failure Type | Status |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| ADV-001 | **Template Repository** | Boilerplate template files with zero task feature implementation. | `FAIL` | `FAIL` | `incorrect_logic` | ✅ BLOCKED (FAIL) |
-| ADV-002 | **Wrong-Language Repository** | JavaScript code submitted for Python backend task. | `FAIL` | `FAIL` | `incomplete` | ✅ BLOCKED (FAIL) |
-| ADV-003 | **Fake Architecture Repository** | Claims layered design in description but directory has flat files. | `FAIL` | `FAIL` | `incorrect_logic` | ✅ BLOCKED (FAIL) |
-| ADV-004 | **Unrelated PDF** | Unrelated lorem-ipsum PDF description text without code. | `FAIL` | `FAIL` | `incomplete` | ✅ BLOCKED (FAIL) |
-| ADV-005 | **Empty Feature Submission** | Repository contains only one empty README file. | `FAIL` | `FAIL` | `incomplete` | ✅ BLOCKED (FAIL) |
-| ADV-006 | **Copied Repository** | Exact copy of a classmate repository (detected by identical file hashes). | `FAIL` | `FAIL` | `incorrect_logic` | ✅ BLOCKED (FAIL) |
-| ADV-007 | **README-Only Repository** | Only README.md file populated with descriptive text, no code files. | `FAIL` | `FAIL` | `incomplete` | ✅ BLOCKED (FAIL) |
-| ADV-008 | **AI-Generated Code (Keyword Gaming)** | Contains comments matching keywords but logic is empty/fake. | `FAIL` | `FAIL` | `incomplete` | ✅ BLOCKED (FAIL) |
-| ADV-009 | **Large Framework Boilerplate** | React/NextJS boilerplate with 100+ files but no custom changes. | `FAIL` | `FAIL` | `incorrect_logic` | ✅ BLOCKED (FAIL) |
-| ADV-010 | **Keyword Matching but Incorrect Logic** | Files named auth.py exists but contains only 'pass' statements. | `FAIL` | `FAIL` | `incorrect_logic` | ✅ BLOCKED (FAIL) |
-| ADV-011 | **Correct Implementation with Missing Docs** | Python code is correct but contains no README or comments. | `FAIL` | `FAIL` | `incomplete` | ✅ BLOCKED (FAIL) |
+| ID | Attack Vector | Expected Result | Actual Result | Verification Status | Risk Level | FP? | FN? | Confidence |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| ADV-01 | **Template Repositories**: Boilerplate template files present but 0% delivery of actual features. | `FAIL (incorrect_logic)` | `FAIL (incorrect_logic)` | **PASS** | `LOW` | No | No | 1.00 |
+| ADV-02 | **Wrong-Language Repositories**: JS code submitted for a task explicitly requiring Python features. | `FAIL (incomplete)` | `FAIL (incomplete)` | **PASS** | `LOW` | No | No | 1.00 |
+| ADV-03 | **Fake Architecture Repositories**: Claims layered architecture in description but features flat structure with single directory. | `FAIL (incorrect_logic)` | `FAIL (incorrect_logic)` | **PASS** | `LOW` | No | No | 1.00 |
+| ADV-04 | **README-Only Repositories**: Repository contains only the README file, bypassing text limit, but has no source code files. | `FAIL (incomplete)` | `FAIL (incomplete)` | **PASS** | `LOW` | No | No | 1.00 |
+| ADV-05 | **Copied Repositories**: Cloned repository containing generic structure but zero implementation of task specific features. | `FAIL (incorrect_logic)` | `FAIL (incorrect_logic)` | **PASS** | `LOW` | No | No | 1.00 |
+| ADV-06 | **Generated AI Repositories**: Artificially high word count and fake code structures designed to pass basic matching heuristics. | `FAIL (incorrect_logic)` | `FAIL (incomplete)` | **FAIL** | `LOW` | No | No | 1.00 |
+| ADV-07 | **Large Boilerplates**: Massive framework code (e.g. Django default) with no user modifications or features. | `FAIL (incorrect_logic)` | `FAIL (incorrect_logic)` | **PASS** | `LOW` | No | No | 1.00 |
+| ADV-08 | **Keyword-Match False Positives**: Description contains engineering keywords but files are blank text files. | `FAIL (incomplete)` | `FAIL (incomplete)` | **PASS** | `LOW` | No | No | 1.00 |
+| ADV-09 | **Correct Solutions With Missing Docs**: Clean, fully-layered correct implementation but lacks any documentation or testing files (no README/tests). | `FAIL (incomplete)` | `FAIL (incomplete)` | **PASS** | `LOW` | No | No | 1.00 |
+| ADV-10 | **Empty Feature Submissions**: Submission contains valid repository URLs but zero deliverables or expected code structures. | `FAIL (incorrect_logic)` | `FAIL (incomplete)` | **FAIL** | `LOW` | No | No | 1.00 |
+| ADV-11 | **Unrelated PDFs**: PDF text uploaded has engineering words but repository is missing or not provided. | `FAIL (incomplete)` | `FAIL (incomplete)` | **PASS** | `LOW` | No | No | 1.00 |
 
----
-
-## Metric Breakdown
-- **Total Attacks**: 11
-- **Blocked**: 11
-- **Bypassed**: 0
-- **False Positive Rate**: `0.0%`
-- **False Negative Rate**: `0.0%`
+*Generated at: 2026-06-30T10:38:25.383349Z UTC*

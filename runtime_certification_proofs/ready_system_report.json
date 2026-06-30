@@ -1,7 +1,7 @@
 {
     "system_information": {
         "trace_id": "trace-prod-ready",
-        "certified_at": "2026-06-26T10:29:16.904363Z",
+        "certified_at": "2026-06-30T06:55:55.001248Z",
         "verifier": "Parikshak Production Certification Engine v1.0"
     },
     "dimensions": {

@@ -17,6 +17,11 @@ from fastapi.testclient import TestClient
 from main import app
 from db.persistent_storage import product_storage
 from canonical_db.db import CanonicalDB
+from security.middleware import SecurityConfig, UserRole
+
+gov_token = SecurityConfig.create_access_token({"sub": "Akash", "role": UserRole.GOVERNOR.value})
+auth_headers = {"Authorization": f"Bearer {gov_token}"}
+
 
 client = TestClient(app)
 
@@ -24,6 +29,16 @@ client = TestClient(app)
 def cleanup():
     """Clear product storage and database tables before each test."""
     product_storage.clear_all()
+    # Clean up stale backups
+    import shutil
+    for bdir in ["storage/backups", "storage/checkpoints"]:
+        if os.path.exists(bdir):
+            try:
+                shutil.rmtree(bdir)
+            except Exception:
+                pass
+        os.makedirs(bdir, exist_ok=True)
+
     # Reset Canonical DB by removing the database files completely
     db_path = "storage/canonical_db.sqlite"
     for ext in ("", "-wal", "-shm"):
@@ -55,7 +70,7 @@ def test_intake_validation_fail_fast():
         "trace_id": "short" # Too short
     }
     # FastAPI schema validation check (validation error or ValueError)
-    resp = client.post("/api/v1/production/intake", json=payload)
+    resp = client.post("/api/v1/production/intake", json=payload, headers=auth_headers)
     assert resp.status_code in (400, 422)
 
 def test_intake_and_review_pipeline_success():
@@ -74,7 +89,7 @@ def test_intake_and_review_pipeline_success():
         "assigned_task_id": "T-GOV-001"
     }
 
-    resp = client.post("/api/v1/production/intake", json=payload)
+    resp = client.post("/api/v1/production/intake", json=payload, headers=auth_headers)
     assert resp.status_code == 200, resp.text
     res_data = resp.json()
 
@@ -127,13 +142,13 @@ def test_downstream_ecosystem_propagation():
     }
 
     # 1. Run intake & evaluation
-    resp = client.post("/api/v1/production/intake", json=payload)
+    resp = client.post("/api/v1/production/intake", json=payload, headers=auth_headers)
     assert resp.status_code == 200
     res_data = resp.json()
     submission_id = res_data["submission_id"]
 
     # Get review to check expected version
-    pending_list = client.get("/api/v1/review/pending").json()
+    pending_list = client.get("/api/v1/review/pending", headers=auth_headers).json()
     expected_version = 1
     for r in pending_list:
         if r["submission_id"] == submission_id:
@@ -152,7 +167,7 @@ def test_downstream_ecosystem_propagation():
     }
     
     # We call approve endpoint
-    approve_resp = client.post("/api/v1/review/approve", json=approve_payload)
+    approve_resp = client.post("/api/v1/review/approve", json=approve_payload, headers=auth_headers)
     assert approve_resp.status_code == 200, approve_resp.text
 
     # 3. Verify Gov-OS DB commit (sequence appended)

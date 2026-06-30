@@ -197,6 +197,7 @@ async def apply_human_override(request: HumanOverrideRequest, current_user: dict
         review.decision = decision_val
         review.review_state = decision_val
         review.status = "pass" if decision_val == "APPROVED" else "fail"
+        review.evaluation_result = "PASS" if decision_val == "APPROVED" else "FAIL"
         review.reviewed_by = request.reviewer
         review.reviewed_at = datetime.now()
         review.version += 1

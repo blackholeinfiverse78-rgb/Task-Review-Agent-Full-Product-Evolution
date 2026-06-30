@@ -1,20 +1,17 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "ReviewRequest",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "NiyantranTaskRequest",
   "type": "object",
   "properties": {
-    "mode": {
-      "type": "string",
-      "enum": [
-        "task_review"
-      ]
+    "task_id": {
+      "type": "string"
     },
-    "title": {
+    "task_title": {
       "type": "string",
       "minLength": 5,
       "maxLength": 100
     },
-    "description": {
+    "task_description": {
       "type": "string",
       "minLength": 10,
       "maxLength": 2000
@@ -24,12 +21,17 @@
       "minLength": 2,
       "maxLength": 50
     },
-    "submission": {
+    "github_repo_link": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "module_id": {
       "type": "string"
     },
-    "repo_url": {
-      "type": "string",
-      "format": "uri"
+    "schema_version": {
+      "type": "string"
     },
     "trace_id": {
       "type": "string",
@@ -37,9 +39,12 @@
     }
   },
   "required": [
-    "title",
-    "description",
+    "task_id",
+    "task_title",
+    "task_description",
     "submitted_by",
+    "module_id",
+    "schema_version",
     "trace_id"
   ]
 }

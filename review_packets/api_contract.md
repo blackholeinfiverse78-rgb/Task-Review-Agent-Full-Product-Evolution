@@ -1,31 +1,13 @@
-# Parikshak API Contract
+# Parikshak API Contract Specification
 
-This document specifies the communication interfaces, error codes, and consumption strategies for Parikshak as a Capability Provider.
+This document details the interface guidelines, versioning rules, and retry/timeout strategies for Parikshak.
 
----
+## Contract Boundaries & Versioning
+* **Current Version**: `v1.0` (indicated by `schema_version`)
+* **Strategy**: Backward compatibility is enforced. Any schema update increments the major or minor identifier. If `schema_version` is unsupported, the `registry_validator` throws a `schema_violation` rejection immediately.
 
-## 1. REST Endpoints
+## Retry and Timeout Strategy
+* **GitHub API Timeout**: If the GitHub API or crawler timeout is reached (network_failure), the system falls back gracefully to title and description scoring only (max 60 points). It does not block execution or raise uncaught 500 errors.
+* **Client Retry**: Consumers are advised to implement an exponential backoff retry for downstream writes only if a network exception occurs. Double submissions are prevented by checking unique trace IDs.
 
-### POST `/parikshak/review`
-Evaluates a task submission and returns a structured decision result.
-
-#### Request Headers
-- `Content-Type`: `application/json`
-
-#### Response Codes
-- `200 OK`: Request processed successfully (includes PASS, PARTIAL, and FAIL outcomes).
-- `400 Bad Request`: Invalid payload format or missing required fields.
-- `422 Unprocessable Entity`: Validation failure on string length constraints.
-
----
-
-## 2. Versioning & Deprecation Strategy
-- **Current Version**: `v1.1.0`
-- **URI Prefixing**: Future versions will use `/api/v2/parikshak/review` to prevent breaking changes.
-- **Backward Compatibility Guarantee**: Minor updates (v1.x) will never drop or rename payload fields.
-
----
-
-## 3. Resilience Strategies
-- **Retry Strategy**: Downstream clients should retry on HTTP 500/503 errors using **Exponential Backoff** (Base: 1s, Max: 32s, Max attempts: 5).
-- **Timeout Strategy**: Evaluator processes generally complete in < 2 ms. The API gateway enforces a strict timeout of **1500 ms** per call, raising a `TIMEOUT_EXPIRED` error thereafter.
+*Verified: 2026-06-30T10:38:25.844917Z UTC*

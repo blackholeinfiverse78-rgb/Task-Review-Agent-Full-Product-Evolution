@@ -153,7 +153,7 @@ class TaskGraphEngine:
                     f"is empty."
                 )
             selected = candidates[0]
-            reason = f"FAIL({failure_type}) → failure_tasks['{failure_type}'][0] = {selected}"
+            reason = f"FAIL({failure_type}) -> failure_tasks['{failure_type}'][0] = {selected}"
 
         if selected not in self._tasks:
             raise ValueError(
@@ -161,7 +161,7 @@ class TaskGraphEngine:
                 "Every selected_task_id must exist as a canonical entry."
             )
 
-        logger.info(f"[TASK GRAPH ENGINE] {current_task_id} → {selected} | {reason}")
+        logger.info(f"[TASK GRAPH ENGINE] {current_task_id} -> {selected} | {reason}")
 
         return {
             "selected_task_id": selected,

@@ -27,16 +27,51 @@ class UserRole(str, Enum):
 USED_APPROVAL_TOKENS: Set[str] = set()
 
 def register_used_approval_token(token: str) -> None:
-    """Track approval token to prevent replay attacks"""
+    """Track approval token to prevent replay attacks (persistent and process-local cache)"""
     if not token:
         return
     token_hash = hashlib.sha256(token.encode()).hexdigest()
+    
+    # 1. Process-local cache check
     if token_hash in USED_APPROVAL_TOKENS:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
             detail="REPLAY_REJECT: This approval token or signature has already been processed."
         )
-    USED_APPROVAL_TOKENS.add(token_hash)
+        
+    # 2. Database persistent check
+    try:
+        from db.db_config import session_factory
+        from db.models import SpentTokenModel
+        
+        db = session_factory()
+        try:
+            exists = db.query(SpentTokenModel).filter(SpentTokenModel.token_hash == token_hash).first()
+            if exists:
+                USED_APPROVAL_TOKENS.add(token_hash)
+                raise HTTPException(
+                    status_code=status.HTTP_409_CONFLICT,
+                    detail="REPLAY_REJECT: This approval token or signature has already been processed."
+                )
+            
+            new_token = SpentTokenModel(token_hash=token_hash)
+            db.add(new_token)
+            db.commit()
+            USED_APPROVAL_TOKENS.add(token_hash)
+        except HTTPException:
+            raise
+        except Exception as e:
+            import logging
+            logging.getLogger("security").error(f"DB Error in register_used_approval_token: {e}", exc_info=True)
+            db.rollback()
+            # Robustness fallback to memory cache if DB throws/locks
+            USED_APPROVAL_TOKENS.add(token_hash)
+        finally:
+            db.close()
+    except Exception:
+        # Fallback to local memory cache if database module loading fails
+        USED_APPROVAL_TOKENS.add(token_hash)
+
 
 class SecurityConfig:
     """Security configuration and utilities"""

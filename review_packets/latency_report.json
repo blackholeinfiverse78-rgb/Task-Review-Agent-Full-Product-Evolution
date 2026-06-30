@@ -1,33 +1,51 @@
 {
-  "reviews_per_sec": 161566.55,
-  "reviews_per_min": 9693992.96,
-  "concurrency_latencies": {
+  "timestamp": "2026-06-30T10:38:25.380908Z",
+  "rule_engine_benchmarks": {
+    "iterations": 1000,
+    "total_time_sec": 0.01362399999925401,
+    "average_latency_ms": 0.01362399999925401
+  },
+  "concurrency_tiers": {
     "1": {
-      "total_duration_ms": 0.73,
-      "avg_latency_ms": 0.02,
-      "max_latency_ms": 0.02,
-      "throughput_req_sec": 1362.21
+      "concurrency": 1,
+      "throughput_ops_sec": 825.76,
+      "throughput_ops_min": 49545.83,
+      "avg_latency_ms": 0.09,
+      "min_latency_ms": 0.09,
+      "max_latency_ms": 0.09,
+      "errors": 0
     },
     "10": {
-      "total_duration_ms": 1.42,
-      "avg_latency_ms": 0.02,
-      "max_latency_ms": 0.02,
-      "throughput_req_sec": 7059.16
+      "concurrency": 10,
+      "throughput_ops_sec": 2691.21,
+      "throughput_ops_min": 161472.63,
+      "avg_latency_ms": 0.04,
+      "min_latency_ms": 0.03,
+      "max_latency_ms": 0.06,
+      "errors": 0
     },
     "50": {
-      "total_duration_ms": 5.83,
-      "avg_latency_ms": 0.02,
-      "max_latency_ms": 0.02,
-      "throughput_req_sec": 8570.89
+      "concurrency": 50,
+      "throughput_ops_sec": 2844.92,
+      "throughput_ops_min": 170695.07,
+      "avg_latency_ms": 0.04,
+      "min_latency_ms": 0.02,
+      "max_latency_ms": 0.08,
+      "errors": 0
     },
     "100": {
-      "total_duration_ms": 11.23,
-      "avg_latency_ms": 0.01,
-      "max_latency_ms": 0.02,
-      "throughput_req_sec": 8906.46
+      "concurrency": 100,
+      "throughput_ops_sec": 2399.94,
+      "throughput_ops_min": 143996.43,
+      "avg_latency_ms": 0.05,
+      "min_latency_ms": 0.02,
+      "max_latency_ms": 0.25,
+      "errors": 0
     }
   },
-  "cold_start_ms": 46.12,
-  "warm_start_ms": 0.98,
-  "single_review_latency_ms": 0.006
+  "startup_timings_ms": {
+    "db_init_cold": 274.9869999970542,
+    "db_init_warm": 2.6093000051332638,
+    "integrity_scan": 1.2669999996433035
+  }
 }

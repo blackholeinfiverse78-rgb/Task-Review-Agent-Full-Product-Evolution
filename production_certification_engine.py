@@ -106,7 +106,10 @@ class ProductionCertificationEngine:
         if not gov_rec or not decision:
             return "UNKNOWN"
             
-        if decision.get("decision") == "REJECTED" or not gov_rec.get("valid_authority", False):
+        dec_val = decision.get("decision")
+        if dec_val in ("REJECTED", "FAIL"):
+            return "FAIL"
+        if not gov_rec.get("valid_authority", False):
             return "FAIL"
             
         # Check constitutional history for block triggers
@@ -115,7 +118,7 @@ class ProductionCertificationEngine:
                 return "FAIL"
             return "WARNING"
             
-        if decision.get("decision") == "APPROVED":
+        if dec_val in ("APPROVED", "PASS"):
             return "PASS"
             
         return "UNKNOWN"
@@ -199,10 +202,52 @@ class ProductionCertificationEngine:
             
         return "FAIL"
 
+    def verify_trust_chain(self, trace_id: str) -> Tuple[bool, str]:
+        """
+        Verify the constitutional trust chain by traversing the lineage chain
+        and verifying governance approvals at each node in the lineage.
+        """
+        trace_path = os.path.join(self.traces_dir, trace_id)
+        lineage = self._read_json(trace_path, "lineage_chain.json")
+        
+        if not lineage:
+            return True, "No lineage chain found; starting root trust."
+            
+        chain = lineage.get("chain", [])
+        if not chain:
+            return True, "Empty lineage chain; starting root trust."
+            
+        for t_id in chain:
+            if t_id == trace_id:
+                continue
+            p_path = os.path.join(self.traces_dir, t_id)
+            if not os.path.exists(p_path):
+                continue
+                
+            p_dec = self._read_json(p_path, "validation_decision.json")
+            p_gov = self._read_json(p_path, "governance_record.json")
+            
+            if not p_dec or not p_gov:
+                return False, f"Missing governance evidence for lineage node: {t_id}"
+                
+            dec_val = p_dec.get("decision")
+            if dec_val not in ("APPROVED", "PASS"):
+                return False, f"Lineage node {t_id} decision is not APPROVED/PASS: {dec_val}"
+                
+            if not p_gov.get("valid_authority", False):
+                return False, f"Lineage node {t_id} does not have valid authority"
+                
+            signer = p_dec.get("signed_by")
+            if signer not in AUTHORIZED_GOVERNORS:
+                return False, f"Lineage node {t_id} signed by unauthorized governor: {signer}"
+                
+        return True, "Constitutional trust chain verified"
+
     def check_human_approval(self, trace_path: str) -> str:
         decision = self._read_json(trace_path, "validation_decision.json")
+        gov_rec = self._read_json(trace_path, "governance_record.json")
         
-        if not decision:
+        if not decision or not gov_rec:
             return "UNKNOWN"
             
         signed_by = decision.get("signed_by")
@@ -212,7 +257,18 @@ class ProductionCertificationEngine:
         if signed_by not in AUTHORIZED_GOVERNORS:
             return "FAIL"
             
-        if decision.get("decision") == "APPROVED":
+        if not gov_rec.get("valid_authority", False):
+            return "FAIL"
+            
+        # Verify trust chain
+        trace_id = os.path.basename(trace_path)
+        valid_chain, reason = self.verify_trust_chain(trace_id)
+        if not valid_chain:
+            logger.warning(f"Trust chain verification failed: {reason}")
+            return "FAIL"
+            
+        dec_val = decision.get("decision")
+        if dec_val in ("APPROVED", "PASS"):
             return "PASS"
             
         return "FAIL"

@@ -79,4 +79,4 @@ This map evaluates documented system capabilities against active runtime evidenc
 * **Confidence Level**: High (1.00)
 * **Dependencies**: test suites.
 
-*Verified: 2026-06-11T06:13:04.546503Z UTC*
+*Verified: 2026-06-30T10:38:25.849459Z UTC*

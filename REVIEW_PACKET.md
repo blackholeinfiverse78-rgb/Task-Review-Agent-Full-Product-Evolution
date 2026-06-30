@@ -286,5 +286,28 @@ In Phase IV, Parikshak has been hardened for production certification. The follo
 - **Backward Compatibility**: A custom Pydantic `@model_validator` maps older payloads cleanly without data loss.
 - **Self-Certification Loop**: Full pipeline runs deterministically: Intake -> Evaluation -> Human Review Escalate -> human Override -> Gov-OS Commit -> Saarthi -> Bucket -> Pravah Replay -> Production Certification -> Evidence Export.
 
+---
+
+## PRODUCTION HANDOVER PACKETS & MANUALS
+
+All operational handovers, rollback manuals, and evidence checklists are organized inside the repository:
+
+### 1. Operations and Maintenance Manuals (Root)
+* **Deployment Guide**: [DEPLOYMENT_GUIDE.md](file:///g:/Live%20Task%20Review%20Agent%20-%202/DEPLOYMENT_GUIDE.md)
+* **Rollback Playbook**: [ROLLBACK_GUIDE.md](file:///g:/Live%20Task%20Review%20Agent%20-%202/ROLLBACK_GUIDE.md)
+* **Disaster Recovery Guide**: [RECOVERY_GUIDE.md](file:///g:/Live%20Task%20Review%20Agent%20-%202/RECOVERY_GUIDE.md)
+* **Operational Handbook**: [OPERATIONAL_HANDBOOK.md](file:///g:/Live%20Task%20Review%20Agent%20-%202/OPERATIONAL_HANDBOOK.md)
+
+### 2. Code Review Packets (review_packets/code_review/)
+* **Changed Files**: [changed_file_list.md](file:///g:/Live%20Task%20Review%20Agent%20-%202/review_packets/code_review/changed_file_list.md)
+* **API Payload Specs**: [api_samples.md](file:///g:/Live%20Task%20Review%20Agent%20-%202/review_packets/code_review/api_samples.md)
+* **Deployment Proof Logs**: [deployment_proof.md](file:///g:/Live%20Task%20Review%20Agent%20-%202/review_packets/code_review/deployment_proof.md)
+* **Runtime Logging Traces**: [runtime_logs.md](file:///g:/Live%20Task%20Review%20Agent%20-%202/review_packets/code_review/runtime_logs.md)
+* **Executive Dashboards**: [executive_screenshots.md](file:///g:/Live%20Task%20Review%20Agent%20-%202/review_packets/code_review/executive_screenshots.md)
+* **Systems Reviewer Guide**: [reviewer_guide.md](file:///g:/Live%20Task%20Review%20Agent%20-%202/review_packets/code_review/reviewer_guide.md)
+* **Manual Inspection Areas**: [files_requiring_manual_review.md](file:///g:/Live%20Task%20Review%20Agent%20-%202/review_packets/code_review/files_requiring_manual_review.md)
+* **Ecosystem Checklist Matrix**: [production_evidence_checklist.md](file:///g:/Live%20Task%20Review%20Agent%20-%202/review_packets/code_review/production_evidence_checklist.md)
+
+
 
 
