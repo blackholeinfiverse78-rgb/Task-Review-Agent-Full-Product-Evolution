@@ -68,6 +68,8 @@ def register_used_approval_token(token: str) -> None:
             USED_APPROVAL_TOKENS.add(token_hash)
         finally:
             db.close()
+    except HTTPException:
+        raise
     except Exception:
         # Fallback to local memory cache if database module loading fails
         USED_APPROVAL_TOKENS.add(token_hash)
