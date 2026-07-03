@@ -45,6 +45,10 @@ TEMP_SAARTHI_LEDGER = os.path.join(project_root, "scratch", "temp_saarthi_visibi
 TEMP_NIYANTRAN_LEDGER = os.path.join(project_root, "scratch", "temp_niyantran_assignments.jsonl")
 TEMP_BUCKET_PATH = os.path.join(project_root, "scratch", "temp_bucket_logs")
 
+# Save original ledger paths
+original_saarthi = canonical_db.integration.SAARTHI_VISIBILITY_LEDGER
+original_niyantran = canonical_db.integration.NIYANTRAN_ASSIGNMENTS_LEDGER
+
 # Override global ledger paths in the integration module to sandbox the test
 canonical_db.integration.SAARTHI_VISIBILITY_LEDGER = TEMP_SAARTHI_LEDGER
 canonical_db.integration.NIYANTRAN_ASSIGNMENTS_LEDGER = TEMP_NIYANTRAN_LEDGER
@@ -292,6 +296,8 @@ This document records the end-to-end evidence of Parikshak's downstream integrat
         print(f"🎉 Ecosystem integration verified. Proof written to {proof_report_path}")
 
     finally:
-        # Restore original bucket path and clean up
+        # Restore original paths and clean up
+        canonical_db.integration.SAARTHI_VISIBILITY_LEDGER = original_saarthi
+        canonical_db.integration.NIYANTRAN_ASSIGNMENTS_LEDGER = original_niyantran
         bucket_integration.bucket_path = original_bucket_path
         clean_temp_files()
