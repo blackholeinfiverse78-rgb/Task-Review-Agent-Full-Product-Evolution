@@ -1,0 +1,9 @@
+{
+    "trace_id": "trace-rejected-evidence-case",
+    "parent_trace_id": "trace-parent-999",
+    "lineage_path": [
+        "trace-parent-999",
+        "trace-grandparent-888"
+    ],
+    "integrity_hash": "abc-lineage-123"
+}

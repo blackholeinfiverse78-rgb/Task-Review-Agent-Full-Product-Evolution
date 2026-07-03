@@ -3,11 +3,11 @@
 This document presents the high-level performance assessment and resource analysis of the Parikshak production engine.
 
 ## Key Performance Observations
-1. **Rule Evaluation Efficiency**: The core Sri Satya Rule Engine processes inputs in `0.014 ms` per review, establishing a CPU-bound throughput threshold exceeding `73399.9 reviews/sec`.
+1. **Rule Evaluation Efficiency**: The core Sri Satya Rule Engine processes inputs in `0.007 ms` per review, establishing a CPU-bound throughput threshold exceeding `138881.2 reviews/sec`.
 2. **Lock Contention Under Concurrency**: 
-   - **Measured Concurrent Writes**: 1017.49 appends/sec
+   - **Measured Concurrent Writes**: 1658.84 appends/sec
    - **Exceptions Encountered**: 0 database lock exceptions.
-   - **Latency Profile**: Average append delay is `93.80 ms` with a peak delay of `216.22 ms` under high write stress (100 parallel writer threads executing 10 sequential appends each). This confirms the effectiveness of the `SingleWriterQueue` mutex serialization.
+   - **Latency Profile**: Average append delay is `57.47 ms` with a peak delay of `154.22 ms` under high write stress (100 parallel writer threads executing 10 sequential appends each). This confirms the effectiveness of the `SingleWriterQueue` mutex serialization.
 3. **Resource Leak Analysis**:
    - **Memory Footprint Growth**: `0.00 KB/review` average growth. Memory remains bounded and stable.
    - **Database File Footprint Growth**: `450.56 bytes/review` average write expansion, maintaining a compact storage footprint suitable for low-latency operations.
@@ -17,4 +17,4 @@ This document presents the high-level performance assessment and resource analys
 5. **Robust Failure Handling**:
    - Validation failures on malformed schemas (e.g. missing `task_title`, missing `trace_id` or injected evaluation inputs) are properly intercepted and raise standard `HARD REJECT` errors with 100% reliability.
 
-*Verified: 2026-06-30T10:38:25.382445Z UTC*
+*Verified: 2026-07-03T08:06:50.442915Z UTC*

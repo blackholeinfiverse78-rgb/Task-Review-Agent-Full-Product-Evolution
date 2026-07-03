@@ -1,0 +1,12 @@
+{
+    "trace_id": "trace-rejected-replay-case",
+    "files": [
+        {
+            "path": "app.py",
+            "hash": "59625c1d8ccd0a8e1c160f5ff43e42cfd0c7df03035461ff9fd807f97affce6b",
+            "size": 23
+        }
+    ],
+    "checksum": "dc59bff4bcdaf9c75b8b2611b27897fee324e68a2488586ca2dc222e69797a44",
+    "timestamp": "2026-06-16T12:00:00Z"
+}

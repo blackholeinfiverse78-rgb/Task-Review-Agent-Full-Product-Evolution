@@ -1,0 +1,9 @@
+{
+    "trace_id": "trace-needs-review-case",
+    "chain": [
+        "trace-needs-review-case",
+        "trace-parent-999",
+        "trace-grandparent-888"
+    ],
+    "valid_chain": true
+}

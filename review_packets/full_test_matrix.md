@@ -29,4 +29,4 @@ This matrix documents the verification results across all functional, adversaria
 * **Niyantran Assignment Propagation**: **PASS** | Evidence: Assignment created in ledger.
 * **Replay State Reconstruction**: **PASS** | Evidence: Restored state read models from event ledger sequence correctly.
 
-*Verified: 2026-06-30T10:38:25.848683Z UTC*
+*Verified: 2026-07-03T08:06:50.986542Z UTC*

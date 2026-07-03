@@ -1,0 +1,7 @@
+{
+    "trace_id": "trace-rejected-replay-case",
+    "replay_script": "pytest",
+    "replay_status": "FAILURE",
+    "replay_logs": "[ERROR] Compilation failed: syntax error in main.py",
+    "checksum": "checksum-replay-123"
+}

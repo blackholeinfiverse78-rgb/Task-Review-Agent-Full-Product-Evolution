@@ -1,0 +1,9 @@
+{
+    "trace_id": "trace-rejected-replay-case",
+    "chain": [
+        "trace-rejected-replay-case",
+        "trace-parent-999",
+        "trace-grandparent-888"
+    ],
+    "valid_chain": true
+}

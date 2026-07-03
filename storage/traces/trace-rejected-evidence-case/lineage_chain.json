@@ -1,0 +1,9 @@
+{
+    "trace_id": "trace-rejected-evidence-case",
+    "chain": [
+        "trace-rejected-evidence-case",
+        "trace-parent-999",
+        "trace-grandparent-888"
+    ],
+    "valid_chain": true
+}

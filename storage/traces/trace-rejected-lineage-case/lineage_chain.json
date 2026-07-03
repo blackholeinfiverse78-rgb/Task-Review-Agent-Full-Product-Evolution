@@ -1,0 +1,9 @@
+{
+    "trace_id": "trace-rejected-lineage-case",
+    "chain": [
+        "trace-rejected-lineage-case",
+        "trace-parent-999",
+        "trace-grandparent-888"
+    ],
+    "valid_chain": true
+}

@@ -1,0 +1,7 @@
+{
+    "trace_id": "trace-needs-review-case",
+    "replay_script": "pytest",
+    "replay_status": "SUCCESS",
+    "replay_logs": "[WARNING] Minor latency spike observed during execution.\nReplay succeeded.",
+    "checksum": "checksum-replay-123"
+}
