@@ -1,127 +1,59 @@
-# 🚀 Deploying to Render: Complete Guide
+# 🚀 Deploying to Render: Unified Web Service
 
-This guide explains how to deploy the **Task Review AI** system (FastAPI backend + React frontend).
-
-## Prerequisites
-1. A [GitHub](https://github.com) account with the project repository pushed.
-2. A [Render](https://render.com) account.
+This guide explains how to deploy the **Parikshak** system as a single unified web service on Render, serving both the FastAPI backend and the React frontend from a single URL.
 
 ---
 
-## Method 1: Blueprint Deployment (Recommended)
+## 1. Unified Architecture Overview
+
+Instead of deploying separate backend services and static frontends, the project compiles everything into a single Docker image:
+- **Build Stage**: React frontend is built statically with API base URL configured to root (`/`).
+- **Serve Stage**: FastAPI mounts the React build directory, serving SPA files under `/{catchall}` and API endpoints under `/api/v1`.
+
+This provides:
+- ✅ **A single deployed link** (`https://parikshak.blackholeinfiverse.com`).
+- ✅ **Zero CORS configuration complexity** between frontend and backend.
+- ✅ **Simplified deployment** on Render.
+
+---
+
+## 2. Deploying via render.yaml (Blueprint)
 
 1. Log in to [Render Dashboard](https://dashboard.render.com).
 2. Click **New +** and select **Blueprint**.
 3. Connect your GitHub repository.
-4. Render will detect the `render.yaml` file.
+4. Render will detect [render.yaml](file:///g:/Live%20Task%20Review%20Agent%20-%202/render.yaml).
 5. Click **Apply**.
-6. Render will automatically create:
-   - `task-review-backend` (Web Service - FastAPI)
-   - `task-review-frontend` (Static Site - React)
-7. The frontend will automatically use the backend's public URL.
 
 ---
 
-## Method 2: Manual Deployment
+## 3. Manual Web Service Deploy (Alternative)
 
-### Step 1: Deploy the Backend (FastAPI)
-1. Go to **New +** -> **Web Service**.
+1. Click **New +** -> **Web Service**.
 2. Connect your GitHub repository.
-3. Configure:
-   - **Name**: `task-review-backend`
-   - **Environment**: `Python 3`
-   - **Build Command**: `pip install -r requirements.txt`
-   - **Start Command**: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
-4. Add Environment Variables:
-   - `ALLOWED_ORIGINS`: `["*"]`
+3. Configure the following:
+   - **Name**: `parikshak-unified`
+   - **Language**: `Docker`
+   - **Dockerfile Path**: `Dockerfile`
+4. Add the following **Environment Variables**:
+   - `DATABASE_URL`: `postgresql://parikshak_user:secure_pwd@db-host:5432/parikshak_db`
+   - `JWT_SECRET_KEY`: `[your-custom-secure-key]`
+   - `ALLOWED_ORIGINS`: `["https://parikshak.blackholeinfiverse.com"]`
 5. Click **Deploy Web Service**.
-6. **Copy the backend URL** (e.g., `https://task-review-backend-xxxx.onrender.com`).
-
-### Step 2: Deploy the Frontend (React)
-1. Go to **New +** -> **Static Site**.
-2. Connect the same GitHub repository.
-3. Configure:
-   - **Name**: `task-review-frontend`
-   - **Build Command**: `cd frontend && npm install && npm run build`
-   - **Publish Directory**: `frontend/build`
-4. Add Environment Variables:
-   - `REACT_APP_BACKEND_URL`: Paste your backend URL + `/api/v1/task`
-     - Example: `https://task-review-backend-xxxx.onrender.com/api/v1/task`
-5. Click **Create Static Site**.
 
 ---
 
-## Local Development
+## 4. Subdomain Mapping (`parikshak.blackholeinfiverse.com`)
 
-### Backend
-```bash
-# From project root
-uvicorn app.main:app --reload
-```
-
-### Frontend
-```bash
-cd frontend
-npm install
-npm start
-```
-
-The React app will run on `http://localhost:3000` and proxy requests to `http://localhost:8000`.
+1. In the Web Service settings on Render, go to the **Custom Domains** section.
+2. Click **Add Custom Domain** and enter:
+   `parikshak.blackholeinfiverse.com`
+3. Point your DNS provider's CNAME record for `parikshak` to:
+   `parikshak-unified.onrender.com`
 
 ---
 
-## Important Notes
-
-### 1. Static Site vs Web Service
-The React frontend is deployed as a **Static Site** on Render, which is:
-- Free forever (no spin-down)
-- Served via CDN (faster)
-- No server-side code execution
-
-### 2. Environment Variables
-React environment variables must be prefixed with `REACT_APP_` and are **baked into the build** at build time. If you change the backend URL, you must **redeploy** the frontend.
-
-### 3. CORS Configuration
-Ensure your backend's `ALLOWED_ORIGINS` includes `*` or your specific frontend URL.
-
----
-
-## Troubleshooting
-
-### Build Fails
-- Ensure Node.js version is compatible (Render uses Node 14+ by default)
-- Check build logs for npm errors
-- Verify `package.json` is valid
-
-### Backend Connection Issues
-1. Check the backend URL in the frontend environment variables
-2. Ensure it includes `/api/v1/task` at the end
-3. Verify CORS is properly configured on the backend
-4. Check browser console for specific error messages
-
-### Static Site Not Updating
-- Clear your browser cache
-- Trigger a manual redeploy in Render Dashboard
-- Verify the build command completed successfully
-
----
-
-## Features of React Frontend
-
-✨ **Modern Design**
-- Beautiful gradient backgrounds
-- Smooth animations and transitions
-- Glassmorphism effects
-- Responsive mobile-first design
-
-🚀 **Enhanced UX**
-- Real-time backend status indicator
-- Loading states with spinners
-- Error handling with user-friendly messages
-- Interactive progress bars
-
-📊 **Complete Functionality**
-- Pre-loaded demo scenarios (Good, Partial, Poor submissions)
-- Complete task submission and review flow
-- Detailed analysis and metrics display
-- Next task recommendations
+## 5. Expected Production URLs
+- **Main App Portal**: `https://parikshak.blackholeinfiverse.com`
+- **API Swagger Documentation**: `https://parikshak.blackholeinfiverse.com/docs`
+- **System Health Checks**: `https://parikshak.blackholeinfiverse.com/health`

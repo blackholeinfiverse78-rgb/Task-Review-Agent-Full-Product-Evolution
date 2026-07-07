@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: task-review-unified
+    name: parikshak-unified
     env: docker
     region: oregon
     healthCheckPath: /health
