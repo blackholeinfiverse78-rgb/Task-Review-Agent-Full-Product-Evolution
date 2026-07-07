@@ -13,4 +13,4 @@ This document details the analysis of false-positive vulnerabilities in the Pari
 3. **Keyword-Match Exploits**: Fake descriptions containing keyword matching but flat structures are caught by the architecture checker (`arch_present = False` triggers `incomplete`).
 4. **Wrong-Language Gaming**: Prevented by missing expected features because file analyzers search for extensions matching target stacks, resulting in a low `delivery_ratio` under logic check.
 
-*Verified: 2026-07-03T08:06:50.443705Z UTC*
+*Verified: 2026-07-07T07:26:48.201943Z UTC*

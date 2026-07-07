@@ -43,4 +43,4 @@ If a review is placed in `PENDING_REVIEW`, the consumer can check `/api/v1/revie
 }
 ```
 
-*Verified: 2026-07-03T08:06:50.984521Z UTC*
+*Verified: 2026-07-07T07:26:48.601562Z UTC*

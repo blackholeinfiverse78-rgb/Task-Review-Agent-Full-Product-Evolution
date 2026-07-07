@@ -16,4 +16,4 @@ This matrix details system evaluation performance against malicious gaming submi
 | ADV-10 | **Empty Feature Submissions**: Submission contains valid repository URLs but zero deliverables or expected code structures. | `FAIL (incorrect_logic)` | `FAIL (incomplete)` | **FAIL** | `LOW` | No | No | 1.00 |
 | ADV-11 | **Unrelated PDFs**: PDF text uploaded has engineering words but repository is missing or not provided. | `FAIL (incomplete)` | `FAIL (incomplete)` | **PASS** | `LOW` | No | No | 1.00 |
 
-*Generated at: 2026-07-03T08:06:50.443392Z UTC*
+*Generated at: 2026-07-07T07:26:48.201702Z UTC*
