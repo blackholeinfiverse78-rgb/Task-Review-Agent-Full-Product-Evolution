@@ -51,7 +51,7 @@ Once deployed, map your custom domain:
 3. Configure your DNS provider with a CNAME record:
    - **Name / Host**: `parikshak`
    - **Type**: `CNAME`
-   - **Target**: `parikshak-unified.onrender.com`
+   - **Target**: `parikshak-system.onrender.com`
 
 ---
 

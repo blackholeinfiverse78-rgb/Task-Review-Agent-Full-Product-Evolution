@@ -49,7 +49,7 @@ This provides:
 2. Click **Add Custom Domain** and enter:
    `parikshak.blackholeinfiverse.com`
 3. Point your DNS provider's CNAME record for `parikshak` to:
-   `parikshak-unified.onrender.com`
+   `parikshak-system.onrender.com`
 
 ---
 

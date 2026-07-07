@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: parikshak-unified
+    name: parikshak-system
     env: docker
     region: oregon
     healthCheckPath: /health
