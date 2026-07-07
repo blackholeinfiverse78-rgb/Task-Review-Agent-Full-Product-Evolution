@@ -22,9 +22,12 @@ VALID_FORM = {
 
 @pytest.fixture(autouse=True)
 def clear_storage():
+    from api.lifecycle import product_storage as api_storage
     product_storage.clear_all()
+    api_storage.clear_all()
     yield
     product_storage.clear_all()
+    api_storage.clear_all()
 
 
 def test_submit_task_stable_contract():
