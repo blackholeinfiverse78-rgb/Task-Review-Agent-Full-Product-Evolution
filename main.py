@@ -101,12 +101,14 @@ async def health():
 # Serve React Frontend SPA
 build_dir = os.path.join(os.path.dirname(__file__), "frontend", "build")
 if os.path.exists(build_dir):
-    # Mount static assets at BOTH /static and /review/static to fix chunk loading
-    # when React Router renders pages under /review/* paths
+    # Mount static assets under every top-level SPA route so chunk JS/CSS
+    # loads correctly regardless of which React Router path the browser is on.
     static_dir = os.path.join(build_dir, "static")
     if os.path.exists(static_dir):
-        app.mount("/static", StaticFiles(directory=static_dir), name="static")
-        app.mount("/review/static", StaticFiles(directory=static_dir), name="review_static")
+        for mount_prefix in ["/static", "/review/static", "/submission/static",
+                             "/dashboard/static", "/next/static", "/history/static"]:
+            app.mount(mount_prefix, StaticFiles(directory=static_dir),
+                      name=mount_prefix.lstrip("/").replace("/", "_"))
 
     # Define catch-all handler for serving React assets and SPA pages
     @app.get("/{catchall:path}")

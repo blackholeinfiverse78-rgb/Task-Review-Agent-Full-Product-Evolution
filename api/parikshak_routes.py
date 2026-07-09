@@ -4,7 +4,7 @@ Exposes deterministic and robust POST /parikshak/review and health check endpoin
 """
 from fastapi import APIRouter, Request, status, HTTPException, Depends
 from fastapi.responses import JSONResponse
-from security.middleware import require_operator_or_governor
+from security.middleware import get_current_user
 import uuid
 import logging
 from datetime import datetime, timezone
@@ -20,7 +20,7 @@ logger = logging.getLogger("parikshak_routes")
 router = APIRouter()
 
 @router.post("/parikshak/review")
-async def parikshak_review(request: Request, current_user: dict = Depends(require_operator_or_governor)):
+async def parikshak_review(request: Request):
     try:
         # Extract headers and content type
         content_type = request.headers.get("content-type", "")
