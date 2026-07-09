@@ -15,7 +15,7 @@ SECRET_KEY = os.getenv("JWT_SECRET_KEY", "your-secret-key-change-in-production")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
-security = HTTPBearer()
+security = HTTPBearer(auto_error=False)
 
 class UserRole(str, Enum):
     GOVERNOR = "Governor"
@@ -95,6 +95,12 @@ class SecurityConfig:
     @staticmethod
     def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)):
         """Verify JWT token and enforce expiration"""
+        if not credentials:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Not authenticated",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
         try:
             payload = jwt.decode(credentials.credentials, SECRET_KEY, algorithms=[ALGORITHM])
             username: str = payload.get("sub")
