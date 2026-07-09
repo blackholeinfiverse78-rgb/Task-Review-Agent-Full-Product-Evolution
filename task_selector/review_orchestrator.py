@@ -218,6 +218,9 @@ class ReviewOrchestrator:
         if "discipline_signals" not in analysis_val:
             analysis_val["discipline_signals"] = score_val
 
+        improvement_hints_val = eval_output.get("improvement_hints", [])
+        missing_features_val = eval_output.get("missing_features", [])
+
         review_record = ReviewRecord(
             review_id=review_id,
             submission_id=submission_id,
@@ -226,11 +229,11 @@ class ReviewOrchestrator:
             failure_type=failure_type,
             decision=decision,
             failure_reasons=failure_reasons,
-            improvement_hints=[],
+            improvement_hints=improvement_hints_val,
             analysis=analysis_val,
             reviewed_at=task.timestamp if getattr(task, "timestamp", None) else datetime.now(),
             evaluation_time_ms=0,
-            missing_features=[],
+            missing_features=missing_features_val,
             evaluation_summary=f"Parikshak Evaluation: {eval_res}",
             selected_task_id=selected_task_id,
             selection_reason=selection_reason,
@@ -348,8 +351,8 @@ class ReviewOrchestrator:
                 "evaluation_summary": f"Parikshak Evaluation: {eval_res}",
                 "review_state": "PENDING_REVIEW",
                 "failure_reasons": failure_reasons,
-                "improvement_hints": [],
-                "missing_features": [],
+                "improvement_hints": improvement_hints_val,
+                "missing_features": missing_features_val,
                 "analysis": {
                     "technical_quality": score_val,
                     "clarity": score_val,

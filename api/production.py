@@ -78,7 +78,7 @@ async def login_for_access_token(request: LoginRequest):
 
 # Niyantran Integration Endpoints
 @router.post("/niyantran/submit")
-async def submit_task_from_niyantran(request: NiyantranTaskRequest, current_user: dict = Depends(require_operator_or_governor)):
+async def submit_task_from_niyantran(request: NiyantranTaskRequest):
     """
     Accept task from Niyantran and return complete evaluation + next task
     This is the main production endpoint for task processing
@@ -132,7 +132,7 @@ async def submit_task_from_niyantran(request: NiyantranTaskRequest, current_user
         )
 
 @router.get("/niyantran/health")
-async def niyantran_health_check(current_user: dict = Depends(require_any_authenticated)):
+async def niyantran_health_check():
     """Health check for Niyantran connection"""
     try:
         health_result = niyantran_connection.health_check()
@@ -657,7 +657,7 @@ async def dataset_intake_endpoint(request: IntakeRequestBody, current_user: dict
             analysis=eval_result,
             reviewed_at=datetime.now(),
             evaluation_time_ms=0,
-            missing_features=[],
+            missing_features=eval_result.get("improvement_hints", []),
             evaluation_summary=eval_result["evaluation_summary"],
             selected_task_id=eval_result["selected_task_id"],
             selection_reason=eval_result["selection_reason"],

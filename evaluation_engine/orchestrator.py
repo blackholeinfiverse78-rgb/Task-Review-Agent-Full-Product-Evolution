@@ -51,13 +51,46 @@ class EvaluationOrchestrator:
             task_id=task_id
         )
 
+        failure_type = evaluation.get("failure_type")
+        missing_features = supporting_signals.get("missing_features", [])
+        
+        improvement_hints = []
+        if failure_type == "schema_violation":
+            improvement_hints.extend([
+                "Ensure task title is at least 5 words and description is detailed (> 50 words).",
+                "Verify the repository link is present and valid if required."
+            ])
+        elif failure_type == "incomplete":
+            improvement_hints.extend([
+                "Provide a README.md file documenting the project setup.",
+                "Include unit tests under a tests/ folder (e.g. test_api.py).",
+                "Add structured documentation or architectural comments.",
+                "Ensure the repository has at least 3 implementation files."
+            ])
+        elif failure_type == "incorrect_logic":
+            improvement_hints.extend([
+                "Improve test coverage and code complexity alignment.",
+                "Satisfy at least 60% of the expected task features."
+            ])
+            for f in missing_features:
+                improvement_hints.append(f"Implement missing feature: {f}")
+        elif failure_type == "integration_fail":
+            improvement_hints.extend([
+                "Verify repository metadata (e.g. check that metadata name is present).",
+                "Verify downstream integration points and API registration."
+            ])
+        else:
+            improvement_hints.append("Ecosystem requirements are fully met. Ready for production.")
+
         return {
             "evaluation_result": evaluation["evaluation_result"],
-            "failure_type": evaluation.get("failure_type"),
+            "failure_type": failure_type,
             "reason": evaluation.get("reason", ""),
             "pac": evaluation.get("pac", {}),
             "rubric": evaluation.get("rubric", {}),
-            "canonical_authority": evaluation.get("canonical_authority", False)
+            "canonical_authority": evaluation.get("canonical_authority", False),
+            "missing_features": missing_features,
+            "improvement_hints": improvement_hints
         }
 
 evaluation_orchestrator = EvaluationOrchestrator()

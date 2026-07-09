@@ -9,6 +9,7 @@ from datetime import datetime
 import re
 import logging
 import hashlib
+import os
 
 from security.middleware import require_any_authenticated
 
@@ -81,6 +82,16 @@ class ReviewDetailResponse(BaseModel):
     selected_task_id: str = ""
     selection_reason: str = ""
     registry_validation: Optional[dict] = None
+    candidate_name: str = ""
+    task_title: str = ""
+    task_description: str = ""
+    trace_id: str = ""
+    repository_url: Optional[str] = None
+    next_task_title: str = ""
+    next_task_objective: str = ""
+    next_task_difficulty: str = ""
+    next_task_focus_area: str = ""
+    runtime_evidence: List[str] = []
 
 class NextTaskDetailResponse(BaseModel):
     next_task_id: str
@@ -245,6 +256,20 @@ def get_review(submission_id: str, current_user: dict = Depends(require_any_auth
             "validation_passed": submission.registry_validation_status == "VALID"
         }
 
+    # Query next task details
+    next_task = product_storage.get_next_task_by_submission(submission_id)
+    
+    # Query runtime evidence folder files
+    runtime_evidence = []
+    trace_id_val = getattr(review, "trace_id", "")
+    if trace_id_val:
+        trace_path = os.path.join("storage", "traces", trace_id_val)
+        if os.path.exists(trace_path) and os.path.isdir(trace_path):
+            try:
+                runtime_evidence = [f for f in os.listdir(trace_path) if os.path.isfile(os.path.join(trace_path, f))]
+            except Exception:
+                pass
+
     return ReviewDetailResponse(
         review_id=review.review_id,
         submission_id=review.submission_id,
@@ -262,7 +287,17 @@ def get_review(submission_id: str, current_user: dict = Depends(require_any_auth
         evaluation_summary=review.evaluation_summary,
         selected_task_id=getattr(review, "selected_task_id", ""),
         selection_reason=getattr(review, "selection_reason", ""),
-        registry_validation=registry_validation
+        registry_validation=registry_validation,
+        candidate_name=getattr(review, "candidate_name", "") or (submission.submitted_by if submission else "candidate"),
+        task_title=getattr(review, "task_title", "") or (submission.task_title if submission else "Task"),
+        task_description=submission.task_description if submission else "",
+        trace_id=trace_id_val,
+        repository_url=submission.github_repo_link if submission else None,
+        next_task_title=next_task.title if next_task else "",
+        next_task_objective=next_task.objective if next_task else "",
+        next_task_difficulty=next_task.difficulty if next_task else "",
+        next_task_focus_area=next_task.focus_area if next_task else "",
+        runtime_evidence=runtime_evidence
     )
 
 @router.get("/next/{submission_id}", response_model=NextTaskDetailResponse)
