@@ -101,32 +101,34 @@ async def health():
 # Serve React Frontend SPA
 build_dir = os.path.join(os.path.dirname(__file__), "frontend", "build")
 if os.path.exists(build_dir):
-    # Mount the /static directory
+    # Mount static assets at BOTH /static and /review/static to fix chunk loading
+    # when React Router renders pages under /review/* paths
     static_dir = os.path.join(build_dir, "static")
     if os.path.exists(static_dir):
         app.mount("/static", StaticFiles(directory=static_dir), name="static")
+        app.mount("/review/static", StaticFiles(directory=static_dir), name="review_static")
 
     # Define catch-all handler for serving React assets and SPA pages
     @app.get("/{catchall:path}")
     async def serve_spa(catchall: str):
         # Prevent catching API/docs routes
-        if (catchall.startswith("api/") or 
-            catchall.startswith("health") or 
-            catchall.startswith("docs") or 
-            catchall.startswith("openapi.json") or 
+        if (catchall.startswith("api/") or
+            catchall.startswith("health") or
+            catchall.startswith("docs") or
+            catchall.startswith("openapi.json") or
             catchall.startswith("redoc")):
             raise HTTPException(status_code=404, detail="Not Found")
-            
-        # Check if file exists in the build root (like favicon.ico, logo192.png, asset-manifest.json etc.)
+
+        # Check if file exists in the build root (favicon.ico, manifest.json, etc.)
         file_path = os.path.join(build_dir, catchall)
         if os.path.exists(file_path) and os.path.isfile(file_path):
             return FileResponse(file_path)
-            
-        # Fallback to index.html for React Router SPA routes
+
+        # Fallback to index.html for all React Router SPA routes
         index_path = os.path.join(build_dir, "index.html")
         if os.path.exists(index_path):
             return FileResponse(index_path)
-            
+
         raise HTTPException(status_code=404, detail="React build index.html not found")
 else:
     @app.get("/")
