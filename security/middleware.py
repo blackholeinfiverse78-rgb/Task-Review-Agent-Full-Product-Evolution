@@ -169,7 +169,23 @@ def require_any_authenticated(current_user: dict = Depends(SecurityConfig.verify
     return current_user
 
 def validate_startup_secrets():
-    """Validate runtime secrets on startup"""
+    """Validate runtime secrets on startup — hard exit if insecure."""
+    import sys
     secret = os.getenv("JWT_SECRET_KEY")
-    if not secret or secret in ("your-secret-key-change-in-production", "your-super-secret-jwt-key-change-this-in-production-min-32-chars"):
-        raise ValueError("CRITICAL SECURITY ERROR: Insecure or default JWT_SECRET_KEY detected in environment configuration!")
+    insecure_defaults = {
+        "your-secret-key-change-in-production",
+        "your-super-secret-jwt-key-change-this-in-production-min-32-chars"
+    }
+    if not secret or secret in insecure_defaults:
+        # Allow override in local dev only
+        if os.getenv("ALLOW_INSECURE_JWT", "").lower() == "true":
+            import logging
+            logging.getLogger("security").warning(
+                "SECURITY WARNING: Insecure JWT_SECRET_KEY — allowed by ALLOW_INSECURE_JWT=true"
+            )
+            return
+        sys.exit(
+            "FATAL: Insecure or default JWT_SECRET_KEY detected. "
+            "Set a strong JWT_SECRET_KEY environment variable before starting the server. "
+            "Set ALLOW_INSECURE_JWT=true to bypass in local development only."
+        )

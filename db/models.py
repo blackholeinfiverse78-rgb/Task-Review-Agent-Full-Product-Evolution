@@ -80,6 +80,15 @@ class ReviewModel(Base):
     candidate_name = Column(String(100), nullable=True)
     task_title = Column(String(255), nullable=True)
     deleted_at = Column(DateTime, nullable=True)
+    # Review detail columns (previously only in JSON file)
+    failure_type = Column(String(50), nullable=True)
+    failure_reasons = Column(Text, nullable=True)       # JSON list
+    improvement_hints = Column(Text, nullable=True)     # JSON list
+    missing_features = Column(Text, nullable=True)      # JSON list
+    whats_done_well = Column(Text, nullable=True)       # JSON list
+    selected_task_id = Column(String(100), nullable=True)
+    selection_reason = Column(Text, nullable=True)
+    analysis_json = Column(Text, nullable=True)         # JSON dict (pac, rubric, scores)
 
     evidences = relationship("EvidenceModel", back_populates="review")
     artifacts = relationship("ArtifactModel", back_populates="review")

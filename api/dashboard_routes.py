@@ -6,11 +6,12 @@ from typing import List, Dict, Any
 
 from db.db_config import get_db_session
 from db.models import Builder, Product, ReviewModel, CertificationModel, AssignmentModel, RiskRegisterModel, DimensionResultModel
+from security.middleware import require_any_authenticated
 
 router = APIRouter(prefix="/dashboard", tags=["Dashboard"])
 
 @router.get("/builder-quality")
-def get_builder_quality(db: Session = Depends(get_db_session)):
+def get_builder_quality(db: Session = Depends(get_db_session), current_user: dict = Depends(require_any_authenticated)):
     """Retrieve quality metrics aggregated per builder/candidate."""
     try:
         results = db.query(
@@ -45,7 +46,7 @@ def get_builder_quality(db: Session = Depends(get_db_session)):
         raise HTTPException(status_code=500, detail=f"Failed to fetch builder quality: {str(e)}")
 
 @router.get("/product-readiness")
-def get_product_readiness(db: Session = Depends(get_db_session)):
+def get_product_readiness(db: Session = Depends(get_db_session), current_user: dict = Depends(require_any_authenticated)):
     """Retrieve certification readiness per ecosystem product."""
     try:
         products = db.query(Product).all()
@@ -80,7 +81,7 @@ def get_product_readiness(db: Session = Depends(get_db_session)):
         raise HTTPException(status_code=500, detail=f"Failed to fetch product readiness: {str(e)}")
 
 @router.get("/certification-history")
-def get_certification_history(db: Session = Depends(get_db_session)):
+def get_certification_history(db: Session = Depends(get_db_session), current_user: dict = Depends(require_any_authenticated)):
     """Retrieve chronological list of past certifications."""
     try:
         certs = db.query(
@@ -113,7 +114,7 @@ def get_certification_history(db: Session = Depends(get_db_session)):
         raise HTTPException(status_code=500, detail=f"Failed to fetch certification history: {str(e)}")
 
 @router.get("/production-scores")
-def get_production_scores(db: Session = Depends(get_db_session)):
+def get_production_scores(db: Session = Depends(get_db_session), current_user: dict = Depends(require_any_authenticated)):
     """Retrieve average scores and status ratios across all reviews."""
     try:
         reviews = db.query(ReviewModel).all()
@@ -137,7 +138,7 @@ def get_production_scores(db: Session = Depends(get_db_session)):
         raise HTTPException(status_code=500, detail=f"Failed to fetch production scores: {str(e)}")
 
 @router.get("/engineering-trends")
-def get_engineering_trends(days: int = 30, db: Session = Depends(get_db_session)):
+def get_engineering_trends(days: int = 30, db: Session = Depends(get_db_session), current_user: dict = Depends(require_any_authenticated)):
     """Retrieve review counts aggregated daily over a specified window."""
     try:
         cutoff = datetime.utcnow() - timedelta(days=days)
@@ -161,7 +162,7 @@ def get_engineering_trends(days: int = 30, db: Session = Depends(get_db_session)
         raise HTTPException(status_code=500, detail=f"Failed to fetch engineering trends: {str(e)}")
 
 @router.get("/open-reviews")
-def get_open_reviews(db: Session = Depends(get_db_session)):
+def get_open_reviews(db: Session = Depends(get_db_session), current_user: dict = Depends(require_any_authenticated)):
     """Retrieve all reviews waiting in the manual escalation queue."""
     try:
         reviews = db.query(ReviewModel).filter(
@@ -185,7 +186,7 @@ def get_open_reviews(db: Session = Depends(get_db_session)):
         raise HTTPException(status_code=500, detail=f"Failed to fetch open reviews: {str(e)}")
 
 @router.get("/risk-register")
-def get_risk_register(db: Session = Depends(get_db_session)):
+def get_risk_register(db: Session = Depends(get_db_session), current_user: dict = Depends(require_any_authenticated)):
     """Retrieve all identified risks from task reviews."""
     try:
         risks = db.query(RiskRegisterModel).filter(RiskRegisterModel.status != "mitigated").all()
@@ -206,7 +207,7 @@ def get_risk_register(db: Session = Depends(get_db_session)):
         raise HTTPException(status_code=500, detail=f"Failed to fetch risk register: {str(e)}")
 
 @router.get("/governance-issues")
-def get_governance_issues(db: Session = Depends(get_db_session)):
+def get_governance_issues(db: Session = Depends(get_db_session), current_user: dict = Depends(require_any_authenticated)):
     """Retrieve all critical failures and unapproved releases."""
     try:
         failures = db.query(ReviewModel).filter(
@@ -229,7 +230,7 @@ def get_governance_issues(db: Session = Depends(get_db_session)):
         raise HTTPException(status_code=500, detail=f"Failed to fetch governance issues: {str(e)}")
 
 @router.get("/assignment-queue")
-def get_assignment_queue(db: Session = Depends(get_db_session)):
+def get_assignment_queue(db: Session = Depends(get_db_session), current_user: dict = Depends(require_any_authenticated)):
     """Retrieve active next tasks grouped by priority."""
     try:
         assignments = db.query(AssignmentModel).filter(
@@ -268,7 +269,7 @@ def get_assignment_queue(db: Session = Depends(get_db_session)):
         raise HTTPException(status_code=500, detail=f"Failed to fetch assignment queue: {str(e)}")
 
 @router.get("/ecosystem-health")
-def get_ecosystem_health(db: Session = Depends(get_db_session)):
+def get_ecosystem_health(db: Session = Depends(get_db_session), current_user: dict = Depends(require_any_authenticated)):
     """Retrieve high-level combined ecosystem KPIs."""
     try:
         total_products = db.query(Product).count()

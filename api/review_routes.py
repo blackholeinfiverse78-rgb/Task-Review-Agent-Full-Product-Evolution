@@ -115,7 +115,7 @@ async def approve_submission(request: GovernanceRequest, current_user: dict = De
     review.decision = "APPROVED"
     review.status = "pass"
     review.version += 1
-    product_storage._save()
+    product_storage.store_review(review)
 
     # Propagate governed approval downstream to ecosystem
     try:
@@ -300,7 +300,7 @@ async def reject_submission(request: GovernanceRequest, current_user: dict = Dep
     review.decision = "REJECTED"
     review.status = "fail"
     review.version += 1
-    product_storage._save()
+    product_storage.store_review(review)
 
     try:
         from task_selector.human_in_loop import human_in_loop
@@ -406,7 +406,7 @@ async def modify_submission(request: GovernanceRequest, current_user: dict = Dep
     review.decision = "APPROVED"
     review.status = "pass"
     review.version += 1
-    product_storage._save()
+    product_storage.store_review(review)
 
     try:
         from task_selector.human_in_loop import human_in_loop
@@ -495,41 +495,43 @@ async def modify_submission(request: GovernanceRequest, current_user: dict = Dep
 
 @router.get("/pending")
 async def get_pending_reviews(current_user: dict = Depends(require_any_authenticated)):
-    """Observability only — no mutations."""
+    """Observability only — queries DB directly."""
+    all_reviews = product_storage.get_all_reviews_list()
     pending = []
-    for sub_id, review in product_storage.reviews.items():
+    for review in all_reviews:
         if getattr(review, "review_state", "") == ReviewState.PENDING_REVIEW:
             submission = product_storage.get_submission(review.submission_id)
             pending.append({
-                "submission_id":    review.submission_id,
-                "candidate_name":   submission.submitted_by if submission else "Unknown",
-                "task_title":       submission.task_title if submission else "Unknown",
+                "submission_id":     review.submission_id,
+                "candidate_name":    submission.submitted_by if submission else "Unknown",
+                "task_title":        submission.task_title if submission else "Unknown",
                 "evaluation_result": getattr(review, "evaluation_result", ""),
-                "failure_type":     getattr(review, "failure_type", None),
-                "selected_task_id": getattr(review, "selected_task_id", ""),
-                "trace_id":         getattr(review, "trace_id", ""),
-                "review_state":     getattr(review, "review_state", ""),
-                "expected_version": getattr(review, "version", 1)
+                "failure_type":      getattr(review, "failure_type", None),
+                "selected_task_id":  getattr(review, "selected_task_id", ""),
+                "trace_id":          getattr(review, "trace_id", ""),
+                "review_state":      getattr(review, "review_state", ""),
+                "expected_version":  getattr(review, "version", 1)
             })
     return pending
 
 
 @router.get("/all")
 async def get_all_reviews(current_user: dict = Depends(require_any_authenticated)):
-    """Observability only — no mutations."""
-    all_reviews = []
-    for sub_id, review in product_storage.reviews.items():
+    """Observability only — queries DB directly."""
+    all_reviews = product_storage.get_all_reviews_list()
+    result = []
+    for review in all_reviews:
         submission = product_storage.get_submission(review.submission_id)
-        all_reviews.append({
-            "submission_id":    review.submission_id,
-            "candidate_name":   submission.submitted_by if submission else "Unknown",
-            "task_title":       submission.task_title if submission else "Unknown",
+        result.append({
+            "submission_id":     review.submission_id,
+            "candidate_name":    submission.submitted_by if submission else "Unknown",
+            "task_title":        submission.task_title if submission else "Unknown",
             "evaluation_result": getattr(review, "evaluation_result", ""),
-            "failure_type":     getattr(review, "failure_type", None),
-            "selected_task_id": getattr(review, "selected_task_id", ""),
-            "trace_id":         review.trace_id,
-            "review_state":     getattr(review, "review_state", ""),
-            "selection_reason": getattr(review, "selection_reason", ""),
-            "expected_version": getattr(review, "version", 1)
+            "failure_type":      getattr(review, "failure_type", None),
+            "selected_task_id":  getattr(review, "selected_task_id", ""),
+            "trace_id":          review.trace_id,
+            "review_state":      getattr(review, "review_state", ""),
+            "selection_reason":  getattr(review, "selection_reason", ""),
+            "expected_version":  getattr(review, "version", 1)
         })
-    return all_reviews
+    return result

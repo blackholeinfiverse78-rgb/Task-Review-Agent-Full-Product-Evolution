@@ -114,7 +114,8 @@ class BHIVReviewEngine:
             "selection_reason": review_analysis.get("next_task_justification", "Next task recommendation based on pipeline graph rules."),
             "evidence_used": review_analysis.get("evidence_used", []),
             "whats_done_well": review_analysis.get("whats_done_well", []),
-            "timeline_commentary": review_analysis.get("timeline_commentary", "")
+            "timeline_commentary": review_analysis.get("timeline_commentary", ""),
+            "review_mode": review_analysis.get("_review_mode", "deterministic_fallback")
         }
 
         return output
@@ -216,6 +217,7 @@ INSTRUCTIONS:
             res_json = resp.json()
             content_str = res_json["choices"][0]["message"]["content"]
             result = json.loads(content_str)
+            result["_review_mode"] = "llm"
             logger.info("[LLM] Deep analysis successfully retrieved from Groq API.")
             return result
         except Exception as e:

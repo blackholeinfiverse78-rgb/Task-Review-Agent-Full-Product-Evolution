@@ -21,7 +21,7 @@ class EvaluationOrchestrator:
     ) -> Dict[str, Any]:
         
         # Step 0: REVIEW_PACKET hard gate
-        packet_result = review_packet_parser.enforce_packet_requirement(".")
+        packet_result = review_packet_parser.enforce_packet_requirement()
         if not packet_result["valid"]:
             return {"evaluation_result": "FAIL", "failure_type": "schema_violation", "reason": f"REVIEW_PACKET hard gate: {packet_result['reason']}"}
 

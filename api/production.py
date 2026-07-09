@@ -62,16 +62,17 @@ class BucketQueryRequest(BaseModel):
 # Token Generation Endpoint
 @router.post("/auth/token")
 async def login_for_access_token(request: LoginRequest):
+    # Credentials loaded from environment variables — never hardcoded
     CREDENTIALS = {
-        "operator": {"password": "OperatorPass123!", "role": UserRole.OPERATOR.value},
-        "reviewer": {"password": "ReviewerPass123!", "role": UserRole.REVIEWER.value},
-        "governor": {"password": "GovernorPass123!", "role": UserRole.GOVERNOR.value},
-        "readonly": {"password": "ReadOnlyPass123!", "role": UserRole.READONLY.value},
-        "Akash": {"password": "AkashPass123!", "role": UserRole.GOVERNOR.value},
-        "Ansh": {"password": "AnshPass123!", "role": UserRole.GOVERNOR.value},
+        "operator":  {"password": os.getenv("OPERATOR_PASSWORD", ""),  "role": UserRole.OPERATOR.value},
+        "reviewer":  {"password": os.getenv("REVIEWER_PASSWORD", ""),  "role": UserRole.REVIEWER.value},
+        "governor":  {"password": os.getenv("GOVERNOR_PASSWORD", ""),  "role": UserRole.GOVERNOR.value},
+        "readonly":  {"password": os.getenv("READONLY_PASSWORD", ""),  "role": UserRole.READONLY.value},
+        "Akash":     {"password": os.getenv("AKASH_PASSWORD", ""),     "role": UserRole.GOVERNOR.value},
+        "Ansh":      {"password": os.getenv("ANSH_PASSWORD", ""),      "role": UserRole.GOVERNOR.value},
     }
     user_info = CREDENTIALS.get(request.username)
-    if not user_info or user_info["password"] != request.password:
+    if not user_info or not user_info["password"] or user_info["password"] != request.password:
         raise HTTPException(status_code=401, detail="Invalid username or password")
     token = SecurityConfig.create_access_token({"sub": request.username, "role": user_info["role"]})
     return {"access_token": token, "token_type": "bearer"}

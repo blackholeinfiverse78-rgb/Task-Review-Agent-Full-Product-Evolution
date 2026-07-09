@@ -49,9 +49,10 @@ class ReviewOrchestrator:
 
         logger.info(f"[ORCHESTRATOR] Processing: {task.task_title[:50]}")
 
-        # Phase 3: Trace Discipline Fix
+        # Generate unique trace_id if not provided — never use a shared hardcoded fallback
         if not trace_id:
-            trace_id = "trace-test-default-123456"
+            import uuid
+            trace_id = f"trace-auto-{uuid.uuid4().hex[:16]}"
         elif len(trace_id) < 8:
             raise ValueError(
                 "HARD_REJECT: trace_id missing or invalid. "
@@ -123,8 +124,9 @@ class ReviewOrchestrator:
                 )
                 eval_res = eval_output["evaluation_result"]
                 failure_type = eval_output["failure_type"]
-                score_val = 100 if eval_res == "PASS" else 40
-                status_val = "pass" if eval_res == "PASS" else "fail"
+                # score computed after PAC/rubric block below
+                score_val = eval_output.get("score", 0)
+                status_val = eval_output.get("status", "fail")
 
             failure_reasons = eval_output.get("failure_reasons", [])
             if not failure_reasons and failure_type:
@@ -199,12 +201,21 @@ class ReviewOrchestrator:
         )
         product_storage.store_submission(submission)
 
-        # Derive score and status from evaluation result
-        if registry_rejected:
-            score_val = 0
+        # Derive score from PAC and rubric binary signals
+        pac_val = eval_output.get("pac", {})
+        rubric_val = eval_output.get("rubric", {})
+        if pac_val or rubric_val:
+            pac_score = int(sum(pac_val.values()) / max(len(pac_val), 1) * 50) if pac_val else 0
+            rubric_score = int(sum(rubric_val.values()) / max(len(rubric_val), 1) * 50) if rubric_val else 0
+            score_val = pac_score + rubric_score
+            # Clamp: PASS must be >= 60, FAIL must be <= 59
+            if eval_res == "PASS":
+                score_val = max(60, score_val)
+            else:
+                score_val = min(59, score_val)
         else:
             score_val = 100 if eval_res == "PASS" else 40
-        status_val = "pass" if eval_res == "PASS" else "fail"
+        status_val = "pass" if eval_res == "PASS" else ("borderline" if score_val >= 40 else "fail")
 
         # Store review record (Governance Layer)
         review_id = f"rev-{submission_id}"

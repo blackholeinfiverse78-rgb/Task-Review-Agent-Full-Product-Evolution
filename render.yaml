@@ -5,9 +5,25 @@ services:
     region: oregon
     healthCheckPath: /health
     envVars:
+      - key: JWT_SECRET_KEY
+        sync: false
       - key: GITHUB_TOKEN
         sync: false
       - key: GROQ_API_KEY
         sync: false
       - key: ALLOWED_ORIGINS
         value: '["*"]'
+      - key: ALLOW_INSECURE_JWT
+        value: "false"
+      - key: OPERATOR_PASSWORD
+        sync: false
+      - key: REVIEWER_PASSWORD
+        sync: false
+      - key: GOVERNOR_PASSWORD
+        sync: false
+      - key: READONLY_PASSWORD
+        sync: false
+      - key: AKASH_PASSWORD
+        sync: false
+      - key: ANSH_PASSWORD
+        sync: false

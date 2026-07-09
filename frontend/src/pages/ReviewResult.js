@@ -381,7 +381,7 @@ const ReviewResult = () => {
                         {/* Whats Done Well */}
                         {reviewData.whats_done_well?.length > 0 && (
                             <div>
-                                <span className="text-[10px] uppercase font-bold text-emerald-600 dark:text-emerald-400 block mb-2 flex items-center gap-1">
+                                <span className="text-[10px] uppercase font-bold text-emerald-600 dark:text-emerald-400 mb-2 flex items-center gap-1">
                                     <CheckCircle size={12} /> What's Done Well
                                 </span>
                                 <ul className="space-y-2">
@@ -416,7 +416,7 @@ const ReviewResult = () => {
                         {/* Failure Reasons list */}
                         {!isPassed && reviewData.failure_reasons?.length > 0 && (
                             <div>
-                                <span className="text-[10px] uppercase font-bold text-rose-500 block mb-2 flex items-center gap-1">
+                                <span className="text-[10px] uppercase font-bold text-rose-500 mb-2 flex items-center gap-1">
                                     <XCircle size={12} /> Critical Failures
                                 </span>
                                 <ul className="space-y-2">
