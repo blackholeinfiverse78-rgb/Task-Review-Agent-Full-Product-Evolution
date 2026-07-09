@@ -179,6 +179,7 @@ class ReviewRecord(BaseModel):
     candidate_name: str = Field(default="")
     task_title: str = Field(default="")
     reviewed_by: Optional[str] = Field(None)
+    whats_done_well: list[str] = Field(default_factory=list)
 
     class Config:
         use_enum_values = True
@@ -464,6 +465,15 @@ class ProductStorage:
                     if row.deleted_at is not None:
                         db.close()
                         return None
+                    def _dejson(val, default):
+                        if val is None:
+                            return default
+                        if isinstance(val, (list, dict)):
+                            return val
+                        try:
+                            return json.loads(val)
+                        except Exception:
+                            return default
                     res = ReviewRecord(
                         review_id=row.review_id,
                         submission_id=row.submission_id,
@@ -471,12 +481,12 @@ class ProductStorage:
                         evaluation_result=row.evaluation_result,
                         failure_type=getattr(mem_review, "failure_type", None) if mem_review else None,
                         decision=row.decision,
-                        failure_reasons=getattr(mem_review, "failure_reasons", []) if mem_review else [],
-                        improvement_hints=getattr(mem_review, "improvement_hints", []) if mem_review else [],
-                        analysis=getattr(mem_review, "analysis", {}) if mem_review else {},
+                        failure_reasons=_dejson(row.failure_reasons, getattr(mem_review, "failure_reasons", []) if mem_review else []),
+                        improvement_hints=_dejson(row.improvement_hints, getattr(mem_review, "improvement_hints", []) if mem_review else []),
+                        analysis=_dejson(row.analysis, getattr(mem_review, "analysis", {}) if mem_review else {}),
                         reviewed_at=row.reviewed_at,
                         evaluation_time_ms=row.evaluation_time_ms or 0,
-                        missing_features=getattr(mem_review, "missing_features", []) if mem_review else [],
+                        missing_features=_dejson(row.missing_features, getattr(mem_review, "missing_features", []) if mem_review else []),
                         evaluation_summary=row.evaluation_summary or (mem_review.evaluation_summary if mem_review else ""),
                         selected_task_id=getattr(mem_review, "selected_task_id", "") if mem_review else "",
                         selection_reason=getattr(mem_review, "selection_reason", "") if mem_review else "",
@@ -487,7 +497,8 @@ class ProductStorage:
                         status=row.status or "fail",
                         candidate_name=row.candidate_name or "",
                         task_title=row.task_title or "",
-                        reviewed_by=row.reviewed_by or "system"
+                        reviewed_by=row.reviewed_by or "system",
+                        whats_done_well=getattr(mem_review, "whats_done_well", []) if mem_review else []
                     )
                     db.close()
                     return res
@@ -549,6 +560,15 @@ class ProductStorage:
                     if row.deleted_at is not None:
                         db.close()
                         return None
+                    def _dejson(val, default):
+                        if val is None:
+                            return default
+                        if isinstance(val, (list, dict)):
+                            return val
+                        try:
+                            return json.loads(val)
+                        except Exception:
+                            return default
                     res = ReviewRecord(
                         review_id=row.review_id,
                         submission_id=row.submission_id,
@@ -556,12 +576,12 @@ class ProductStorage:
                         evaluation_result=row.evaluation_result,
                         failure_type=getattr(mem_review, "failure_type", None) if mem_review else None,
                         decision=row.decision,
-                        failure_reasons=getattr(mem_review, "failure_reasons", []) if mem_review else [],
-                        improvement_hints=getattr(mem_review, "improvement_hints", []) if mem_review else [],
-                        analysis=getattr(mem_review, "analysis", {}) if mem_review else {},
+                        failure_reasons=_dejson(row.failure_reasons, getattr(mem_review, "failure_reasons", []) if mem_review else []),
+                        improvement_hints=_dejson(row.improvement_hints, getattr(mem_review, "improvement_hints", []) if mem_review else []),
+                        analysis=_dejson(row.analysis, getattr(mem_review, "analysis", {}) if mem_review else {}),
                         reviewed_at=row.reviewed_at,
                         evaluation_time_ms=row.evaluation_time_ms or 0,
-                        missing_features=getattr(mem_review, "missing_features", []) if mem_review else [],
+                        missing_features=_dejson(row.missing_features, getattr(mem_review, "missing_features", []) if mem_review else []),
                         evaluation_summary=row.evaluation_summary or (mem_review.evaluation_summary if mem_review else ""),
                         selected_task_id=getattr(mem_review, "selected_task_id", "") if mem_review else "",
                         selection_reason=getattr(mem_review, "selection_reason", "") if mem_review else "",
@@ -572,7 +592,8 @@ class ProductStorage:
                         status=row.status or "fail",
                         candidate_name=row.candidate_name or "",
                         task_title=row.task_title or "",
-                        reviewed_by=row.reviewed_by or "system"
+                        reviewed_by=row.reviewed_by or "system",
+                        whats_done_well=getattr(mem_review, "whats_done_well", []) if mem_review else []
                     )
                     db.close()
                     return res

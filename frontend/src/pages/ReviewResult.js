@@ -98,6 +98,8 @@ const ReviewResult = () => {
     const technicalQuality = reviewData.analysis?.technical_quality ?? reviewData.score;
     const clarity = reviewData.analysis?.clarity ?? reviewData.score;
     const disciplineSignals = reviewData.analysis?.discipline_signals ?? reviewData.score;
+    const pac = reviewData.analysis?.pac || null;
+    const rubric = reviewData.analysis?.rubric || null;
 
     return (
         <div className="max-w-6xl mx-auto space-y-8 fade-in">
@@ -311,7 +313,60 @@ const ReviewResult = () => {
                             </div>
                         </div>
                     </div>
-                </div>
+                    {/* PAC Binary Signals */}
+                    {pac && (
+                        <div className="card bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-md">
+                            <h3 className="font-black text-lg text-slate-800 dark:text-white mb-4 flex items-center gap-2">
+                                <Target size={18} className="text-indigo-500" />
+                                PAC Signal Detection
+                            </h3>
+                            <div className="grid grid-cols-3 gap-3">
+                                {Object.entries(pac).map(([key, val]) => (
+                                    <div key={key} className={`p-3 rounded-xl border text-center ${
+                                        val === 1
+                                            ? 'bg-emerald-50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-900/40'
+                                            : 'bg-rose-50 dark:bg-rose-950/20 border-rose-200 dark:border-rose-900/40'
+                                    }`}>
+                                        <div className={`text-lg font-black ${ val === 1 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`}>
+                                            {val === 1 ? '✓' : '✗'}
+                                        </div>
+                                        <div className="text-[10px] uppercase font-bold text-slate-500 mt-1">{key}</div>
+                                    </div>
+                                ))}
+                            </div>
+                            {rubric && (
+                                <div className="mt-4 grid grid-cols-3 gap-3">
+                                    {Object.entries(rubric).map(([key, val]) => (
+                                        <div key={key} className={`p-3 rounded-xl border text-center ${
+                                            val === 1
+                                                ? 'bg-blue-50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-900/40'
+                                                : 'bg-amber-50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-900/40'
+                                        }`}>
+                                            <div className={`text-lg font-black ${ val === 1 ? 'text-blue-600 dark:text-blue-400' : 'text-amber-600 dark:text-amber-400'}`}>
+                                                {val === 1 ? '✓' : '✗'}
+                                            </div>
+                                            <div className="text-[10px] uppercase font-bold text-slate-500 mt-1">{key.replace('has_', '')}</div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    )}
+
+                    {/* Evaluation Summary (markdown report) */}
+                    {reviewData.evaluation_summary && reviewData.evaluation_summary.length > 30 && (
+                        <div className="card bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-md">
+                            <h3 className="font-black text-lg text-slate-800 dark:text-white mb-3 flex items-center gap-2">
+                                <FileText size={18} className="text-purple-500" />
+                                Evaluation Summary
+                            </h3>
+                            <pre className="text-xs text-slate-600 dark:text-slate-400 whitespace-pre-wrap leading-relaxed font-sans bg-slate-50 dark:bg-slate-900/50 p-4 rounded-xl border border-slate-100 dark:border-slate-800 max-h-72 overflow-y-auto">
+                                {reviewData.evaluation_summary}
+                            </pre>
+                        </div>
+                    )}
+
+                </div>{/* end lg:col-span-2 left column */}
 
                 {/* Right Column - Review Details, Gaps, Recommendations, and Trace Documents */}
                 <div className="space-y-6">
@@ -322,6 +377,23 @@ const ReviewResult = () => {
                             <Settings size={18} className="text-slate-500" />
                             Deliverables Assessment
                         </h3>
+
+                        {/* Whats Done Well */}
+                        {reviewData.whats_done_well?.length > 0 && (
+                            <div>
+                                <span className="text-[10px] uppercase font-bold text-emerald-600 dark:text-emerald-400 block mb-2 flex items-center gap-1">
+                                    <CheckCircle size={12} /> What's Done Well
+                                </span>
+                                <ul className="space-y-2">
+                                    {reviewData.whats_done_well.map((item, i) => (
+                                        <li key={i} className="text-xs text-emerald-700 dark:text-emerald-400 bg-emerald-50/50 dark:bg-emerald-900/10 p-2.5 rounded-xl border border-emerald-100 dark:border-emerald-900/30 flex items-start gap-2">
+                                            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-1.5 flex-shrink-0" />
+                                            <span className="leading-normal">{item}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        )}
 
                         {/* Missing Deliverables Badges */}
                         <div>

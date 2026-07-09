@@ -129,6 +129,9 @@ class ReviewOrchestrator:
             failure_reasons = eval_output.get("failure_reasons", [])
             if not failure_reasons and failure_type:
                 failure_reasons = [failure_type]
+            whats_done_well = eval_output.get("whats_done_well", [])
+            if not whats_done_well and eval_res == "PASS":
+                whats_done_well = ["All rule checks passed. Repository structure, proof, architecture, and delivery ratio meet requirements."]
 
         # Sanitize eval_res and failure_type to strictly respect final_convergence contract
         if eval_res not in ("PASS", "FAIL"):
@@ -217,9 +220,19 @@ class ReviewOrchestrator:
             analysis_val["clarity"] = score_val
         if "discipline_signals" not in analysis_val:
             analysis_val["discipline_signals"] = score_val
+        # Embed pac and rubric into analysis so they survive storage
+        pac_val = eval_output.get("pac", {})
+        rubric_val = eval_output.get("rubric", {})
+        if pac_val:
+            analysis_val["pac"] = pac_val
+        if rubric_val:
+            analysis_val["rubric"] = rubric_val
 
         improvement_hints_val = eval_output.get("improvement_hints", [])
         missing_features_val = eval_output.get("missing_features", [])
+        whats_done_well_val = eval_output.get("whats_done_well", [])
+        if not whats_done_well_val and eval_res == "PASS":
+            whats_done_well_val = ["All rule checks passed. Repository structure, proof, architecture, and delivery ratio meet requirements."]
 
         review_record = ReviewRecord(
             review_id=review_id,
@@ -242,7 +255,8 @@ class ReviewOrchestrator:
             readiness_percent=score_val,
             status=status_val,
             candidate_name=task.submitted_by,
-            task_title=task.task_title
+            task_title=task.task_title,
+            whats_done_well=whats_done_well_val
         )
         product_storage.store_review(review_record)
 

@@ -92,6 +92,7 @@ class ReviewDetailResponse(BaseModel):
     next_task_difficulty: str = ""
     next_task_focus_area: str = ""
     runtime_evidence: List[str] = []
+    whats_done_well: List[str] = []
 
 class NextTaskDetailResponse(BaseModel):
     next_task_id: str
@@ -297,7 +298,8 @@ def get_review(submission_id: str, current_user: dict = Depends(require_any_auth
         next_task_objective=next_task.objective if next_task else "",
         next_task_difficulty=next_task.difficulty if next_task else "",
         next_task_focus_area=next_task.focus_area if next_task else "",
-        runtime_evidence=runtime_evidence
+        runtime_evidence=runtime_evidence,
+        whats_done_well=getattr(review, "whats_done_well", []) or []
     )
 
 @router.get("/next/{submission_id}", response_model=NextTaskDetailResponse)
