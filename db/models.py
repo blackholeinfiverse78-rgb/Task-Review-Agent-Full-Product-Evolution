@@ -59,6 +59,7 @@ class TaskSubmissionModel(Base):
     registry_validation_status = Column(String(50), nullable=True)
     registry_validation_reason = Column(Text, nullable=True)
     review_state = Column(String(50), nullable=True)
+    github_repo_link = Column(String(500), nullable=True)
     deleted_at = Column(DateTime, nullable=True)
 
 class ReviewModel(Base):

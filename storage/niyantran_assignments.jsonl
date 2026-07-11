@@ -1,4 +1,9 @@
-{"trace_id": "trace-test-527c7526", "assignment_id": "assign-trace-te", "task_id": "T-GOV-F01", "candidate_id": "Akash", "assigned_by": "Akash", "timestamp": "2026-06-30T07:09:14.766632Z"}
-{"trace_id": "trace-self-cert-f451c8e1", "assignment_id": "assign-trace-se", "task_id": "T-GOV-F01", "candidate_id": "Akash", "assigned_by": "Akash", "timestamp": "2026-06-30T10:37:27.054964Z"}
-{"trace_id": "trace-self-cert-6419aa93", "assignment_id": "assign-trace-se", "task_id": "T-GOV-F01", "candidate_id": "Akash", "assigned_by": "Akash", "timestamp": "2026-06-30T10:40:25.380515Z"}
-{"trace_id": "trace-self-cert-0c759547", "assignment_id": "assign-trace-se", "task_id": "T-GOV-F01", "candidate_id": "Akash", "assigned_by": "Akash", "timestamp": "2026-06-30T10:42:13.774349Z"}
+{"trace_id": "trace-test-737d83e1", "assignment_id": "assign-trace-te", "task_id": "T-GOV-F01", "candidate_id": "Akash", "assigned_by": "Akash", "timestamp": "2026-07-10T11:56:50.158783Z"}
+{"trace_id": "hv-demo-002", "assignment_id": "assign-hv-demo-", "task_id": "T-GOV-F01", "candidate_id": "Akash", "assigned_by": "Akash", "timestamp": "2026-07-10T11:59:22.774173Z"}
+{"trace_id": "hv-demo-003", "assignment_id": "assign-hv-demo-", "task_id": "T-GOV-F01", "candidate_id": "Akash", "assigned_by": "Akash", "timestamp": "2026-07-10T11:59:23.354180Z"}
+{"trace_id": "hv-demo-001", "assignment_id": "assign-hv-demo-", "task_id": "T-GOV-F01", "candidate_id": "Akash", "assigned_by": "Akash", "timestamp": "2026-07-10T11:59:23.913555Z"}
+{"trace_id": "trace-ishan-self-review-v1", "assignment_id": "assign-trace-is", "task_id": "T-GOV-F01", "candidate_id": "Akash", "assigned_by": "Akash", "timestamp": "2026-07-11T05:16:06.753558Z"}
+{"trace_id": "trace-ishan-borderline-v1", "assignment_id": "assign-trace-is", "task_id": "T-GOV-F01", "candidate_id": "Akash", "assigned_by": "Akash", "timestamp": "2026-07-11T05:16:16.641384Z"}
+{"trace_id": "trace-ishan-failure-v1", "assignment_id": "assign-trace-is", "task_id": "T-GOV-F01", "candidate_id": "Akash", "assigned_by": "Akash", "timestamp": "2026-07-11T05:16:26.014150Z"}
+{"trace_id": "trace-ansh-shakti-v1", "assignment_id": "assign-trace-an", "task_id": "T-GOV-F01", "candidate_id": "Akash", "assigned_by": "Akash", "timestamp": "2026-07-11T05:16:35.301407Z"}
+{"trace_id": "trace-self-cert-622ef3ed", "assignment_id": "assign-trace-se", "task_id": "T-GOV-F01", "candidate_id": "Akash", "assigned_by": "Akash", "timestamp": "2026-07-11T05:17:15.452757Z"}

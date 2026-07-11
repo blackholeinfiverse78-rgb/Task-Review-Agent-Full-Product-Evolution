@@ -153,6 +153,7 @@ class TaskSubmission(BaseModel):
     registry_validation_status: Optional[str] = Field(None)
     registry_validation_reason: Optional[str] = Field(None)
     review_state: str = Field(default="PENDING_REVIEW")
+    github_repo_link: Optional[str] = Field(None)
 
     class Config:
         use_enum_values = True
@@ -215,7 +216,7 @@ def _row_to_review(row, mem_review=None) -> "ReviewRecord":
         decision=row.decision,
         failure_reasons=_dejson(row.failure_reasons, getattr(mem_review, "failure_reasons", []) if mem_review else []),
         improvement_hints=_dejson(row.improvement_hints, getattr(mem_review, "improvement_hints", []) if mem_review else []),
-        analysis=_dejson(getattr(row, "analysis_json", None) or row.analysis, getattr(mem_review, "analysis", {}) if mem_review else {}),
+        analysis=_dejson(getattr(row, "analysis_json", None) or getattr(row, "analysis", None), getattr(mem_review, "analysis", {}) if mem_review else {}),
         reviewed_at=row.reviewed_at,
         evaluation_time_ms=row.evaluation_time_ms or 0,
         missing_features=_dejson(row.missing_features, getattr(mem_review, "missing_features", []) if mem_review else []),
@@ -342,6 +343,7 @@ class ProductStorage:
                 db_obj.registry_validation_status = submission.registry_validation_status
                 db_obj.registry_validation_reason = submission.registry_validation_reason
                 db_obj.review_state = submission.review_state
+                db_obj.github_repo_link = getattr(submission, 'github_repo_link', None)
                 db.add(db_obj)
                 builder_obj = db.query(Builder).filter(Builder.id == submission.submitted_by).first()
                 if not builder_obj:
@@ -451,7 +453,8 @@ class ProductStorage:
                         module_id=row.module_id, schema_version=row.schema_version,
                         registry_validation_status=row.registry_validation_status,
                         registry_validation_reason=row.registry_validation_reason,
-                        review_state=row.review_state
+                        review_state=row.review_state,
+                        github_repo_link=getattr(row, 'github_repo_link', None)
                     )
                     db.close()
                     return res

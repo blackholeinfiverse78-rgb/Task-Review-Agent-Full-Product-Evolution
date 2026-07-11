@@ -1,1 +1,689 @@
-{"submissions": {}, "reviews": {}, "next_tasks": {}}
+{
+  "submissions": {
+    "sub-7fb68f11361c-0f2cc045": {
+      "submission_id": "sub-7fb68f11361c-0f2cc045",
+      "task_id": "task-det-100",
+      "task_title": "Determinism Verification Task with Specific Requirements",
+      "task_description": "Objective: Verify absolute determinism across iterations.\n    Requirement: Same input must yield identical output every time.\n    Constraint: Zero randomness, zero variance allowed.\n    Technical Stack: FastAPI, PostgreSQL, Redis, Docker.",
+      "submitted_by": "QA Engineer",
+      "submitted_at": "2026-02-05T10:00:00",
+      "status": "submitted",
+      "previous_task_id": null,
+      "pdf_file_path": null,
+      "pdf_extracted_text": null,
+      "module_id": "task-review-agent",
+      "schema_version": "v1.0",
+      "registry_validation_status": "VALID",
+      "registry_validation_reason": "Validation Passed",
+      "review_state": "PENDING_REVIEW",
+      "github_repo_link": null
+    },
+    "sub-304468318b9e-4cf182ab": {
+      "submission_id": "sub-304468318b9e-4cf182ab",
+      "task_id": "task-1783684812.456592",
+      "task_title": "My Test Task Title",
+      "task_description": "This is a description that is at least ten characters long and has enough detail for validation checks.",
+      "submitted_by": "Test User",
+      "submitted_at": "2026-07-10T17:30:12.456598",
+      "status": "submitted",
+      "previous_task_id": null,
+      "pdf_file_path": null,
+      "pdf_extracted_text": "",
+      "module_id": "task-review-agent",
+      "schema_version": "v1.0",
+      "registry_validation_status": "VALID",
+      "registry_validation_reason": "Validation Passed",
+      "review_state": "PENDING_REVIEW",
+      "github_repo_link": null
+    },
+    "sub-c8ded0272f25-eview-v1": {
+      "submission_id": "sub-c8ded0272f25-eview-v1",
+      "task_id": "T-GOV-001",
+      "task_title": "Parikshak Runtime Validation Service",
+      "task_description": "Validate Parikshak using actual historical developer submissions and repositories. Verify deterministic outputs across repeated executions.",
+      "submitted_by": "operator",
+      "submitted_at": "2026-07-11T10:46:01.296345",
+      "status": "submitted",
+      "previous_task_id": null,
+      "pdf_file_path": null,
+      "pdf_extracted_text": null,
+      "module_id": "task-review-agent",
+      "schema_version": "v1.0",
+      "registry_validation_status": "VALID",
+      "registry_validation_reason": null,
+      "review_state": "PENDING_REVIEW",
+      "github_repo_link": null
+    },
+    "sub-f055e2cff916-rline-v1": {
+      "submission_id": "sub-f055e2cff916-rline-v1",
+      "task_id": "T-GOV-001",
+      "task_title": "Implement rate limiter middleware",
+      "task_description": "Implement a sliding window rate limiter middleware for protected FastAPI routes using SQLite backend.",
+      "submitted_by": "operator",
+      "submitted_at": "2026-07-11T10:46:11.259083",
+      "status": "submitted",
+      "previous_task_id": null,
+      "pdf_file_path": null,
+      "pdf_extracted_text": null,
+      "module_id": "task-review-agent",
+      "schema_version": "v1.0",
+      "registry_validation_status": "VALID",
+      "registry_validation_reason": null,
+      "review_state": "PENDING_REVIEW",
+      "github_repo_link": null
+    },
+    "sub-53812b5fe54a-ilure-v1": {
+      "submission_id": "sub-53812b5fe54a-ilure-v1",
+      "task_id": "T-GOV-001",
+      "task_title": "Database Trigger setup",
+      "task_description": "Short desc",
+      "submitted_by": "operator",
+      "submitted_at": "2026-07-11T10:46:21.038366",
+      "status": "submitted",
+      "previous_task_id": null,
+      "pdf_file_path": null,
+      "pdf_extracted_text": null,
+      "module_id": "task-review-agent",
+      "schema_version": "v1.0",
+      "registry_validation_status": "VALID",
+      "registry_validation_reason": null,
+      "review_state": "PENDING_REVIEW",
+      "github_repo_link": null
+    },
+    "sub-bf7b3c9280fe-hakti-v1": {
+      "submission_id": "sub-bf7b3c9280fe-hakti-v1",
+      "task_id": "T-GOV-001",
+      "task_title": "GC Shakti Integration",
+      "task_description": "Develop the GC Shakti consensus engine integration for governed TANTRA release pipelines. Implement cryptographic signature checks and replay prevention rules.",
+      "submitted_by": "operator",
+      "submitted_at": "2026-07-11T10:46:30.326991",
+      "status": "submitted",
+      "previous_task_id": null,
+      "pdf_file_path": null,
+      "pdf_extracted_text": null,
+      "module_id": "task-review-agent",
+      "schema_version": "v1.0",
+      "registry_validation_status": "VALID",
+      "registry_validation_reason": null,
+      "review_state": "PENDING_REVIEW",
+      "github_repo_link": null
+    },
+    "sub-416b2e6f1d07-t-03e408": {
+      "submission_id": "sub-416b2e6f1d07-t-03e408",
+      "task_id": "test-001",
+      "task_title": "Consensus State Machine Verification",
+      "task_description": "Implement consensus state machine to verify blockchain block finality and replay checks.",
+      "submitted_by": "Akash",
+      "submitted_at": "2026-07-11T10:47:12.834490",
+      "status": "submitted",
+      "previous_task_id": null,
+      "pdf_file_path": null,
+      "pdf_extracted_text": null,
+      "module_id": null,
+      "schema_version": null,
+      "registry_validation_status": null,
+      "registry_validation_reason": null,
+      "review_state": "PENDING_REVIEW",
+      "github_repo_link": null
+    },
+    "sub-5caf4c3cf748-622ef3ed": {
+      "submission_id": "sub-5caf4c3cf748-622ef3ed",
+      "task_id": "T-GOV-001",
+      "task_title": "Gov-OS Integration Validation",
+      "task_description": "Implement Gov-OS journal and Pravah replay adapters.",
+      "submitted_by": "operator",
+      "submitted_at": "2026-07-11T10:47:14.570234",
+      "status": "submitted",
+      "previous_task_id": null,
+      "pdf_file_path": null,
+      "pdf_extracted_text": null,
+      "module_id": "task-review-agent",
+      "schema_version": "v1.0",
+      "registry_validation_status": "VALID",
+      "registry_validation_reason": null,
+      "review_state": "PENDING_REVIEW",
+      "github_repo_link": null
+    },
+    "sub-251e5ba06e1b-89f4bb3a": {
+      "submission_id": "sub-251e5ba06e1b-89f4bb3a",
+      "task_id": "task-1783754038.014688",
+      "task_title": "Test Task For Debug",
+      "task_description": "This is a detailed description for the test task submission to debug the 500 error on review load endpoint.",
+      "submitted_by": "DebugUser",
+      "submitted_at": "2026-07-11T12:43:58.014696",
+      "status": "submitted",
+      "previous_task_id": null,
+      "pdf_file_path": null,
+      "pdf_extracted_text": "",
+      "module_id": "task-review-agent",
+      "schema_version": "v1.0",
+      "registry_validation_status": "VALID",
+      "registry_validation_reason": "Validation Passed",
+      "review_state": "PENDING_REVIEW",
+      "github_repo_link": null
+    },
+    "sub-585b4cbfc7e3-2bd87ec6": {
+      "submission_id": "sub-585b4cbfc7e3-2bd87ec6",
+      "task_id": "task-1783754365.81247",
+      "task_title": "Parikshak Deterministic Task Review and Governance System",
+      "task_description": "Parikshak is a deterministic rule-based engineering task evaluation engine built with FastAPI and SQLite. The system implements a strict binary rule engine that evaluates task submissions against schema validation completeness checks logic correctness and integration verification. It features an immutable append-only event journal with cryptographic governance envelopes a human-in-loop review queue that blocks autonomous AI assignment releases and a single-writer concurrency mutex for serialized database mutations. The architecture includes a graph-based task traversal engine that routes PASS submissions to advancement tasks and FAIL submissions to corrective assignments.",
+      "submitted_by": "TestUser",
+      "submitted_at": "2026-07-11T12:49:25.812477",
+      "status": "submitted",
+      "previous_task_id": null,
+      "pdf_file_path": null,
+      "pdf_extracted_text": "",
+      "module_id": "task-review-agent",
+      "schema_version": "v1.0",
+      "registry_validation_status": "VALID",
+      "registry_validation_reason": "Validation Passed",
+      "review_state": "PENDING_REVIEW",
+      "github_repo_link": "https://github.com/Akash-kafle/parikshak"
+    }
+  },
+  "reviews": {
+    "rev-sub-7fb68f11361c-0f2cc045": {
+      "review_id": "rev-sub-7fb68f11361c-0f2cc045",
+      "submission_id": "sub-7fb68f11361c-0f2cc045",
+      "trace_id": "trace-auto-d71bafb2174a4c7b",
+      "evaluation_result": "FAIL",
+      "failure_type": "schema_violation",
+      "decision": "REJECTED",
+      "failure_reasons": [
+        "schema_violation"
+      ],
+      "improvement_hints": [
+        "Provide more detailed task description (min 50 words)."
+      ],
+      "analysis": {
+        "technical_quality": 59,
+        "clarity": 59,
+        "discipline_signals": 59
+      },
+      "reviewed_at": "2026-02-05T10:00:00",
+      "evaluation_time_ms": 0,
+      "missing_features": [],
+      "evaluation_summary": "Parikshak Evaluation: FAIL",
+      "selected_task_id": "T-GOV-F01",
+      "selection_reason": "FAIL(schema_violation) -> failure_tasks['schema_violation'][0] = T-GOV-F01",
+      "review_state": "PENDING_REVIEW",
+      "version": 1,
+      "score": 40,
+      "readiness_percent": 40,
+      "status": "borderline",
+      "candidate_name": "QA Engineer",
+      "task_title": "Determinism Verification Task with Specific Requirements",
+      "reviewed_by": null,
+      "whats_done_well": []
+    },
+    "rev-sub-304468318b9e-4cf182ab": {
+      "review_id": "rev-sub-304468318b9e-4cf182ab",
+      "submission_id": "sub-304468318b9e-4cf182ab",
+      "trace_id": "trace-ui-20260710173012-6cf44fc2",
+      "evaluation_result": "FAIL",
+      "failure_type": "schema_violation",
+      "decision": "REJECTED",
+      "failure_reasons": [
+        "schema_violation"
+      ],
+      "improvement_hints": [
+        "Ensure task title is at least 5 words and description is detailed (> 50 words).",
+        "Verify the repository link is present and valid if required."
+      ],
+      "analysis": {
+        "technical_quality": 16,
+        "clarity": 16,
+        "discipline_signals": 16,
+        "pac": {
+          "code": 0,
+          "architecture": 0,
+          "proof": 0
+        },
+        "rubric": {
+          "has_alignment": 1,
+          "has_effort": 0,
+          "has_code": 0
+        }
+      },
+      "reviewed_at": "2026-07-10T17:30:12.456598",
+      "evaluation_time_ms": 0,
+      "missing_features": [],
+      "evaluation_summary": "Parikshak Evaluation: FAIL",
+      "selected_task_id": "T-GOV-F01",
+      "selection_reason": "FAIL(schema_violation) -> failure_tasks['schema_violation'][0] = T-GOV-F01",
+      "review_state": "PENDING_REVIEW",
+      "version": 1,
+      "score": 16,
+      "readiness_percent": 16,
+      "status": "fail",
+      "candidate_name": "Test User",
+      "task_title": "My Test Task Title",
+      "reviewed_by": null,
+      "whats_done_well": []
+    },
+    "rev-sub-c8ded0272f25-eview-v1": {
+      "review_id": "rev-sub-c8ded0272f25-eview-v1",
+      "submission_id": "sub-c8ded0272f25-eview-v1",
+      "trace_id": "trace-ishan-self-review-v1",
+      "evaluation_result": "PASS",
+      "failure_type": "schema_violation",
+      "decision": "APPROVED",
+      "failure_reasons": [
+        "Verify repository files and structure match blueprint registry specs. Details: schema_violation"
+      ],
+      "improvement_hints": [
+        "Gaps in requirement completeness: Required repository structure or metadata files are missing or incomplete."
+      ],
+      "analysis": {
+        "evaluation_result": "FAIL",
+        "failure_type": "schema_violation",
+        "decision": "REJECTED",
+        "score": 40,
+        "readiness_percent": 40,
+        "status": "fail",
+        "failure_reasons": [
+          "Verify repository files and structure match blueprint registry specs. Details: schema_violation"
+        ],
+        "improvement_hints": [
+          "Gaps in requirement completeness: Required repository structure or metadata files are missing or incomplete."
+        ],
+        "evaluation_summary": "# Parikshak Executive Review Report\n\n## WHAT'S DONE WELL\n* Basic package setup is visible, but core enforcement rules failed.\n\n## MISSING / INCOMPLETE\n* Gaps in requirement completeness: Required repository structure or metadata files are missing or incomplete.\n\n## REQUIRED FIXES\n* Verify repository files and structure match blueprint registry specs. Details: schema_violation\n\n## OPERATIONAL METRICS\n* **Score**: 4.0/10\n* **Readiness**: 40.0%\n* **Verdict**: NEEDS WORK\n* **Evaluation Result**: FAIL\n\n## TIMELINE COMMENTARY\nReview execution rejected due to rule failure.\n\n## EVIDENCE USED\n* rule_engine.py\n* context_registry.json\n\n## RECOMMENDATION & DISPATCH\n* **Next Assigned Task**: `T-GOV-F01`\n* **Justification**: Rule failure (schema_violation) requires correction task targeting failed dimension before advancement is permitted.\n\n*Verified: 2026-07-11T05:16:01.296277Z*\n",
+        "selected_task_id": "T-GOV-F01",
+        "selection_reason": "Rule failure (schema_violation) requires correction task targeting failed dimension before advancement is permitted.",
+        "evidence_used": [
+          "rule_engine.py",
+          "context_registry.json"
+        ],
+        "whats_done_well": [
+          "Basic package setup is visible, but core enforcement rules failed."
+        ],
+        "timeline_commentary": "Review execution rejected due to rule failure.",
+        "review_mode": "deterministic_fallback"
+      },
+      "reviewed_at": "2026-07-11T10:46:06.231843",
+      "evaluation_time_ms": 0,
+      "missing_features": [
+        "Gaps in requirement completeness: Required repository structure or metadata files are missing or incomplete."
+      ],
+      "evaluation_summary": "# Parikshak Executive Review Report\n\n## WHAT'S DONE WELL\n* Basic package setup is visible, but core enforcement rules failed.\n\n## MISSING / INCOMPLETE\n* Gaps in requirement completeness: Required repository structure or metadata files are missing or incomplete.\n\n## REQUIRED FIXES\n* Verify repository files and structure match blueprint registry specs. Details: schema_violation\n\n## OPERATIONAL METRICS\n* **Score**: 4.0/10\n* **Readiness**: 40.0%\n* **Verdict**: NEEDS WORK\n* **Evaluation Result**: FAIL\n\n## TIMELINE COMMENTARY\nReview execution rejected due to rule failure.\n\n## EVIDENCE USED\n* rule_engine.py\n* context_registry.json\n\n## RECOMMENDATION & DISPATCH\n* **Next Assigned Task**: `T-GOV-F01`\n* **Justification**: Rule failure (schema_violation) requires correction task targeting failed dimension before advancement is permitted.\n\n*Verified: 2026-07-11T05:16:01.296277Z*\n",
+      "selected_task_id": "T-GOV-F01",
+      "selection_reason": "Rule failure (schema_violation) requires correction task targeting failed dimension before advancement is permitted.",
+      "review_state": "APPROVED",
+      "version": 2,
+      "score": 40,
+      "readiness_percent": 40,
+      "status": "pass",
+      "candidate_name": "Ishan Shirode",
+      "task_title": "Parikshak Runtime Validation Service",
+      "reviewed_by": "Akash",
+      "whats_done_well": []
+    },
+    "rev-sub-f055e2cff916-rline-v1": {
+      "review_id": "rev-sub-f055e2cff916-rline-v1",
+      "submission_id": "sub-f055e2cff916-rline-v1",
+      "trace_id": "trace-ishan-borderline-v1",
+      "evaluation_result": "FAIL",
+      "failure_type": "schema_violation",
+      "decision": "REJECTED",
+      "failure_reasons": [
+        "Verify repository files and structure match blueprint registry specs. Details: schema_violation"
+      ],
+      "improvement_hints": [
+        "Gaps in requirement completeness: Required repository structure or metadata files are missing or incomplete."
+      ],
+      "analysis": {
+        "evaluation_result": "FAIL",
+        "failure_type": "schema_violation",
+        "decision": "REJECTED",
+        "score": 40,
+        "readiness_percent": 40,
+        "status": "fail",
+        "failure_reasons": [
+          "Verify repository files and structure match blueprint registry specs. Details: schema_violation"
+        ],
+        "improvement_hints": [
+          "Gaps in requirement completeness: Required repository structure or metadata files are missing or incomplete."
+        ],
+        "evaluation_summary": "# Parikshak Executive Review Report\n\n## WHAT'S DONE WELL\n* Basic package setup is visible, but core enforcement rules failed.\n\n## MISSING / INCOMPLETE\n* Gaps in requirement completeness: Required repository structure or metadata files are missing or incomplete.\n\n## REQUIRED FIXES\n* Verify repository files and structure match blueprint registry specs. Details: schema_violation\n\n## OPERATIONAL METRICS\n* **Score**: 4.0/10\n* **Readiness**: 40.0%\n* **Verdict**: NEEDS WORK\n* **Evaluation Result**: FAIL\n\n## TIMELINE COMMENTARY\nReview execution rejected due to rule failure.\n\n## EVIDENCE USED\n* rule_engine.py\n* context_registry.json\n\n## RECOMMENDATION & DISPATCH\n* **Next Assigned Task**: `T-GOV-F01`\n* **Justification**: Rule failure (schema_violation) requires correction task targeting failed dimension before advancement is permitted.\n\n*Verified: 2026-07-11T05:16:11.259022Z*\n",
+        "selected_task_id": "T-GOV-F01",
+        "selection_reason": "Rule failure (schema_violation) requires correction task targeting failed dimension before advancement is permitted.",
+        "evidence_used": [
+          "rule_engine.py",
+          "context_registry.json"
+        ],
+        "whats_done_well": [
+          "Basic package setup is visible, but core enforcement rules failed."
+        ],
+        "timeline_commentary": "Review execution rejected due to rule failure.",
+        "review_mode": "deterministic_fallback"
+      },
+      "reviewed_at": "2026-07-11T10:46:16.084619",
+      "evaluation_time_ms": 0,
+      "missing_features": [
+        "Gaps in requirement completeness: Required repository structure or metadata files are missing or incomplete."
+      ],
+      "evaluation_summary": "# Parikshak Executive Review Report\n\n## WHAT'S DONE WELL\n* Basic package setup is visible, but core enforcement rules failed.\n\n## MISSING / INCOMPLETE\n* Gaps in requirement completeness: Required repository structure or metadata files are missing or incomplete.\n\n## REQUIRED FIXES\n* Verify repository files and structure match blueprint registry specs. Details: schema_violation\n\n## OPERATIONAL METRICS\n* **Score**: 4.0/10\n* **Readiness**: 40.0%\n* **Verdict**: NEEDS WORK\n* **Evaluation Result**: FAIL\n\n## TIMELINE COMMENTARY\nReview execution rejected due to rule failure.\n\n## EVIDENCE USED\n* rule_engine.py\n* context_registry.json\n\n## RECOMMENDATION & DISPATCH\n* **Next Assigned Task**: `T-GOV-F01`\n* **Justification**: Rule failure (schema_violation) requires correction task targeting failed dimension before advancement is permitted.\n\n*Verified: 2026-07-11T05:16:11.259022Z*\n",
+      "selected_task_id": "T-GOV-F01",
+      "selection_reason": "Rule failure (schema_violation) requires correction task targeting failed dimension before advancement is permitted.",
+      "review_state": "REJECTED",
+      "version": 2,
+      "score": 40,
+      "readiness_percent": 40,
+      "status": "fail",
+      "candidate_name": "Ishan Borderline",
+      "task_title": "Implement rate limiter middleware",
+      "reviewed_by": "Akash",
+      "whats_done_well": []
+    },
+    "rev-sub-53812b5fe54a-ilure-v1": {
+      "review_id": "rev-sub-53812b5fe54a-ilure-v1",
+      "submission_id": "sub-53812b5fe54a-ilure-v1",
+      "trace_id": "trace-ishan-failure-v1",
+      "evaluation_result": "FAIL",
+      "failure_type": "schema_violation",
+      "decision": "REJECTED",
+      "failure_reasons": [
+        "Verify repository files and structure match blueprint registry specs. Details: schema_violation"
+      ],
+      "improvement_hints": [
+        "Gaps in requirement completeness: Required repository structure or metadata files are missing or incomplete."
+      ],
+      "analysis": {
+        "evaluation_result": "FAIL",
+        "failure_type": "schema_violation",
+        "decision": "REJECTED",
+        "score": 40,
+        "readiness_percent": 40,
+        "status": "fail",
+        "failure_reasons": [
+          "Verify repository files and structure match blueprint registry specs. Details: schema_violation"
+        ],
+        "improvement_hints": [
+          "Gaps in requirement completeness: Required repository structure or metadata files are missing or incomplete."
+        ],
+        "evaluation_summary": "# Parikshak Executive Review Report\n\n## WHAT'S DONE WELL\n* Basic package setup is visible, but core enforcement rules failed.\n\n## MISSING / INCOMPLETE\n* Gaps in requirement completeness: Required repository structure or metadata files are missing or incomplete.\n\n## REQUIRED FIXES\n* Verify repository files and structure match blueprint registry specs. Details: schema_violation\n\n## OPERATIONAL METRICS\n* **Score**: 4.0/10\n* **Readiness**: 40.0%\n* **Verdict**: NEEDS WORK\n* **Evaluation Result**: FAIL\n\n## TIMELINE COMMENTARY\nReview execution rejected due to rule failure.\n\n## EVIDENCE USED\n* rule_engine.py\n* context_registry.json\n\n## RECOMMENDATION & DISPATCH\n* **Next Assigned Task**: `T-GOV-F01`\n* **Justification**: Rule failure (schema_violation) requires correction task targeting failed dimension before advancement is permitted.\n\n*Verified: 2026-07-11T05:16:21.038327Z*\n",
+        "selected_task_id": "T-GOV-F01",
+        "selection_reason": "Rule failure (schema_violation) requires correction task targeting failed dimension before advancement is permitted.",
+        "evidence_used": [
+          "rule_engine.py",
+          "context_registry.json"
+        ],
+        "whats_done_well": [
+          "Basic package setup is visible, but core enforcement rules failed."
+        ],
+        "timeline_commentary": "Review execution rejected due to rule failure.",
+        "review_mode": "deterministic_fallback"
+      },
+      "reviewed_at": "2026-07-11T10:46:25.680129",
+      "evaluation_time_ms": 0,
+      "missing_features": [
+        "Gaps in requirement completeness: Required repository structure or metadata files are missing or incomplete."
+      ],
+      "evaluation_summary": "# Parikshak Executive Review Report\n\n## WHAT'S DONE WELL\n* Basic package setup is visible, but core enforcement rules failed.\n\n## MISSING / INCOMPLETE\n* Gaps in requirement completeness: Required repository structure or metadata files are missing or incomplete.\n\n## REQUIRED FIXES\n* Verify repository files and structure match blueprint registry specs. Details: schema_violation\n\n## OPERATIONAL METRICS\n* **Score**: 4.0/10\n* **Readiness**: 40.0%\n* **Verdict**: NEEDS WORK\n* **Evaluation Result**: FAIL\n\n## TIMELINE COMMENTARY\nReview execution rejected due to rule failure.\n\n## EVIDENCE USED\n* rule_engine.py\n* context_registry.json\n\n## RECOMMENDATION & DISPATCH\n* **Next Assigned Task**: `T-GOV-F01`\n* **Justification**: Rule failure (schema_violation) requires correction task targeting failed dimension before advancement is permitted.\n\n*Verified: 2026-07-11T05:16:21.038327Z*\n",
+      "selected_task_id": "T-GOV-F01",
+      "selection_reason": "Rule failure (schema_violation) requires correction task targeting failed dimension before advancement is permitted.",
+      "review_state": "REJECTED",
+      "version": 2,
+      "score": 40,
+      "readiness_percent": 40,
+      "status": "fail",
+      "candidate_name": "Ishan Failure",
+      "task_title": "Database Trigger setup",
+      "reviewed_by": "Akash",
+      "whats_done_well": []
+    },
+    "rev-sub-bf7b3c9280fe-hakti-v1": {
+      "review_id": "rev-sub-bf7b3c9280fe-hakti-v1",
+      "submission_id": "sub-bf7b3c9280fe-hakti-v1",
+      "trace_id": "trace-ansh-shakti-v1",
+      "evaluation_result": "PASS",
+      "failure_type": "schema_violation",
+      "decision": "APPROVED",
+      "failure_reasons": [
+        "Verify repository files and structure match blueprint registry specs. Details: schema_violation"
+      ],
+      "improvement_hints": [
+        "Gaps in requirement completeness: Required repository structure or metadata files are missing or incomplete."
+      ],
+      "analysis": {
+        "evaluation_result": "FAIL",
+        "failure_type": "schema_violation",
+        "decision": "REJECTED",
+        "score": 40,
+        "readiness_percent": 40,
+        "status": "fail",
+        "failure_reasons": [
+          "Verify repository files and structure match blueprint registry specs. Details: schema_violation"
+        ],
+        "improvement_hints": [
+          "Gaps in requirement completeness: Required repository structure or metadata files are missing or incomplete."
+        ],
+        "evaluation_summary": "# Parikshak Executive Review Report\n\n## WHAT'S DONE WELL\n* Basic package setup is visible, but core enforcement rules failed.\n\n## MISSING / INCOMPLETE\n* Gaps in requirement completeness: Required repository structure or metadata files are missing or incomplete.\n\n## REQUIRED FIXES\n* Verify repository files and structure match blueprint registry specs. Details: schema_violation\n\n## OPERATIONAL METRICS\n* **Score**: 4.0/10\n* **Readiness**: 40.0%\n* **Verdict**: NEEDS WORK\n* **Evaluation Result**: FAIL\n\n## TIMELINE COMMENTARY\nReview execution rejected due to rule failure.\n\n## EVIDENCE USED\n* rule_engine.py\n* context_registry.json\n\n## RECOMMENDATION & DISPATCH\n* **Next Assigned Task**: `T-GOV-F01`\n* **Justification**: Rule failure (schema_violation) requires correction task targeting failed dimension before advancement is permitted.\n\n*Verified: 2026-07-11T05:16:30.326943Z*\n",
+        "selected_task_id": "T-GOV-F01",
+        "selection_reason": "Rule failure (schema_violation) requires correction task targeting failed dimension before advancement is permitted.",
+        "evidence_used": [
+          "rule_engine.py",
+          "context_registry.json"
+        ],
+        "whats_done_well": [
+          "Basic package setup is visible, but core enforcement rules failed."
+        ],
+        "timeline_commentary": "Review execution rejected due to rule failure.",
+        "review_mode": "deterministic_fallback"
+      },
+      "reviewed_at": "2026-07-11T10:46:34.923747",
+      "evaluation_time_ms": 0,
+      "missing_features": [
+        "Gaps in requirement completeness: Required repository structure or metadata files are missing or incomplete."
+      ],
+      "evaluation_summary": "# Parikshak Executive Review Report\n\n## WHAT'S DONE WELL\n* Basic package setup is visible, but core enforcement rules failed.\n\n## MISSING / INCOMPLETE\n* Gaps in requirement completeness: Required repository structure or metadata files are missing or incomplete.\n\n## REQUIRED FIXES\n* Verify repository files and structure match blueprint registry specs. Details: schema_violation\n\n## OPERATIONAL METRICS\n* **Score**: 4.0/10\n* **Readiness**: 40.0%\n* **Verdict**: NEEDS WORK\n* **Evaluation Result**: FAIL\n\n## TIMELINE COMMENTARY\nReview execution rejected due to rule failure.\n\n## EVIDENCE USED\n* rule_engine.py\n* context_registry.json\n\n## RECOMMENDATION & DISPATCH\n* **Next Assigned Task**: `T-GOV-F01`\n* **Justification**: Rule failure (schema_violation) requires correction task targeting failed dimension before advancement is permitted.\n\n*Verified: 2026-07-11T05:16:30.326943Z*\n",
+      "selected_task_id": "T-GOV-F01",
+      "selection_reason": "Rule failure (schema_violation) requires correction task targeting failed dimension before advancement is permitted.",
+      "review_state": "APPROVED",
+      "version": 2,
+      "score": 40,
+      "readiness_percent": 40,
+      "status": "pass",
+      "candidate_name": "Ansh",
+      "task_title": "GC Shakti Integration",
+      "reviewed_by": "Akash",
+      "whats_done_well": []
+    },
+    "rev-sub-416b2e6f1d07-t-03e408": {
+      "review_id": "rev-sub-416b2e6f1d07-t-03e408",
+      "submission_id": "sub-416b2e6f1d07-t-03e408",
+      "trace_id": "trace-det-03e408",
+      "evaluation_result": "FAIL",
+      "failure_type": "schema_violation",
+      "decision": "REJECTED",
+      "failure_reasons": [],
+      "improvement_hints": [],
+      "analysis": {},
+      "reviewed_at": "2026-07-11T10:47:12.834559",
+      "evaluation_time_ms": 0,
+      "missing_features": [],
+      "evaluation_summary": "",
+      "selected_task_id": "T-GOV-F01",
+      "selection_reason": "FAIL(schema_violation) -> failure_tasks['schema_violation'][0] = T-GOV-F01",
+      "review_state": "PENDING_REVIEW",
+      "version": 1,
+      "score": 40,
+      "readiness_percent": 40,
+      "status": "fail",
+      "candidate_name": "Akash",
+      "task_title": "Consensus State Machine Verification",
+      "reviewed_by": null,
+      "whats_done_well": []
+    },
+    "rev-sub-5caf4c3cf748-622ef3ed": {
+      "review_id": "rev-sub-5caf4c3cf748-622ef3ed",
+      "submission_id": "sub-5caf4c3cf748-622ef3ed",
+      "trace_id": "trace-self-cert-622ef3ed",
+      "evaluation_result": "PASS",
+      "failure_type": "schema_violation",
+      "decision": "APPROVED",
+      "failure_reasons": [
+        "Verify repository files and structure match blueprint registry specs. Details: schema_violation"
+      ],
+      "improvement_hints": [
+        "Gaps in requirement completeness: Required repository structure or metadata files are missing or incomplete."
+      ],
+      "analysis": {
+        "evaluation_result": "FAIL",
+        "failure_type": "schema_violation",
+        "decision": "REJECTED",
+        "score": 40,
+        "readiness_percent": 40,
+        "status": "fail",
+        "failure_reasons": [
+          "Verify repository files and structure match blueprint registry specs. Details: schema_violation"
+        ],
+        "improvement_hints": [
+          "Gaps in requirement completeness: Required repository structure or metadata files are missing or incomplete."
+        ],
+        "evaluation_summary": "# Parikshak Executive Review Report\n\n## WHAT'S DONE WELL\n* Basic package setup is visible, but core enforcement rules failed.\n\n## MISSING / INCOMPLETE\n* Gaps in requirement completeness: Required repository structure or metadata files are missing or incomplete.\n\n## REQUIRED FIXES\n* Verify repository files and structure match blueprint registry specs. Details: schema_violation\n\n## OPERATIONAL METRICS\n* **Score**: 4.0/10\n* **Readiness**: 40.0%\n* **Verdict**: NEEDS WORK\n* **Evaluation Result**: FAIL\n\n## TIMELINE COMMENTARY\nReview execution rejected due to rule failure.\n\n## EVIDENCE USED\n* rule_engine.py\n* context_registry.json\n\n## RECOMMENDATION & DISPATCH\n* **Next Assigned Task**: `T-GOV-F01`\n* **Justification**: Rule failure (schema_violation) requires correction task targeting failed dimension before advancement is permitted.\n\n*Verified: 2026-07-11T05:17:14.570189Z*\n",
+        "selected_task_id": "T-GOV-F01",
+        "selection_reason": "Rule failure (schema_violation) requires correction task targeting failed dimension before advancement is permitted.",
+        "evidence_used": [
+          "rule_engine.py",
+          "context_registry.json"
+        ],
+        "whats_done_well": [
+          "Basic package setup is visible, but core enforcement rules failed."
+        ],
+        "timeline_commentary": "Review execution rejected due to rule failure.",
+        "review_mode": "deterministic_fallback"
+      },
+      "reviewed_at": "2026-07-11T10:47:15.151115",
+      "evaluation_time_ms": 0,
+      "missing_features": [
+        "Gaps in requirement completeness: Required repository structure or metadata files are missing or incomplete."
+      ],
+      "evaluation_summary": "# Parikshak Executive Review Report\n\n## WHAT'S DONE WELL\n* Basic package setup is visible, but core enforcement rules failed.\n\n## MISSING / INCOMPLETE\n* Gaps in requirement completeness: Required repository structure or metadata files are missing or incomplete.\n\n## REQUIRED FIXES\n* Verify repository files and structure match blueprint registry specs. Details: schema_violation\n\n## OPERATIONAL METRICS\n* **Score**: 4.0/10\n* **Readiness**: 40.0%\n* **Verdict**: NEEDS WORK\n* **Evaluation Result**: FAIL\n\n## TIMELINE COMMENTARY\nReview execution rejected due to rule failure.\n\n## EVIDENCE USED\n* rule_engine.py\n* context_registry.json\n\n## RECOMMENDATION & DISPATCH\n* **Next Assigned Task**: `T-GOV-F01`\n* **Justification**: Rule failure (schema_violation) requires correction task targeting failed dimension before advancement is permitted.\n\n*Verified: 2026-07-11T05:17:14.570189Z*\n",
+      "selected_task_id": "T-GOV-F01",
+      "selection_reason": "Rule failure (schema_violation) requires correction task targeting failed dimension before advancement is permitted.",
+      "review_state": "APPROVED",
+      "version": 2,
+      "score": 40,
+      "readiness_percent": 40,
+      "status": "pass",
+      "candidate_name": "Ishan Shirode",
+      "task_title": "Gov-OS Integration Validation",
+      "reviewed_by": "Akash",
+      "whats_done_well": []
+    },
+    "rev-sub-251e5ba06e1b-89f4bb3a": {
+      "review_id": "rev-sub-251e5ba06e1b-89f4bb3a",
+      "submission_id": "sub-251e5ba06e1b-89f4bb3a",
+      "trace_id": "trace-ui-20260711124358-44e82a05",
+      "evaluation_result": "FAIL",
+      "failure_type": "schema_violation",
+      "decision": "REJECTED",
+      "failure_reasons": [
+        "schema_violation"
+      ],
+      "improvement_hints": [
+        "Ensure task title is at least 5 words and description is detailed (> 50 words).",
+        "Verify the repository link is present and valid if required."
+      ],
+      "analysis": {
+        "technical_quality": 0,
+        "clarity": 0,
+        "discipline_signals": 0,
+        "pac": {
+          "code": 0,
+          "architecture": 0,
+          "proof": 0
+        },
+        "rubric": {
+          "has_alignment": 0,
+          "has_effort": 0,
+          "has_code": 0
+        }
+      },
+      "reviewed_at": "2026-07-11T12:43:58.014696",
+      "evaluation_time_ms": 0,
+      "missing_features": [
+        "endpoint",
+        "review"
+      ],
+      "evaluation_summary": "Parikshak Evaluation: FAIL",
+      "selected_task_id": "T-GOV-F01",
+      "selection_reason": "FAIL(schema_violation) -> failure_tasks['schema_violation'][0] = T-GOV-F01",
+      "review_state": "PENDING_REVIEW",
+      "version": 1,
+      "score": 0,
+      "readiness_percent": 0,
+      "status": "fail",
+      "candidate_name": "DebugUser",
+      "task_title": "Test Task For Debug",
+      "reviewed_by": null,
+      "whats_done_well": []
+    },
+    "rev-sub-585b4cbfc7e3-2bd87ec6": {
+      "review_id": "rev-sub-585b4cbfc7e3-2bd87ec6",
+      "submission_id": "sub-585b4cbfc7e3-2bd87ec6",
+      "trace_id": "trace-ui-20260711124925-84fee6f5",
+      "evaluation_result": "FAIL",
+      "failure_type": "incomplete",
+      "decision": "REJECTED",
+      "failure_reasons": [
+        "incomplete"
+      ],
+      "improvement_hints": [
+        "Provide a README.md file documenting the project setup.",
+        "Include unit tests under a tests/ folder (e.g. test_api.py).",
+        "Add structured documentation or architectural comments.",
+        "Ensure the repository has at least 3 implementation files."
+      ],
+      "analysis": {
+        "technical_quality": 16,
+        "clarity": 16,
+        "discipline_signals": 16,
+        "pac": {
+          "code": 0,
+          "architecture": 0,
+          "proof": 0
+        },
+        "rubric": {
+          "has_alignment": 0,
+          "has_effort": 1,
+          "has_code": 0
+        }
+      },
+      "reviewed_at": "2026-07-11T12:49:25.812477",
+      "evaluation_time_ms": 0,
+      "missing_features": [
+        "database",
+        "evaluation",
+        "review"
+      ],
+      "evaluation_summary": "Parikshak Evaluation: FAIL",
+      "selected_task_id": "T-GOV-F01",
+      "selection_reason": "FAIL(incomplete) -> failure_tasks['incomplete'][0] = T-GOV-F01",
+      "review_state": "PENDING_REVIEW",
+      "version": 1,
+      "score": 16,
+      "readiness_percent": 16,
+      "status": "fail",
+      "candidate_name": "TestUser",
+      "task_title": "Parikshak Deterministic Task Review and Governance System",
+      "reviewed_by": null,
+      "whats_done_well": []
+    }
+  },
+  "next_tasks": {
+    "T-GOV-F01": {
+      "next_task_id": "T-GOV-F01",
+      "review_id": "rev-sub-585b4cbfc7e3-2bd87ec6",
+      "previous_submission_id": "sub-585b4cbfc7e3-2bd87ec6",
+      "task_type": "correction",
+      "title": "Next Task T-GOV-F01",
+      "objective": "Complete task T-GOV-F01",
+      "focus_area": "general",
+      "difficulty": "beginner",
+      "reason": "FAIL(incomplete) -> failure_tasks['incomplete'][0] = T-GOV-F01 correction",
+      "assigned_at": "2026-07-11T12:49:25.812477"
+    }
+  }
+}

@@ -1,8 +1,0 @@
-{
-    "trace_id": "trace-prod-ready",
-    "chain": [
-        "trace-prod-ready",
-        "trace-parent-111"
-    ],
-    "valid_chain": true
-}

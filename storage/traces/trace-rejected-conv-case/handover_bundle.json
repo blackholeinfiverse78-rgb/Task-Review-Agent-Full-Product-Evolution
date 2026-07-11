@@ -1,6 +1,0 @@
-{
-    "trace_id": "trace-rejected-conv-case",
-    "recipient": "TANTRA_Consumer",
-    "handover_status": "COMPLETE",
-    "handover_notes": "Handed over to convergence module successfully."
-}

@@ -97,7 +97,7 @@ class SecurityConfig:
         """Verify JWT token and enforce expiration"""
         if not credentials:
             raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
+                status_code=status.HTTP_403_FORBIDDEN,
                 detail="Not authenticated",
                 headers={"WWW-Authenticate": "Bearer"},
             )

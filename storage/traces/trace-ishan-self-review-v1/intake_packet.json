@@ -1,0 +1,32 @@
+{
+  "assigned_task": "Parikshak Runtime Validation Service",
+  "original_task_document": "Validate Parikshak using actual historical developer submissions and repositories. Verify deterministic outputs across repeated executions.",
+  "original_assignment_document": "Validate Parikshak using actual historical developer submissions and repositories. Verify deterministic outputs across repeated executions.",
+  "review_packet": "REVIEW_PACKET.md",
+  "repository_or_commit": "g:\\Live Task Review Agent - 2",
+  "repository_path": "g:\\Live Task Review Agent - 2",
+  "repository_commit_or_branch": "main",
+  "submission_date": "2026-07-11T05:15:58.887696Z",
+  "submission_timestamp": "2026-07-11T05:15:58.887696Z",
+  "due_date": "2026-07-13T05:15:58.887711Z",
+  "expected_deliverables": [
+    "REVIEW_PACKET.md",
+    "Runtime screenshots",
+    "Walkthrough verification"
+  ],
+  "candidate_name": "Ishan Shirode",
+  "candidate_identifier": "ishan-001",
+  "supporting_evidence": {
+    "evidence_files": [
+      "main.py",
+      "api/production.py"
+    ]
+  },
+  "architecture_notes": "",
+  "integration_notes": "",
+  "runtime_evidence": {},
+  "test_evidence": {},
+  "documentation_evidence": {},
+  "additional_instructions": "",
+  "trace_id": "trace-ishan-self-review-v1"
+}

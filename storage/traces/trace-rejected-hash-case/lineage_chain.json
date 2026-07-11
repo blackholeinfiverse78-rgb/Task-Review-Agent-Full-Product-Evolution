@@ -1,9 +1,0 @@
-{
-    "trace_id": "trace-rejected-hash-case",
-    "chain": [
-        "trace-rejected-hash-case",
-        "trace-parent-999",
-        "trace-grandparent-888"
-    ],
-    "valid_chain": true
-}

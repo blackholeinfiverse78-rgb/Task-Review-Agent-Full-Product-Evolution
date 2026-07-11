@@ -197,7 +197,8 @@ class ReviewOrchestrator:
             schema_version=task.schema_version,
             registry_validation_status="INVALID" if registry_rejected else "VALID",
             registry_validation_reason=registry_val.reason if registry_rejected else "Validation Passed",
-            review_state="PENDING_REVIEW"
+            review_state="PENDING_REVIEW",
+            github_repo_link=getattr(task, "github_repo_link", None) or None
         )
         product_storage.store_submission(submission)
 

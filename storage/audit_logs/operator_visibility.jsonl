@@ -81,3 +81,10 @@
 {"operator_id": "Akash", "action": "override", "submission_id": "sub-5caf4c3cf748-f451c8e1", "outcome": "APPROVED", "timestamp": "2026-06-30T16:07:27.200326", "_checksum": "b572bf780dcdf303"}
 {"operator_id": "Akash", "action": "override", "submission_id": "sub-5caf4c3cf748-6419aa93", "outcome": "APPROVED", "timestamp": "2026-06-30T16:10:25.464963", "_checksum": "bd5b71186d531551"}
 {"operator_id": "Akash", "action": "override", "submission_id": "sub-5caf4c3cf748-0c759547", "outcome": "APPROVED", "timestamp": "2026-06-30T16:12:13.870002", "_checksum": "a11021f2739106f0"}
+{"operator_id": "Akash", "action": "override", "submission_id": "sub-5caf4c3cf748-55da1526", "outcome": "APPROVED", "timestamp": "2026-07-10T17:26:40.160251", "_checksum": "a2f9699db3a49a09"}
+{"operator_id": "Akash", "action": "approve", "submission_id": "sub-5caf4c3cf748-737d83e1", "outcome": "APPROVED", "timestamp": "2026-07-10T17:26:50.254880", "_checksum": "1b481cd4b79f6816"}
+{"operator_id": "Akash", "action": "override", "submission_id": "sub-c8ded0272f25-eview-v1", "outcome": "APPROVED", "timestamp": "2026-07-11T10:46:06.963801", "_checksum": "c5553800fa96dd06"}
+{"operator_id": "Akash", "action": "override", "submission_id": "sub-f055e2cff916-rline-v1", "outcome": "REJECTED", "timestamp": "2026-07-11T10:46:16.770003", "_checksum": "99cb7c86b9d7fd91"}
+{"operator_id": "Akash", "action": "override", "submission_id": "sub-53812b5fe54a-ilure-v1", "outcome": "REJECTED", "timestamp": "2026-07-11T10:46:26.109771", "_checksum": "af374479b0ddd8e8"}
+{"operator_id": "Akash", "action": "override", "submission_id": "sub-bf7b3c9280fe-hakti-v1", "outcome": "APPROVED", "timestamp": "2026-07-11T10:46:35.396414", "_checksum": "39fcaf0b4fec141e"}
+{"operator_id": "Akash", "action": "override", "submission_id": "sub-5caf4c3cf748-622ef3ed", "outcome": "APPROVED", "timestamp": "2026-07-11T10:47:15.548779", "_checksum": "adcdf4d5e9bee46e"}

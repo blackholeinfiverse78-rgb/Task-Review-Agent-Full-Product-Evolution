@@ -1,8 +1,0 @@
-{
-    "trace_id": "trace-prod-needs-review",
-    "chain": [
-        "trace-prod-needs-review",
-        "trace-parent-111"
-    ],
-    "valid_chain": true
-}

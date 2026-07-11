@@ -1,0 +1,9 @@
+{
+  "trace_id": "trace-ishan-borderline-v1",
+  "decision": "REJECTED",
+  "signed_by": "Akash",
+  "signature": "sig-gov-Akash-trace-ishan-borderline-v1",
+  "timestamp": "2026-07-11T05:16:16.644992Z",
+  "approval_reason": "Evaluation is borderline. Found minor logic gaps in rate limiter sliding window windowing calculations.",
+  "approval_version": 2
+}

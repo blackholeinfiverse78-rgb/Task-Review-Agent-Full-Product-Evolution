@@ -1,8 +1,0 @@
-{
-    "trace_id": "trace-prod-rejected",
-    "chain": [
-        "trace-prod-rejected",
-        "trace-parent-111"
-    ],
-    "valid_chain": true
-}

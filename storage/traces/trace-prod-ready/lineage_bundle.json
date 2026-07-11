@@ -1,8 +1,0 @@
-{
-    "trace_id": "trace-prod-ready",
-    "parent_trace_id": "trace-parent-111",
-    "lineage_path": [
-        "trace-parent-111"
-    ],
-    "integrity_hash": "lin-hash-111"
-}

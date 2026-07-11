@@ -1,0 +1,264 @@
+[TTS] VaaniTTS import failed: No module named 'tts_service'
+SECURITY WARNING: Insecure JWT_SECRET_KEY — allowed by ALLOW_INSECURE_JWT=true
+INFO:     Will watch for changes in these directories: ['g:\\Live Task Review Agent - 2']
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     Started reloader process [27444] using WatchFiles
+2026-07-11 10:51:21,680 - INFO - 3 changes detected
+[TTS] VaaniTTS import failed: No module named 'tts_service'
+SECURITY WARNING: Insecure JWT_SECRET_KEY — allowed by ALLOW_INSECURE_JWT=true
+2026-07-11 10:51:23,297 - INFO - 3 changes detected
+2026-07-11 10:51:23,529 - WARNING - SECURITY WARNING: Insecure JWT_SECRET_KEY — allowed by ALLOW_INSECURE_JWT=true
+INFO:     Started server process [20944]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+2026-07-11 10:51:24,558 - INFO - 1 change detected
+INFO:     127.0.0.1:65031 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61300 - "POST /api/v1/production/auth/token HTTP/1.1" 200 OK
+2026-07-11 12:43:58,015 - INFO - [ORCHESTRATOR] Processing: Test Task For Debug
+2026-07-11 12:43:58,015 - INFO - Performing complete validation for module: task-review-agent
+2026-07-11 12:43:58,015 - INFO - Validating module_id: task-review-agent
+2026-07-11 12:43:58,016 - INFO - Module found: task-review-agent (status: active)
+2026-07-11 12:43:58,016 - INFO - Validating lifecycle stage for module: task-review-agent
+2026-07-11 12:43:58,016 - INFO - Validating module_id: task-review-agent
+2026-07-11 12:43:58,016 - INFO - Module found: task-review-agent (status: active)
+2026-07-11 12:43:58,016 - INFO - Lifecycle stage validation passed: LifecycleStage.PRODUCTION
+2026-07-11 12:43:58,017 - INFO - Validating schema version for module: task-review-agent (required: v1.0)
+2026-07-11 12:43:58,017 - INFO - Validating module_id: task-review-agent
+2026-07-11 12:43:58,017 - INFO - Module found: task-review-agent (status: active)
+2026-07-11 12:43:58,017 - INFO - Schema version validation passed: v1.0
+2026-07-11 12:43:58,017 - INFO - Complete validation passed for module: task-review-agent
+2026-07-11 12:43:58,066 - INFO - [PACKET] Validated — depth=full confidence=1.00 warnings=0
+2026-07-11 12:43:58,066 - INFO - Performing complete validation for module: task-review-agent
+2026-07-11 12:43:58,066 - INFO - Validating module_id: task-review-agent
+2026-07-11 12:43:58,066 - INFO - Module found: task-review-agent (status: active)
+2026-07-11 12:43:58,066 - INFO - Validating lifecycle stage for module: task-review-agent
+2026-07-11 12:43:58,066 - INFO - Validating module_id: task-review-agent
+2026-07-11 12:43:58,066 - INFO - Module found: task-review-agent (status: active)
+2026-07-11 12:43:58,066 - INFO - Lifecycle stage validation passed: LifecycleStage.PRODUCTION
+2026-07-11 12:43:58,066 - INFO - Validating schema version for module: task-review-agent (required: v1.0)
+2026-07-11 12:43:58,066 - INFO - Validating module_id: task-review-agent
+2026-07-11 12:43:58,066 - INFO - Module found: task-review-agent (status: active)
+2026-07-11 12:43:58,066 - INFO - Schema version validation passed: v1.0
+2026-07-11 12:43:58,066 - INFO - Complete validation passed for module: task-review-agent
+2026-07-11 12:43:58,066 - INFO - [SIGNAL COLLECTOR] Collecting supporting signals for: Test Task For Debug...
+2026-07-11 12:43:58,066 - WARNING - [SIGNAL COLLECTOR] NO SCORING AUTHORITY - Signals only
+2026-07-11 12:43:58,069 - INFO - [SIGNAL COLLECTOR] Extracted 2 expected features
+2026-07-11 12:43:58,069 - INFO - [SIGNAL COLLECTOR] Repository available: False
+2026-07-11 12:43:58,070 - INFO - [SIGNAL COLLECTOR] Feature match ratio: 0.0
+2026-07-11 12:43:58,073 - INFO - [SIGNAL COLLECTOR] Signal collection complete - Repository: False, Features: 2
+2026-07-11 12:43:58,073 - INFO - [ASSIGNMENT ENGINE] Evaluating: Test Task For Debug
+2026-07-11 12:43:58,073 - INFO - [RULE ENGINE] Starting deterministic evaluation
+2026-07-11 12:43:58,073 - INFO - [RULE ENGINE] schema_violation: no repo + description < 50 words
+2026-07-11 12:43:58,073 - INFO - [RULE ENGINE] FAIL — schema_violation
+2026-07-11 12:43:58,073 - INFO - [ASSIGNMENT ENGINE] FAIL | failure_type=schema_violation
+2026-07-11 12:43:58,074 - INFO - [HUMAN-IN-LOOP] Calculating Phase 3 hardened confidence
+2026-07-11 12:43:58,074 - INFO - [HUMAN-IN-LOOP] Confidence: proof=0.0 arch=0.0 code=0.0 rubric=0.000 → (0.0+0.0+0.0+0.000)/4 = 0.0000 (threshold=0.98)
+2026-07-11 12:43:58,074 - WARNING - [HUMAN-IN-LOOP] Escalation: low_confidence, no_proof, no_architecture, no_code, low_rubric_completeness
+2026-07-11 12:43:58,094 - INFO - [HUMAN-IN-LOOP] Escalation case created: esc-20260711124358-trace-ui
+2026-07-11 12:43:58,094 - INFO - [PARIKSHAK] Starting mapping for trace: trace-ui-20260711124358-44e82a05
+2026-07-11 12:43:58,094 - INFO - [TASK GRAPH ENGINE] T-GOV-001 -> T-GOV-F01 | FAIL(schema_violation) -> failure_tasks['schema_violation'][0] = T-GOV-F01
+2026-07-11 12:43:58,203 - INFO - [BUCKET] Logged: trace_id=trace-ui-20260711124358-44e82a05 | decision=REJECTED
+2026-07-11 12:43:58,203 - INFO - [PARIKSHAK] Done | trace_id=trace-ui-20260711124358-44e82a05 | result=FAIL | selected=T-GOV-F01
+2026-07-11 12:43:58,423 - INFO - 16 changes detected
+2026-07-11 12:43:58,778 - INFO - 11 changes detected
+2026-07-11 12:43:58,789 - INFO - Prosody mappings loaded successfully
+2026-07-11 12:43:58,789 - INFO - [VAANI ORCHESTRATOR INTEGRATION] Generated prosody hint: friendly_en
+2026-07-11 12:43:58,791 - ERROR - [TTS] Failed to initialize XTTS v2: No module named 'TTS'
+2026-07-11 12:43:58,791 - ERROR - [TTS] XTTS generation failed: No module named 'TTS'
+2026-07-11 12:43:58,791 - WARNING - [TTS] Coqui XTTS failed: No module named 'TTS' — trying gTTS fallback
+2026-07-11 12:43:59,906 - INFO - [VAANI ORCHESTRATOR INTEGRATION] Saved synthesized review to g:\Live Task Review Agent - 2\storage\tts_reviews\rev-sub-251e5ba06e1b-89f4bb3a.mp3
+INFO:     127.0.0.1:61751 - "POST /api/v1/lifecycle/submit HTTP/1.1" 200 OK
+2026-07-11 12:43:59,990 - INFO - 2 changes detected
+2026-07-11 12:44:00,499 - INFO - 3 changes detected
+INFO:     127.0.0.1:57876 - "GET /api/v1/lifecycle/review/sub-251e5ba06e1b-89f4bb3a HTTP/1.1" 200 OK
+2026-07-11 12:44:05,811 - INFO - 2 changes detected
+INFO:     127.0.0.1:62059 - "GET /api/v1/lifecycle/review/sub-416b2e6f1d07-t-e35871 HTTP/1.1" 404 Not Found
+2026-07-11 12:44:15,636 - INFO - 3 changes detected
+INFO:     127.0.0.1:64210 - "GET /api/v1/lifecycle/review/sub-251e5ba06e1b-89f4bb3a HTTP/1.1" 200 OK
+2026-07-11 12:44:33,993 - INFO - 3 changes detected
+2026-07-11 12:48:39,798 - INFO - 1 change detected
+INFO:     127.0.0.1:65315 - "POST /api/v1/production/auth/token HTTP/1.1" 200 OK
+2026-07-11 12:49:25,812 - INFO - [ORCHESTRATOR] Processing: Parikshak Deterministic Task Review and Governance
+2026-07-11 12:49:25,812 - INFO - Performing complete validation for module: task-review-agent
+2026-07-11 12:49:25,812 - INFO - Validating module_id: task-review-agent
+2026-07-11 12:49:25,812 - INFO - Module found: task-review-agent (status: active)
+2026-07-11 12:49:25,812 - INFO - Validating lifecycle stage for module: task-review-agent
+2026-07-11 12:49:25,812 - INFO - Validating module_id: task-review-agent
+2026-07-11 12:49:25,812 - INFO - Module found: task-review-agent (status: active)
+2026-07-11 12:49:25,812 - INFO - Lifecycle stage validation passed: LifecycleStage.PRODUCTION
+2026-07-11 12:49:25,812 - INFO - Validating schema version for module: task-review-agent (required: v1.0)
+2026-07-11 12:49:25,812 - INFO - Validating module_id: task-review-agent
+2026-07-11 12:49:25,812 - INFO - Module found: task-review-agent (status: active)
+2026-07-11 12:49:25,812 - INFO - Schema version validation passed: v1.0
+2026-07-11 12:49:25,812 - INFO - Complete validation passed for module: task-review-agent
+2026-07-11 12:49:25,814 - INFO - [PACKET] Validated — depth=full confidence=1.00 warnings=0
+2026-07-11 12:49:25,814 - INFO - Performing complete validation for module: task-review-agent
+2026-07-11 12:49:25,814 - INFO - Validating module_id: task-review-agent
+2026-07-11 12:49:25,814 - INFO - Module found: task-review-agent (status: active)
+2026-07-11 12:49:25,814 - INFO - Validating lifecycle stage for module: task-review-agent
+2026-07-11 12:49:25,814 - INFO - Validating module_id: task-review-agent
+2026-07-11 12:49:25,814 - INFO - Module found: task-review-agent (status: active)
+2026-07-11 12:49:25,814 - INFO - Lifecycle stage validation passed: LifecycleStage.PRODUCTION
+2026-07-11 12:49:25,814 - INFO - Validating schema version for module: task-review-agent (required: v1.0)
+2026-07-11 12:49:25,814 - INFO - Validating module_id: task-review-agent
+2026-07-11 12:49:25,814 - INFO - Module found: task-review-agent (status: active)
+2026-07-11 12:49:25,814 - INFO - Schema version validation passed: v1.0
+2026-07-11 12:49:25,814 - INFO - Complete validation passed for module: task-review-agent
+2026-07-11 12:49:25,814 - INFO - [SIGNAL COLLECTOR] Collecting supporting signals for: Parikshak Deterministic Task Review and Governance...
+2026-07-11 12:49:25,814 - WARNING - [SIGNAL COLLECTOR] NO SCORING AUTHORITY - Signals only
+2026-07-11 12:49:25,815 - INFO - [SIGNAL COLLECTOR] Extracted 3 expected features
+2026-07-11 12:49:26,167 - WARNING - requests failed (404 Client Error: Not Found for url: https://api.github.com/repos/Akash-kafle/parikshak), trying curl.exe fallback
+2026-07-11 12:49:26,599 - ERROR - Both requests and curl failed for https://api.github.com/repos/Akash-kafle/parikshak
+2026-07-11 12:49:26,601 - WARNING - Could not fetch repo info for Akash-kafle/parikshak
+2026-07-11 12:49:26,601 - INFO - [SIGNAL COLLECTOR] Repository available: False
+2026-07-11 12:49:26,601 - INFO - [SIGNAL COLLECTOR] Feature match ratio: 0.0
+2026-07-11 12:49:26,602 - INFO - [SIGNAL COLLECTOR] Signal collection complete - Repository: False, Features: 3
+2026-07-11 12:49:26,602 - INFO - [ASSIGNMENT ENGINE] Evaluating: Parikshak Deterministic Task Review and Governance System
+2026-07-11 12:49:26,602 - INFO - [RULE ENGINE] Starting deterministic evaluation
+2026-07-11 12:49:26,602 - INFO - [RULE ENGINE] incomplete: no code present
+2026-07-11 12:49:26,602 - INFO - [RULE ENGINE] FAIL — incomplete
+2026-07-11 12:49:26,602 - INFO - [ASSIGNMENT ENGINE] FAIL | failure_type=incomplete
+2026-07-11 12:49:26,602 - INFO - [HUMAN-IN-LOOP] Calculating Phase 3 hardened confidence
+2026-07-11 12:49:26,602 - INFO - [HUMAN-IN-LOOP] Confidence: proof=0.0 arch=0.0 code=0.0 rubric=0.167 → (0.0+0.0+0.0+0.167)/4 = 0.0417 (threshold=0.98)
+2026-07-11 12:49:26,602 - WARNING - [HUMAN-IN-LOOP] Escalation: low_confidence, no_proof, no_architecture, no_code, low_rubric_completeness
+2026-07-11 12:49:26,603 - INFO - [HUMAN-IN-LOOP] Escalation case created: esc-20260711124926-trace-ui
+2026-07-11 12:49:26,603 - INFO - [PARIKSHAK] Starting mapping for trace: trace-ui-20260711124925-84fee6f5
+2026-07-11 12:49:26,603 - INFO - [TASK GRAPH ENGINE] T-GOV-001 -> T-GOV-F01 | FAIL(incomplete) -> failure_tasks['incomplete'][0] = T-GOV-F01
+2026-07-11 12:49:26,720 - INFO - [BUCKET] Logged: trace_id=trace-ui-20260711124925-84fee6f5 | decision=REJECTED
+2026-07-11 12:49:26,720 - INFO - [PARIKSHAK] Done | trace_id=trace-ui-20260711124925-84fee6f5 | result=FAIL | selected=T-GOV-F01
+2026-07-11 12:49:26,912 - INFO - 18 changes detected
+2026-07-11 12:49:27,060 - INFO - [VAANI ORCHESTRATOR INTEGRATION] Generated prosody hint: friendly_en
+2026-07-11 12:49:27,060 - ERROR - [TTS] Failed to initialize XTTS v2: No module named 'TTS'
+2026-07-11 12:49:27,060 - ERROR - [TTS] XTTS generation failed: No module named 'TTS'
+2026-07-11 12:49:27,060 - WARNING - [TTS] Coqui XTTS failed: No module named 'TTS' — trying gTTS fallback
+2026-07-11 12:49:27,264 - INFO - 11 changes detected
+2026-07-11 12:49:28,416 - INFO - [VAANI ORCHESTRATOR INTEGRATION] Saved synthesized review to g:\Live Task Review Agent - 2\storage\tts_reviews\rev-sub-585b4cbfc7e3-2bd87ec6.mp3
+INFO:     127.0.0.1:52237 - "POST /api/v1/lifecycle/submit HTTP/1.1" 200 OK
+2026-07-11 12:49:28,477 - INFO - 4 changes detected
+2026-07-11 12:49:33,519 - INFO - 1 change detected
+INFO:     127.0.0.1:57465 - "GET /api/v1/lifecycle/review/sub-585b4cbfc7e3-2bd87ec6 HTTP/1.1" 200 OK
+2026-07-11 12:50:02,326 - INFO - 2 changes detected
+INFO:     127.0.0.1:54118 - "POST /api/v1/production/auth/token HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59461 - "GET /api/v1/lifecycle/review/sub-585b4cbfc7e3-2bd87ec6 HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:54091 - "POST /api/v1/production/auth/token HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52312 - "GET /api/v1/review/all HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:49740 - "GET /api/v1/lifecycle/review/sub-585b4cbfc7e3-2bd87ec6 HTTP/1.1" 403 Forbidden
+2026-07-11 12:55:15,322 - INFO - 1 change detected
+2026-07-11 12:56:19,282 - INFO - 1 change detected
+2026-07-11 12:56:19,644 - INFO - 1 change detected
+2026-07-11 12:56:20,049 - INFO - 1 change detected
+2026-07-11 12:56:20,458 - INFO - 1 change detected
+2026-07-11 12:56:20,872 - INFO - 1 change detected
+2026-07-11 12:56:21,228 - INFO - 1 change detected
+2026-07-11 12:56:21,632 - INFO - 1 change detected
+2026-07-11 12:56:22,035 - INFO - 1 change detected
+2026-07-11 12:56:22,443 - INFO - 1 change detected
+2026-07-11 12:56:22,853 - INFO - 1 change detected
+2026-07-11 12:56:23,206 - INFO - 1 change detected
+2026-07-11 12:56:23,611 - INFO - 1 change detected
+2026-07-11 12:56:24,020 - INFO - 1 change detected
+2026-07-11 12:56:24,430 - INFO - 1 change detected
+2026-07-11 12:56:24,838 - INFO - 1 change detected
+2026-07-11 12:56:25,197 - INFO - 1 change detected
+2026-07-11 12:56:25,601 - INFO - 1 change detected
+2026-07-11 12:56:26,006 - INFO - 1 change detected
+2026-07-11 12:56:26,410 - INFO - 1 change detected
+2026-07-11 12:56:26,770 - INFO - 1 change detected
+2026-07-11 12:56:27,173 - INFO - 1 change detected
+2026-07-11 12:56:27,576 - INFO - 1 change detected
+2026-07-11 12:56:27,978 - INFO - 1 change detected
+2026-07-11 12:56:28,338 - INFO - 1 change detected
+2026-07-11 12:56:28,746 - INFO - 1 change detected
+2026-07-11 12:56:29,155 - INFO - 1 change detected
+2026-07-11 12:56:29,562 - INFO - 1 change detected
+2026-07-11 12:56:29,919 - INFO - 1 change detected
+2026-07-11 12:56:30,325 - INFO - 1 change detected
+2026-07-11 12:56:30,729 - INFO - 1 change detected
+2026-07-11 12:56:31,085 - INFO - 1 change detected
+2026-07-11 12:56:31,491 - INFO - 1 change detected
+2026-07-11 12:56:31,898 - INFO - 1 change detected
+2026-07-11 12:56:32,312 - INFO - 1 change detected
+2026-07-11 12:56:32,715 - INFO - 1 change detected
+2026-07-11 12:56:33,075 - INFO - 1 change detected
+2026-07-11 12:56:33,489 - INFO - 1 change detected
+2026-07-11 12:56:33,890 - INFO - 1 change detected
+2026-07-11 12:56:34,243 - INFO - 1 change detected
+2026-07-11 12:56:34,644 - INFO - 1 change detected
+2026-07-11 12:56:35,049 - INFO - 1 change detected
+2026-07-11 12:56:35,401 - INFO - 1 change detected
+2026-07-11 12:56:35,804 - INFO - 1 change detected
+2026-07-11 12:56:36,207 - INFO - 1 change detected
+2026-07-11 12:56:36,620 - INFO - 1 change detected
+2026-07-11 12:56:37,028 - INFO - 1 change detected
+2026-07-11 12:56:37,430 - INFO - 1 change detected
+2026-07-11 12:56:37,782 - INFO - 1 change detected
+2026-07-11 12:56:38,188 - INFO - 1 change detected
+2026-07-11 12:56:38,589 - INFO - 1 change detected
+2026-07-11 12:56:38,992 - INFO - 1 change detected
+2026-07-11 12:56:39,344 - INFO - 1 change detected
+2026-07-11 12:56:39,746 - INFO - 1 change detected
+2026-07-11 12:56:40,149 - INFO - 1 change detected
+2026-07-11 12:56:40,503 - INFO - 1 change detected
+2026-07-11 12:56:40,910 - INFO - 1 change detected
+2026-07-11 12:56:41,321 - INFO - 1 change detected
+2026-07-11 12:56:41,682 - INFO - 1 change detected
+2026-07-11 12:56:42,089 - INFO - 1 change detected
+2026-07-11 12:56:42,502 - INFO - 1 change detected
+2026-07-11 12:56:42,904 - INFO - 1 change detected
+2026-07-11 12:56:43,312 - INFO - 1 change detected
+2026-07-11 12:56:43,664 - INFO - 1 change detected
+2026-07-11 12:56:44,117 - INFO - 1 change detected
+2026-07-11 12:56:44,527 - INFO - 1 change detected
+2026-07-11 12:56:44,936 - INFO - 1 change detected
+2026-07-11 12:56:45,289 - INFO - 1 change detected
+2026-07-11 12:56:45,643 - INFO - 1 change detected
+2026-07-11 12:56:45,994 - INFO - 1 change detected
+2026-07-11 12:56:46,352 - INFO - 1 change detected
+2026-07-11 12:56:46,717 - INFO - 1 change detected
+2026-07-11 12:56:47,068 - INFO - 1 change detected
+2026-07-11 12:56:47,471 - INFO - 1 change detected
+2026-07-11 12:56:47,885 - INFO - 1 change detected
+2026-07-11 12:56:48,293 - INFO - 1 change detected
+2026-07-11 12:56:48,652 - INFO - 1 change detected
+2026-07-11 12:56:49,056 - INFO - 1 change detected
+2026-07-11 12:56:49,460 - INFO - 1 change detected
+2026-07-11 12:56:49,839 - INFO - 1 change detected
+2026-07-11 12:56:50,242 - INFO - 1 change detected
+2026-07-11 12:56:50,645 - INFO - 1 change detected
+2026-07-11 12:56:51,048 - INFO - 1 change detected
+2026-07-11 12:56:51,450 - INFO - 1 change detected
+2026-07-11 12:56:51,853 - INFO - 1 change detected
+2026-07-11 12:56:52,256 - INFO - 1 change detected
+2026-07-11 12:56:52,658 - INFO - 1 change detected
+2026-07-11 12:56:53,012 - INFO - 1 change detected
+2026-07-11 12:56:53,422 - INFO - 1 change detected
+2026-07-11 12:56:53,833 - INFO - 1 change detected
+2026-07-11 12:56:54,199 - INFO - 1 change detected
+2026-07-11 12:56:54,603 - INFO - 1 change detected
+2026-07-11 12:56:55,013 - INFO - 1 change detected
+2026-07-11 12:56:55,377 - INFO - 1 change detected
+2026-07-11 12:56:55,792 - INFO - 1 change detected
+2026-07-11 12:56:56,208 - INFO - 1 change detected
+2026-07-11 12:56:56,619 - INFO - 1 change detected
+2026-07-11 12:56:57,036 - INFO - 1 change detected
+2026-07-11 12:56:57,387 - INFO - 1 change detected
+2026-07-11 12:56:57,792 - INFO - 1 change detected
+2026-07-11 12:56:58,194 - INFO - 1 change detected
+2026-07-11 12:56:58,606 - INFO - 1 change detected
+2026-07-11 12:56:59,012 - INFO - 1 change detected
+2026-07-11 12:56:59,419 - INFO - 1 change detected
+2026-07-11 12:56:59,829 - INFO - 1 change detected
+2026-07-11 12:57:00,196 - INFO - 1 change detected
+2026-07-11 12:57:00,619 - INFO - 1 change detected
+2026-07-11 12:57:00,982 - INFO - 1 change detected
+2026-07-11 12:57:01,399 - INFO - 1 change detected
+2026-07-11 12:57:01,812 - INFO - 1 change detected
+2026-07-11 12:57:02,228 - INFO - 1 change detected
+2026-07-11 12:57:02,642 - INFO - 1 change detected
+2026-07-11 12:57:03,001 - INFO - 1 change detected
+2026-07-11 12:57:03,422 - INFO - 1 change detected
+2026-07-11 12:57:03,836 - INFO - 1 change detected
+2026-07-11 12:57:04,199 - INFO - 1 change detected
+2026-07-11 12:57:04,605 - INFO - 1 change detected
+2026-07-11 12:57:05,016 - INFO - 1 change detected
+INFO:     127.0.0.1:59742 - "GET /health HTTP/1.1" 200 OK

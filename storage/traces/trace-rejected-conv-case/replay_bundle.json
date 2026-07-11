@@ -1,7 +1,0 @@
-{
-    "trace_id": "trace-rejected-conv-case",
-    "replay_script": "pytest",
-    "replay_status": "SUCCESS",
-    "replay_logs": "============================= 1 passed in 0.01s =============================\n[INFO] Replay completed successfully.",
-    "checksum": "checksum-replay-123"
-}

@@ -1,0 +1,9 @@
+{
+  "trace_id": "trace-ishan-failure-v1",
+  "decision": "REJECTED",
+  "signed_by": "Akash",
+  "signature": "sig-gov-Akash-trace-ishan-failure-v1",
+  "timestamp": "2026-07-11T05:16:26.016659Z",
+  "approval_reason": "Failed. Submission description too short and repository link inaccessible.",
+  "approval_version": 2
+}
