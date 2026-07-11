@@ -196,11 +196,11 @@ async def submit_task(
     except HTTPException:
         raise
     except (ValueError, KeyError) as e:
-        logger.error(f"Submission data error: {e}")
-        raise HTTPException(status_code=500, detail="Submission processing failed.")
+        logger.error(f"Submission data error: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Submission processing failed: {e}")
     except Exception as e:
-        logger.error(f"Submission unexpected error: {e}")
-        raise HTTPException(status_code=500, detail="Internal server error.")
+        logger.error(f"Submission unexpected error: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Internal server error: {e}")
 
 @router.get("/history", response_model=List[SubmissionHistoryItem])
 def get_history(current_user: dict = Depends(require_any_authenticated)):
@@ -240,14 +240,22 @@ def get_review(submission_id: str, current_user: dict = Depends(require_any_auth
     # CWE-943: validate ID format before storage lookup
     if not _ID_RE.match(submission_id):
         raise HTTPException(status_code=400, detail="Invalid submission ID format")
-    review = product_storage.get_review_by_submission(submission_id)
-    
+    try:
+        review = product_storage.get_review_by_submission(submission_id)
+    except Exception as e:
+        logger.error(f"get_review_by_submission failed: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"DB read error: {e}")
+
     if not review:
         raise HTTPException(status_code=404, detail="Review not found")
-    
-    submission = product_storage.get_submission(submission_id)
+
+    try:
+        submission = product_storage.get_submission(submission_id)
+    except Exception as e:
+        logger.error(f"get_submission failed: {e}", exc_info=True)
+        submission = None
     registry_validation = None
-    if submission and submission.registry_validation_status:
+    if submission and submission.registry_validation_status:  # noqa
         registry_validation = {
             "module_id": submission.module_id,
             "schema_version": submission.schema_version,
@@ -271,36 +279,40 @@ def get_review(submission_id: str, current_user: dict = Depends(require_any_auth
             except Exception:
                 pass
 
-    return ReviewDetailResponse(
-        review_id=review.review_id,
-        submission_id=review.submission_id,
-        evaluation_result=getattr(review, "evaluation_result", "FAIL"),
-        failure_type=getattr(review, "failure_type", None),
-        decision=getattr(review, "decision", "REJECTED"),
-        score=getattr(review, "score", 0),
-        readiness_percent=getattr(review, "readiness_percent", 0),
-        status=getattr(review, "status", "fail"),
-        failure_reasons=review.failure_reasons,
-        improvement_hints=review.improvement_hints,
-        analysis=review.analysis,
-        reviewed_at=review.reviewed_at,
-        missing_features=review.missing_features,
-        evaluation_summary=review.evaluation_summary,
-        selected_task_id=getattr(review, "selected_task_id", ""),
-        selection_reason=getattr(review, "selection_reason", ""),
-        registry_validation=registry_validation,
-        candidate_name=getattr(review, "candidate_name", "") or (submission.submitted_by if submission else "candidate"),
-        task_title=getattr(review, "task_title", "") or (submission.task_title if submission else "Task"),
-        task_description=submission.task_description if submission else "",
-        trace_id=trace_id_val,
-        repository_url=submission.github_repo_link if submission else None,
-        next_task_title=next_task.title if next_task else "",
-        next_task_objective=next_task.objective if next_task else "",
-        next_task_difficulty=next_task.difficulty if next_task else "",
-        next_task_focus_area=next_task.focus_area if next_task else "",
-        runtime_evidence=runtime_evidence,
-        whats_done_well=getattr(review, "whats_done_well", []) or []
-    )
+    try:
+        return ReviewDetailResponse(
+            review_id=review.review_id,
+            submission_id=review.submission_id,
+            evaluation_result=getattr(review, "evaluation_result", "FAIL"),
+            failure_type=getattr(review, "failure_type", None),
+            decision=getattr(review, "decision", "REJECTED"),
+            score=getattr(review, "score", 0),
+            readiness_percent=getattr(review, "readiness_percent", 0),
+            status=getattr(review, "status", "fail"),
+            failure_reasons=review.failure_reasons or [],
+            improvement_hints=review.improvement_hints or [],
+            analysis=review.analysis or {},
+            reviewed_at=review.reviewed_at,
+            missing_features=review.missing_features or [],
+            evaluation_summary=review.evaluation_summary or "",
+            selected_task_id=getattr(review, "selected_task_id", "") or "",
+            selection_reason=getattr(review, "selection_reason", "") or "",
+            registry_validation=registry_validation,
+            candidate_name=getattr(review, "candidate_name", "") or (submission.submitted_by if submission else "candidate"),
+            task_title=getattr(review, "task_title", "") or (submission.task_title if submission else "Task"),
+            task_description=submission.task_description if submission else "",
+            trace_id=trace_id_val,
+            repository_url=submission.github_repo_link if submission else None,
+            next_task_title=next_task.title if next_task else "",
+            next_task_objective=next_task.objective if next_task else "",
+            next_task_difficulty=next_task.difficulty if next_task else "",
+            next_task_focus_area=next_task.focus_area if next_task else "",
+            runtime_evidence=runtime_evidence,
+            whats_done_well=getattr(review, "whats_done_well", []) or []
+        )
+    except Exception as e:
+        logger.error(f"ReviewDetailResponse build failed: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Response build error: {e}")
 
 @router.get("/next/{submission_id}", response_model=NextTaskDetailResponse)
 def get_next_task(submission_id: str, current_user: dict = Depends(require_any_authenticated)):
