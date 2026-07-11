@@ -393,8 +393,6 @@ class ProductStorage:
                 db_obj.selected_task_id = getattr(review, "selected_task_id", "")
                 db_obj.selection_reason = getattr(review, "selection_reason", "")
                 db_obj.analysis_json = json.dumps(review.analysis)
-                # Keep legacy analysis column in sync
-                db_obj.analysis = json.dumps(review.analysis)
                 db.add(db_obj)
                 db.commit()
                 db.close()
